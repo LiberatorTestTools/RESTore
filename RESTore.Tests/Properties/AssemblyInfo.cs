@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("RESTore")]
-[assembly: AssemblyDescription("A BDD influenced method for testing API endpoints")]
+[assembly: AssemblyTitle("RESTore.Tests")]
+[assembly: AssemblyDescription("Tests for the RESTore project")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Liberator Test Tools")]
-[assembly: AssemblyProduct("RESTore")]
+[assembly: AssemblyProduct("RESTore.Tests")]
 [assembly: AssemblyCopyright("Copyright ©  2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("209f9643-0214-402d-a5d5-21f3ceff1ac8")]
+[assembly: Guid("702945b8-49be-4363-a05c-8ef4a85cbec5")]
 
 // Version information for an assembly consists of the following four values:
 //
