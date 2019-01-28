@@ -1,4 +1,21 @@
-﻿using Newtonsoft.Json;
+﻿// This version, Copyright 2019 Liberator Test Tools
+// 
+// Based on original work of the RestAssured.NET project on GitHub
+// https://github.com/lamchakchan/RestAssured.Net
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"),
+// to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+// and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+// IN THE SOFTWARE.
+
+
+using Newtonsoft.Json;
 using RESTore.Enumerations;
 using System;
 using System.Collections.Generic;
@@ -7,22 +24,79 @@ using System.Net.Http;
 
 namespace RESTore
 {
+    /// <summary>
+    /// The setup for the request.
+    /// </summary>
     public class GivenContext
     {
+        /// <summary>
+        /// The name of the suite.
+        /// </summary>
         public string SuiteName { get; set; }
+
+        /// <summary>
+        /// The name of the host.
+        /// </summary>
         public string HostName { get; set; }
+
+        /// <summary>
+        /// The port to use on the host.
+        /// </summary>
         public int HostPort { get; set; }
+
+        /// <summary>
+        /// The target URL for the request.
+        /// </summary>
         public string TargetUri { get; set; }
+
+        /// <summary>
+        /// The timeout for the request.
+        /// </summary>
         public TimeSpan RequestTimeout { get; set; }
+
+        /// <summary>
+        /// The body of the request.
+        /// </summary>
         public string RequestBody { get; set; }
+
+        /// <summary>
+        /// The files applied to the request.
+        /// </summary>
         public List<FileContent> Files { get; set; }
+
+        /// <summary>
+        /// Cookies for the request.
+        /// </summary>
         public Dictionary<string, string> SiteCookies { get; set; }
+
+        /// <summary>
+        /// Headers for the request.
+        /// </summary>
         public Dictionary<string, string> RequestHeaders { get; set; }
+
+        /// <summary>
+        /// Whether to use a secure HTTP connection
+        /// </summary>
         public bool SecureHttp { get; set; }
+
+        /// <summary>
+        /// HTTP Client for the request.
+        /// </summary>
         public HttpClient Client { get; set; }
+
+        /// <summary>
+        /// The Query Strings for the request.
+        /// </summary>
         public Dictionary<string, string> QueryStrings { get; set; }
+
+        /// <summary>
+        /// The Query Parameters for the request.
+        /// </summary>
         public Dictionary<string, string> QueryParameters { get; set; }
         
+        /// <summary>
+        /// The GivenContext
+        /// </summary>
         public GivenContext()
         {
             Client = new HttpClient();
@@ -123,13 +197,13 @@ namespace RESTore
         }
 
         /// <summary>
-        /// 
+        /// Allows a user to add a file to the request.
         /// </summary>
-        /// <param name="fileName"></param>
-        /// <param name="contentDispositionName"></param>
-        /// <param name="contentType"></param>
-        /// <param name="content"></param>
-        /// <returns></returns>
+        /// <param name="fileName">The name of the file to add.</param>
+        /// <param name="contentDispositionName">A header that indicates if the file is to displayed inline in the browser.</param>
+        /// <param name="contentType">The content-type of the file.</param>
+        /// <param name="content">The content of the file as a byte array.</param>
+        /// <returns>The GivenContext representing the setup of the request.</returns>
         public GivenContext File(string fileName, string contentDispositionName, string contentType, byte[] content)
         {
             Files.Add(
@@ -145,11 +219,11 @@ namespace RESTore
         }
 
         /// <summary>
-        /// 
+        /// Allows a user to add a single cookie to a request.
         /// </summary>
-        /// <param name="name"></param>
-        /// <param name="value"></param>
-        /// <returns></returns>
+        /// <param name="name">The name of the cookie parameter.</param>
+        /// <param name="value">The value of the cookie parameter.</param>
+        /// <returns>The GivenContext representing the setup of the request.</returns>
         public GivenContext Cookie(string name, string value)
         {
             if (!SiteCookies.ContainsKey(name))
@@ -160,10 +234,10 @@ namespace RESTore
         }
 
         /// <summary>
-        /// 
+        /// Allows a user to add a collection of cookies to a request.
         /// </summary>
-        /// <param name="cookies"></param>
-        /// <returns></returns>
+        /// <param name="cookies">The dictionary representing the cookies for the request.</param>
+        /// <returns>The GivenContext representing the setup of the request.</returns>
         public GivenContext Cookies(Dictionary<string, string> cookies)
         {
             foreach (var cookie in cookies)
@@ -177,10 +251,10 @@ namespace RESTore
         }
 
         /// <summary>
-        /// 
+        /// Allows a user to add a collection of headers to a request.
         /// </summary>
-        /// <param name="headers"></param>
-        /// <returns></returns>
+        /// <param name="headers">The dictionary representing the query parameters for the request.</param>
+        /// <returns>The GivenContext representing the setup of the request.</returns>
         public GivenContext Headers(Dictionary<string, string> headers)
         {
             foreach (var header in headers)
@@ -191,7 +265,12 @@ namespace RESTore
             return this;
         }
 
-
+        /// <summary>
+        /// Allows a user to add a single header to a request.
+        /// </summary>
+        /// <param name="headerType">The type of header to use.</param>
+        /// <param name="value">The value to use for the header.</param>
+        /// <returns>The GivenContext representing the setup of the request.</returns>
         public GivenContext Header(string headerType, string value)
         {
             if (!RequestHeaders.ContainsKey(headerType))
@@ -201,11 +280,11 @@ namespace RESTore
         }
 
         /// <summary>
-        /// 
+        /// Allows a user to add a single query parameter to a request.
         /// </summary>
-        /// <param name="key"></param>
-        /// <param name="value"></param>
-        /// <returns></returns>
+        /// <param name="key">The key of the query parameter.</param>
+        /// <param name="value">The value of the query parameter to use.</param>
+        /// <returns>The GivenContext representing the setup of the request.</returns>
         public GivenContext Parameter(string key, string value)
         {
             if (!QueryParameters.ContainsKey(key))
@@ -214,10 +293,10 @@ namespace RESTore
         }
 
         /// <summary>
-        /// 
+        /// Allows a user to add a collection of query parameters to a request.
         /// </summary>
-        /// <param name="parameters"></param>
-        /// <returns></returns>
+        /// <param name="parameters">The dictionary representing the query parameters for the request.</param>
+        /// <returns>The GivenContext representing the setup of the request.</returns>
         public GivenContext Parameters(Dictionary<string, string> parameters)
         {
             foreach (var parameter in parameters)
@@ -229,11 +308,11 @@ namespace RESTore
         }
 
         /// <summary>
-        /// 
+        /// Allows a user to add a single query string to a request.
         /// </summary>
-        /// <param name="key"></param>
-        /// <param name="value"></param>
-        /// <returns></returns>
+        /// <param name="key">The key of the query.</param>
+        /// <param name="value">The value of the query string to use.</param>
+        /// <returns>The GivenContext representing the setup of the request.</returns>
         public GivenContext Query(string key, string value)
         {
             if (!QueryStrings.ContainsKey(key))
@@ -242,10 +321,10 @@ namespace RESTore
         }
 
         /// <summary>
-        /// 
+        /// Allows a user to add a series of query strings to a request.
         /// </summary>
-        /// <param name="queries"></param>
-        /// <returns></returns>
+        /// <param name="queries">A dictionary represnting the collection of query strings.</param>
+        /// <returns>The GivenContext representing the setup of the request.</returns>
         public GivenContext Queries(Dictionary<string, string> queries)
         {
             foreach (var query in queries)
@@ -257,10 +336,10 @@ namespace RESTore
         }
 
         /// <summary>
-        /// 
+        /// Allows a user to specify the HTTP Client to be used for the request.
         /// </summary>
         /// <param name="client"></param>
-        /// <returns></returns>
+        /// <returns>The GivenContext representing the setup of the request.</returns>
         public GivenContext HttpClient(HttpClient client)
         {
             Client = client;
@@ -268,9 +347,9 @@ namespace RESTore
         }
 
         /// <summary>
-        /// 
+        /// Specifies that the request uses a secure connection.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The GivenContext representing the setup of the request.</returns>
         public GivenContext UseHttps()
         {
             SecureHttp = true;
@@ -280,7 +359,7 @@ namespace RESTore
         /// <summary>
 		/// Return all headers.
 		/// </summary>
-		/// <returns></returns>
+		/// <returns>A collection of headers as a dictionary.</returns>
 		public Dictionary<string, string> Headers()
         {
             return RequestHeaders.Select(x => new KeyValuePair<string, string>(x.Key, x.Value)).ToDictionary(x => x.Key, x => x.Value);
@@ -289,7 +368,7 @@ namespace RESTore
         /// <summary>
         /// Return the value for a content-type header.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The content-type header for the request.</returns>
         public string HeaderContentType()
         {
             return RequestHeaders[HeaderType.ContentType];
@@ -298,7 +377,7 @@ namespace RESTore
         /// <summary>
         /// Return the value for an accept header.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The accept header for the request</returns>
         public string HeaderAccept()
         {
             return RequestHeaders[HeaderType.Accept];
@@ -307,7 +386,7 @@ namespace RESTore
         /// <summary>
         /// Return the value for an accept-encoding header.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The accept-encoding header for the request.</returns>
         public string HeaderAcceptEncoding()
         {
             return RequestHeaders[HeaderType.AcceptEncoding];
@@ -316,7 +395,7 @@ namespace RESTore
         /// <summary>
         /// Return the value for an accept-charset header.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The accept-charset header for the request.</returns>
         public string HeaderAcceptCharset()
         {
             return RequestHeaders[HeaderType.AcceptCharset];
@@ -325,7 +404,7 @@ namespace RESTore
         /// <summary>
         /// Return all headers except for content-type, accept, accept-encoding and accept-charset
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A dictionary representing other headers.</returns>
         public Dictionary<string, string> OtherHeaders()
         {
             return RequestHeaders
@@ -337,7 +416,10 @@ namespace RESTore
                 ).ToDictionary(x => x.Key, x => x.Value);
         }
 
-
+        /// <summary>
+        /// Used to initialise the WhenCOntext
+        /// </summary>
+        /// <returns>The WhenContext being used.</returns>
         public WhenContext When()
         {
             return new WhenContext(this);
