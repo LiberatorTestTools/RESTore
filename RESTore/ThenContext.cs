@@ -15,9 +15,13 @@
 // IN THE SOFTWARE.
 
 
+using HtmlAgilityPack;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
+using System.Xml.Linq;
 
 namespace RESTore
 {
@@ -35,7 +39,12 @@ namespace RESTore
         /// The returned content
         /// </summary>
         public string Content { get; set; }
-        
+
+        /// <summary>
+        /// Thenparsed content of the response.
+        /// </summary>
+        public dynamic ParsedContent { get; set; }
+
         /// <summary>
         /// The headers returned by the response
         /// </summary>
@@ -68,9 +77,20 @@ namespace RESTore
         public bool IsSchemaValid { get; set; }
 
         /// <summary>
+        /// Whether the response contains a success status
+        /// </summary>
+        public bool IsSuccessStatus { get; set; }
+
+        /// <summary>
         /// The list of schema errors
         /// </summary>
         public List<string> SchemaErrors { get; set; }
+
+        /// <summary>
+        /// The TYpe of Content being returned
+        /// </summary>
+        private string ContentType { get; set; }
+
 
         /// <summary>
         /// The Constructor for the context
@@ -83,6 +103,160 @@ namespace RESTore
             IsSchemaValid = true;
             SchemaErrors = new List<string>();
         }
+
+
+        /// <summary>
+        /// Checks if a header has a specified value.
+        /// </summary>
+        /// <param name="headerType">The header type to look for.</param>
+        /// <param name="value">The value of the header to assert.</param>
+        /// <returns>The ThenContext representing the response message.</returns>
+        public ThenContext AssertHeader(string headerType, string value)
+        {
+            CheckIfHeaderValueIsConfirmed(headerType, value);
+
+            return this;
+        }
+
+
+        /// <summary>
+        /// Checks a series of headers and asserts specific values.
+        /// </summary>
+        /// <param name="headers">A collection of headers and their target values.</param>
+        /// <returns>The ThenContext representing the response message.</returns>
+        public ThenContext AssertHeaders(Dictionary<string, string> headers)
+        {
+            foreach (KeyValuePair<string, string> header in headers)
+            {
+                CheckIfHeaderValueIsConfirmed(header.Key, header.Value);
+            }
+            return this;
+        }
+
+
+        /// <summary>
+        /// Asserts if the Status Code in the response is as anticipated.
+        /// </summary>
+        /// <param name="httpStatusCode">The code anticipated by the test.</param>
+        /// <returns>The ThenContext representing the response message.</returns>
+        public ThenContext AssertStatus(HttpStatusCode httpStatusCode)
+        {
+            if (StatusCode.Equals(httpStatusCode))
+            {
+                Assertions.Add(string.Format("Status {0} confirmed.", StatusCode), true);
+            }
+            else
+            {
+                Assertions.Add(string.Format("Status {0} not found. Actual status is {1}.", StatusCode, httpStatusCode), false);
+            }
+            return this;
+        }
+
+
+        /// <summary>
+        /// Asserts whether the response contains a successful status
+        /// </summary>
+        /// <returns></returns>
+        public ThenContext AssertSuccessStatus()
+        {
+            if (IsSuccessStatus)
+            {
+                Assertions.Add("Success status returned.", true);
+            }
+            else
+            {
+                Assertions.Add("Non-success status found.", true);
+            }
+            return this;
+        }
+
+
+        /// <summary>
+        /// Checks whether a header contains a particular value.
+        /// </summary>
+        /// <param name="headerType">The type of header to test.</param>
+        /// <param name="value">The value to assert.</param>
+        private void CheckIfHeaderValueIsConfirmed(string headerType, string value)
+        {
+            if (Headers.IsPresentInDictionary(headerType) && Headers[headerType].ToList().Contains(value))
+            {
+                Assertions.Add(string.Format("Header: {0} not found", headerType), false);
+            }
+            else
+            {
+                Assertions.Add(string.Format("Header: {0} | Value: {1}", headerType, value), true);
+            }
+        }
+
         
+        /// <summary>
+        /// Extracts content types and parses the content
+        /// </summary>
+        public void GetContent()
+        {
+            ContentType = Headers["Content-Type"].First();
+            ParseResponseContent();
+        }
+
+
+        /// <summary>
+        /// Parses the JSON or XML content to an object
+        /// </summary>
+        private void ParseResponseContent()
+        {
+            if (!string.IsNullOrEmpty(Content))
+            {
+                if (ContentType.Contains("json"))
+                {
+                    try
+                    {
+                        ParsedContent = JObject.Parse(Content);
+                        return;
+                    }
+                    catch
+                    {
+                        try
+                        {
+                            ParsedContent = JArray.Parse(Content);
+                            return;
+                        }
+                        catch
+                        {
+                            throw new RESToreException("Cannot parse the JSON response to either an object or an array");
+                        }
+                    }
+
+                }
+                else if (ContentType.Contains("xml"))
+                {
+                    try
+                    {
+                        ParsedContent = XDocument.Parse(Content);
+                        return;
+                    }
+                    catch
+                    {
+                        throw new RESToreException("Cannot parse the XML response.");
+                    }
+
+                }
+                else if (ContentType.Contains("html"))
+                {
+                    try
+                    {
+                        //TODO: parse html documents
+                    }
+                    catch
+                    {
+                        throw new RESToreException("Cannot parse the HTML response.");
+                    }
+                    return;
+                } 
+            }
+
+            if (!string.IsNullOrEmpty(Content))
+                throw new RESToreException(string.Format("The Content-Type {0} is not supported at present.", ContentType));
+
+        }
     }
 }

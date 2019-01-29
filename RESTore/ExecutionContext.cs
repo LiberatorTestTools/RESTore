@@ -444,15 +444,17 @@ namespace RESTore
         {
             var content = result.Response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
 
-            return new ThenContext()
+            ThenContext thenContext = new ThenContext()
             {
-                StatusCode = result.Response.StatusCode,
                 Content = content,
                 Headers = result.Response.Content.Headers.ToDictionary(x => x.Key.Trim(), x => x.Value),
+                IsSuccessStatus = result.Response.IsSuccessStatusCode,
+                StatusCode = result.Response.StatusCode,
                 ElapsedExecutionTime = result.TimeElapsed,
                 LoadResponses = _loadReponses.ToList()
             };
-
+            thenContext.GetContent();
+            return thenContext;
         }
 
         #endregion

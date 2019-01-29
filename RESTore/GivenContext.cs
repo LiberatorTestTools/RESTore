@@ -20,6 +20,7 @@ using RESTore.Enumerations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 
 namespace RESTore
@@ -93,13 +94,17 @@ namespace RESTore
         /// The Query Parameters for the request.
         /// </summary>
         public Dictionary<string, string> QueryParameters { get; set; }
-        
+
+
         /// <summary>
         /// The GivenContext
         /// </summary>
         public GivenContext()
         {
-            Client = new HttpClient();
+            Client = Preferences.UseProxy.Contains("TRUE")
+                ? new HttpClient(AddProxyToClient())
+                : new HttpClient();
+
             Files = new List<FileContent>();
             SiteCookies = new Dictionary<string, string>();
             RequestHeaders = new Dictionary<string, string>();
@@ -422,7 +427,17 @@ namespace RESTore
         /// <returns>The WhenContext being used.</returns>
         public WhenContext When()
         {
+            Client = new HttpClient();
             return new WhenContext(this);
+        }
+
+        private HttpClientHandler AddProxyToClient()
+        {
+            return new HttpClientHandler()
+            {
+                Proxy = new WebProxy(Preferences.ProxyAddress, false),
+                UseProxy = true
+            };
         }
 
     }
