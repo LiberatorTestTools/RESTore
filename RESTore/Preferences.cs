@@ -60,8 +60,8 @@ namespace RESTore
             _reader.GetAppSettings();
             _appSettings = _reader.AppSettings;
             _kvList = _appSettings.Settings;
-            UseProxy = !string.IsNullOrEmpty(_kvList["UseProxy"].Value) ? _kvList["UseProxy"].Value : null;
-            ProxyAddress = !string.IsNullOrEmpty(_kvList["ProxyAddress"].Value) ? _kvList["ProxyAddress"].Value : null;
+            UseProxy = _kvList.IsPresentInCollection("UseProxy") ? _kvList["UseProxy"].Value : null;
+            ProxyAddress = _kvList.IsPresentInCollection("ProxyAddress") ? _kvList["ProxyAddress"].Value : null;
             return _reader;
         }
     }
