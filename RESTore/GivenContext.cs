@@ -427,13 +427,12 @@ namespace RESTore
         /// <returns>The WhenContext being used.</returns>
         public WhenContext When()
         {
-            Client = new HttpClient();
             return new WhenContext(this);
         }
 
         private HttpClientHandler AddProxyToClient()
         {
-            WebProxy webProxy = new WebProxy(Preferences.ProxyAddress, true)
+            WebProxy webProxy = new WebProxy(Preferences.ProxyAddress, false)
             {
                 UseDefaultCredentials = true
             };

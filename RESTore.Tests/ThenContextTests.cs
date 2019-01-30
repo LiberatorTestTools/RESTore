@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using RESTore.Enumerations;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -9,12 +10,12 @@ namespace RESTore.Tests
     public class ThenContextTests
     {
         private ThenContext thenContext;
-        
+
         public ThenContextTests()
         {
             Dictionary<string, string> header = new Dictionary<string, string>()
             {
-                {"Accept", "application/json" }
+                {HeaderType.Accept, "application/json" }
             };
 
             thenContext = new RESTore()
