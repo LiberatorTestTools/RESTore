@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace RESTore
 {
-    public class Class1
+    public class RESToreException : Exception
     {
+        public RESToreException(string message): base(message)
+        {
+
+        }
     }
 }

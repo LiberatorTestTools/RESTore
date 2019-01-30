@@ -1,4 +1,21 @@
-﻿using RESTore.Enumerations;
+﻿// This version, Copyright 2019 Liberator Test Tools
+// 
+// Based on original work of the RestAssured.NET project on GitHub
+// https://github.com/lamchakchan/RestAssured.Net
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"),
+// to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+// and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+// IN THE SOFTWARE.
+
+
+using RESTore.Enumerations;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -14,30 +31,48 @@ using System.Web;
 
 namespace RESTore
 {
+    /// <summary>
+    /// Represents the executing request
+    /// </summary>
     public class ExecutionContext
     {
+        /// <summary>
+        /// Represents the setup of the request.
+        /// </summary>
         private readonly GivenContext _givenContext;
+
+        /// <summary>
+        /// Represents the action to be executed.
+        /// </summary>
         private readonly WhenContext _whenContext;
+
+        /// <summary>
+        /// The HTTP Client to use for the request.
+        /// </summary>
         private readonly HttpClient _httpClient;
+
+        /// <summary>
+        /// The compiled responses from the load test.
+        /// </summary>
         private ConcurrentQueue<LoadResponse> _loadReponses = new ConcurrentQueue<LoadResponse>();
 
         /// <summary>
-        /// 
+        /// The constructor for the ThenContext
         /// </summary>
-        /// <param name="setupContext"></param>
-        /// <param name="whenContext"></param>
-        public ExecutionContext(GivenContext setupContext, WhenContext whenContext)
+        /// <param name="givenContext">The setup to use for the reques.</param>
+        /// <param name="whenContext">The action to use for the request.</param>
+        public ExecutionContext(GivenContext givenContext, WhenContext whenContext)
         {
-            _givenContext = setupContext;
+            _givenContext = givenContext;
             _whenContext = whenContext;
 
             _httpClient = _givenContext.Client;
         }
 
         /// <summary>
-        /// 
+        /// Initialises the sending of the request.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The built response from the server.</returns>
         public ThenContext Then()
         {
             if (_whenContext.IsLoadTest)
@@ -53,9 +88,9 @@ namespace RESTore
         #region HttpAction Strategy
 
         /// <summary>
-        /// 
+        /// Builds a request based on the verb used.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The HTTP Request object representing the request.</returns>
         private HttpRequestMessage BuildRequest()
         {
             switch (_whenContext.HttpVerbUsed)
@@ -76,9 +111,9 @@ namespace RESTore
         }
 
         /// <summary>
-        /// 
+        /// Builds a GET request.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The HTTP Request object representing the GET request.</returns>
         private HttpRequestMessage BuildGet()
         {
             var request = new HttpRequestMessage()
@@ -95,9 +130,9 @@ namespace RESTore
         }
 
         /// <summary>
-        /// 
+        /// Builds a POST request.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The HTTP Request object representing the POST request.</returns>
         private HttpRequestMessage BuildPost()
         {
             var request = new HttpRequestMessage()
@@ -116,9 +151,9 @@ namespace RESTore
         }
 
         /// <summary>
-        /// 
+        /// Builds a PUT request.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The HTTP Request object representing the PUT request.</returns>
         private HttpRequestMessage BuildPut()
         {
             var request = new HttpRequestMessage()
@@ -137,9 +172,9 @@ namespace RESTore
         }
 
         /// <summary>
-        /// 
+        /// Builds a PATCH request
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The HTTP Request object representing the PATCH request.</returns>
         private HttpRequestMessage BuildPatch()
         {
             var request = new HttpRequestMessage()
@@ -158,9 +193,9 @@ namespace RESTore
         }
 
         /// <summary>
-        /// 
+        /// Builds a DELETE request.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The HTTP Request object representing the DELETE request.</returns>
         private HttpRequestMessage BuildDelete()
         {
             var request = new HttpRequestMessage()
@@ -179,9 +214,9 @@ namespace RESTore
         }
 
         /// <summary>
-        /// 
+        /// Builds the URL for the request.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The URI used in the request.</returns>
         private Uri BuildUri()
         {
             var builder = new UriBuilder(_whenContext.TargetUrl);
@@ -197,14 +232,14 @@ namespace RESTore
         }
 
         /// <summary>
-        /// 
+        /// Adds the request headers to the default request headers collection
         /// </summary>
-        /// <param name="request"></param>
+        /// <param name="request">The request to be sent to the endpoint.</param>
         private void AppendHeaders(HttpRequestMessage request)
         {
-            if (_givenContext.RequestHeaders.IsPresentInDictionary("Accept"))
+            if (_givenContext.RequestHeaders.IsPresentInDictionary(HeaderType.Accept))
             {
-                _httpClient.DefaultRequestHeaders.Add("Accept", _givenContext.HeaderAccept());
+                _httpClient.DefaultRequestHeaders.Add(HeaderType.Accept, _givenContext.HeaderAccept());
             }
             if (_givenContext.RequestHeaders.IsPresentInDictionary("Accept Encoding"))
             {
@@ -229,16 +264,16 @@ namespace RESTore
         }
 
         /// <summary>
-        /// 
+        /// Appends cookies to the request.
         /// </summary>
-        /// <param name="request"></param>
+        /// <param name="request">The request to be sent to the endpoint.</param>
         private void AppendCookies(HttpRequestMessage request)
         {
             request.Headers.Add("Cookie", string.Join(";", _givenContext.SiteCookies.Select(x => x.Key + "=" + x.Value)));
         }
 
         /// <summary>
-        /// 
+        /// Sets the timeout for the HTTP requests.
         /// </summary>
         private void SetTimeout()
         {
@@ -253,9 +288,9 @@ namespace RESTore
         #region Content Buildup Strategy
 
         /// <summary>
-        /// 
+        /// Builds any file content required
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The content of the requestb to be sent.</returns>
         private HttpContent BuildContent()
         {
             if (_givenContext.Files.Any())
@@ -268,6 +303,10 @@ namespace RESTore
             return null;
         }
 
+        /// <summary>
+        /// Builds content from multipart files.
+        /// </summary>
+        /// <returns>The content of the requestb to be sent.</returns>
         private HttpContent BuildMultipartContent()
         {
             var content = new MultipartFormDataContent();
@@ -298,12 +337,20 @@ namespace RESTore
             return content;
         }
 
+        /// <summary>
+        /// Builds query parameters from the contents of a form.
+        /// </summary>
+        /// <returns>The content of the requestb to be sent.</returns>
         private HttpContent BuildFormContent()
         {
             return new FormUrlEncodedContent(
                 _givenContext.QueryParameters.Select(x => new KeyValuePair<string, string>(x.Key, x.Value)).ToList());
         }
 
+        /// <summary>
+        /// Adds request bodies and content types to a request.
+        /// </summary>
+        /// <returns>The content of the request to be sent.</returns>
         private HttpContent BuildStringContent()
         {
             return new StringContent(_givenContext.RequestBody, Encoding.UTF8,
@@ -311,9 +358,12 @@ namespace RESTore
         }
 
         #endregion
-        
+
         #region Load Test Code
 
+        /// <summary>
+        /// Starts the load test element of the request.
+        /// </summary>
         public void StartCallsForLoad()
         {
             ServicePointManager.DefaultConnectionLimit = _whenContext.Threads;
@@ -336,11 +386,14 @@ namespace RESTore
                 cancellationTokenSource.Cancel();
             }, null, TimeSpan.FromSeconds(_whenContext.Seconds), TimeSpan.FromMilliseconds(-1));
 
-            // swapping this out
-            // AsyncContext.Run(async () => await Task.WhenAll(taskThreads));
             Task.WhenAll(taskThreads).GetAwaiter().GetResult();
         }
 
+        /// <summary>
+        /// Creates a single thread for load testing
+        /// </summary>
+        /// <param name="cancellationToken">The type of token used to cancel the request.</param>
+        /// <returns>The underlying task object.</returns>
         public async Task SingleThread(CancellationToken cancellationToken)
         {
             do
@@ -349,6 +402,10 @@ namespace RESTore
             } while (!cancellationToken.IsCancellationRequested);
         }
 
+        /// <summary>
+        /// Maps the results of a load test call to a load response object.
+        /// </summary>
+        /// <returns>The underlying task object.</returns>
         public async Task MapCall()
         {
             var loadResponse = new LoadResponse()
@@ -360,33 +417,44 @@ namespace RESTore
             loadResponse.Ticks = result.TimeElapsed.Ticks;
         }
 
+        /// <summary>
+        /// Executes the call to the host.
+        /// </summary>
+        /// <returns>A task representing the executed call.</returns>
         private async Task<TimedResponse> ExecuteCall()
         {
             var watch = new Stopwatch();
             watch.Start();
             var response = await _httpClient.SendAsync(BuildRequest());
             watch.Stop();
-            return new TimedResponse {
+            return new TimedResponse
+            {
 
                 TimeElapsed = watch.Elapsed,
                 Response = response
             };
         }
 
+        /// <summary>
+        /// Populates the context with the values from the response.
+        /// </summary>
+        /// <param name="result">The result from host.</param>
+        /// <returns>The ThenConext object representing the result.</returns>
         private ThenContext BuildFromResponse(TimedResponse result)
         {
-            // var content = AsyncContext.Run(async () => await result.Response.Content.ReadAsStringAsync());
             var content = result.Response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
 
-            return new ThenContext()
+            ThenContext thenContext = new ThenContext()
             {
-                StatusCode = result.Response.StatusCode,
                 Content = content,
                 Headers = result.Response.Content.Headers.ToDictionary(x => x.Key.Trim(), x => x.Value),
+                IsSuccessStatus = result.Response.IsSuccessStatusCode,
+                StatusCode = result.Response.StatusCode,
                 ElapsedExecutionTime = result.TimeElapsed,
                 LoadResponses = _loadReponses.ToList()
-                };
-
+            };
+            thenContext.GetContent();
+            return thenContext;
         }
 
         #endregion

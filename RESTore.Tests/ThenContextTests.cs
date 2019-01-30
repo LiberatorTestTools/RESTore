@@ -24,7 +24,9 @@ namespace RESTore.Tests
                 .Host("http://www.totallyratted.com")
                 .When()
                 .Get()
-                .Then();
+                .Then()
+                .AssertSuccessStatus()
+                .ToConsole();
         }
 
         [Test]
