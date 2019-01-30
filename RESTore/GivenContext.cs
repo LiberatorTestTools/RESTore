@@ -433,9 +433,14 @@ namespace RESTore
 
         private HttpClientHandler AddProxyToClient()
         {
+            WebProxy webProxy = new WebProxy(Preferences.ProxyAddress, true)
+            {
+                UseDefaultCredentials = true
+            };
+
             return new HttpClientHandler()
             {
-                Proxy = new WebProxy(Preferences.ProxyAddress, false),
+                Proxy = webProxy,
                 UseProxy = true
             };
         }
