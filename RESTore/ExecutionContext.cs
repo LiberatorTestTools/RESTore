@@ -269,7 +269,8 @@ namespace RESTore
         /// <param name="request">The request to be sent to the endpoint.</param>
         private void AppendCookies(HttpRequestMessage request)
         {
-            request.Headers.Add("Cookie", string.Join(";", _givenContext.SiteCookies.Select(x => x.Key + "=" + x.Value)));
+            if (_givenContext.SiteCookies.Count != 0)
+                request.Headers.Add("Cookie", string.Join(";", _givenContext.SiteCookies.Select(x => x.Key + "=" + x.Value)));
         }
 
         /// <summary>
