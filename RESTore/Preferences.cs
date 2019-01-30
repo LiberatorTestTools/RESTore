@@ -39,6 +39,7 @@ namespace RESTore
         /// </summary>
         public static string UseProxy { get; set; }
 
+
         /// <summary>
         /// Internal static constructor
         /// </summary>
@@ -59,8 +60,8 @@ namespace RESTore
             _reader.GetAppSettings();
             _appSettings = _reader.AppSettings;
             _kvList = _appSettings.Settings;
-            UseProxy = _kvList["UseProxy"].Value;
-            ProxyAddress = _kvList["ProxyAddress"].Value;
+            UseProxy = !string.IsNullOrEmpty(_kvList["UseProxy"].Value) ? _kvList["UseProxy"].Value : null;
+            ProxyAddress = !string.IsNullOrEmpty(_kvList["ProxyAddress"].Value) ? _kvList["ProxyAddress"].Value : null;
             return _reader;
         }
     }
