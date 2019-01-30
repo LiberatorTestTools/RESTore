@@ -172,6 +172,26 @@ namespace RESTore
         }
 
 
+        public ThenContext RetrieveValue(Func<dynamic, object> func)
+        {
+            try
+            {
+                return func.Invoke(ParsedContent).Value;
+            }
+            catch
+            {
+                try
+                {
+                    return func.Invoke(ParsedContent);
+                }
+                catch
+                {
+                    Debug.WriteLine(string.Format("Unable to retrieve the value specified by {0}", func.ToString()));
+                }
+            }
+            return null;
+        }
+
         /// <summary>
         /// Outputs the list of Assertions and their results to the Debug console
         /// </summary>
@@ -203,7 +223,7 @@ namespace RESTore
             }
         }
 
-        
+
         /// <summary>
         /// Extracts content types and parses the content
         /// </summary>
@@ -268,7 +288,7 @@ namespace RESTore
                         throw new RESToreException("Cannot parse the HTML response.");
                     }
                     return;
-                } 
+                }
             }
 
             if (!string.IsNullOrEmpty(Content))
