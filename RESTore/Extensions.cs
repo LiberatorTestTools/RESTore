@@ -17,6 +17,7 @@
 
 using System;
 using System.Collections;
+using System.Configuration;
 
 namespace RESTore
 {
@@ -69,6 +70,18 @@ namespace RESTore
         internal static bool IsPresentInDictionary(this IEnumerable dictionary, object value)
         {
             object objectFound = ((IDictionary)dictionary)[value];
+            return objectFound != null ? true : false;
+        }
+
+        /// <summary>
+        /// Checks if a value is present in a KeyValueConfigurationCollection.
+        /// </summary>
+        /// <param name="configurationCollection">The collection of settings.</param>
+        /// <param name="value">the setting required.</param>
+        /// <returns>Whether the setting is in the collection passed.</returns>
+        internal static bool IsPresentInCollection(this KeyValueConfigurationCollection configurationCollection, string value)
+        {
+            object objectFound = configurationCollection[value].Value;
             return objectFound != null ? true : false;
         }
     }
