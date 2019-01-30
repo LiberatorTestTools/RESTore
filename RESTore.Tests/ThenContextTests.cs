@@ -25,7 +25,8 @@ namespace RESTore.Tests
                 .When()
                 .Get()
                 .Then()
-                .AssertSuccessStatus();
+                .AssertSuccessStatus()
+                .ToConsole();
         }
 
         [Test]

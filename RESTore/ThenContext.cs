@@ -19,6 +19,7 @@ using HtmlAgilityPack;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Xml.Linq;
@@ -172,6 +173,20 @@ namespace RESTore
 
 
         /// <summary>
+        /// Outputs the list of Assertions and their results to the Debug console
+        /// </summary>
+        /// <returns>The ThenContext representing the response message.</returns>
+        public ThenContext ToConsole()
+        {
+            foreach (KeyValuePair<string, bool> assertion in Assertions)
+            {
+                Debug.WriteLine(string.Format("Assertion: {0} | {1}", assertion.Key, assertion.Value.ToString().ToUpper()));
+            }
+            return this;
+        }
+
+
+        /// <summary>
         /// Checks whether a header contains a particular value.
         /// </summary>
         /// <param name="headerType">The type of header to test.</param>
@@ -244,7 +259,9 @@ namespace RESTore
                 {
                     try
                     {
-                        //TODO: parse html documents
+                        HtmlDocument document = new HtmlDocument();
+                        document.LoadHtml(Content);
+                        ParsedContent = document.DocumentNode;
                     }
                     catch
                     {
@@ -256,7 +273,6 @@ namespace RESTore
 
             if (!string.IsNullOrEmpty(Content))
                 throw new RESToreException(string.Format("The Content-Type {0} is not supported at present.", ContentType));
-
         }
     }
 }
