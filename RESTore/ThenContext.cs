@@ -168,7 +168,7 @@ namespace RESTore
             }
             else
             {
-                Assertions.Add("Non-success status found.", true);
+                Assertions.Add("Non-success status found.", false);
             }
             return this;
         }
