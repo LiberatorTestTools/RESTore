@@ -211,6 +211,11 @@ namespace Liberator.RESTore
         }
 
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="func"></param>
+        /// <returns></returns>
         public ThenContext RetrieveValue(Func<dynamic, object> func)
         {
             try
