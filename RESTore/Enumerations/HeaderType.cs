@@ -1,4 +1,4 @@
-﻿namespace RESTore.Enumerations
+﻿namespace Liberator.RESTore.Enumerations
 {
     /// <summary>
     /// Headers as listed at the Mozilla project MDN Web Docs

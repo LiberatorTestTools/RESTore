@@ -7,7 +7,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RESTore
+namespace Liberator.RESTore
 {
     /// <summary>
     /// Preferences loaded from the App.config file

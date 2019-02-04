@@ -1,10 +1,10 @@
 ﻿using NUnit.Framework;
-using RESTore.Enumerations;
+using Liberator.RESTore.Enumerations;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 
-namespace RESTore.Tests
+namespace Liberator.RESTore.Tests
 {
     [TestFixture]
     public class ThenContextTests
@@ -24,7 +24,7 @@ namespace RESTore.Tests
                 .Name("Test suite name")
                 .Host("http://www.totallyratted.com")
                 .When()
-                .Get()
+                .Get("/index.html")
                 .Then()
                 .AssertSuccessStatus()
                 .ToConsole();

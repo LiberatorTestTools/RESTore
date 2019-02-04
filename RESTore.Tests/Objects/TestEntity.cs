@@ -1,4 +1,4 @@
-﻿namespace RESTore.Tests.Objects
+﻿namespace Liberator.RESTore.Tests.Objects
 {
     public class TestEntity
     {

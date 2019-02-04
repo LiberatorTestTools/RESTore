@@ -16,14 +16,14 @@
 
 
 using Newtonsoft.Json;
-using RESTore.Enumerations;
+using Liberator.RESTore.Enumerations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 
-namespace RESTore
+namespace Liberator.RESTore
 {
     /// <summary>
     /// The setup for the request.

@@ -1,7 +1,7 @@
 ﻿using NUnit.Framework;
 using System;
 
-namespace RESTore.Tests
+namespace Liberator.RESTore.Tests
 {
     [TestFixture]
     public class WhenContextTests
