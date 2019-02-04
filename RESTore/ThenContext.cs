@@ -26,7 +26,7 @@ using System.Linq;
 using System.Net;
 using System.Xml.Linq;
 
-namespace RESTore
+namespace Liberator.RESTore
 {
     /// <summary>
     /// The response for the request.

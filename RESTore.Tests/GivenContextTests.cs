@@ -1,9 +1,9 @@
 ﻿using NUnit.Framework;
-using RESTore.Tests.Objects;
+using Liberator.RESTore.Tests.Objects;
 using System.Collections.Generic;
 using System.Net.Http;
 
-namespace RESTore.Tests
+namespace Liberator.RESTore.Tests
 {
     [TestFixture]
     public class GivenContextTests

@@ -15,7 +15,7 @@
 // IN THE SOFTWARE.
 
 
-using RESTore.Enumerations;
+using Liberator.RESTore.Enumerations;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -29,7 +29,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 
-namespace RESTore
+namespace Liberator.RESTore
 {
     /// <summary>
     /// Represents the executing request

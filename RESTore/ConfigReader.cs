@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RESTore
+namespace Liberator.RESTore
 {
     class ConfigReader
     {

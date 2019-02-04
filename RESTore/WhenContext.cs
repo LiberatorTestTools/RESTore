@@ -15,11 +15,11 @@
 // IN THE SOFTWARE.
 
 
-using RESTore.Enumerations;
+using Liberator.RESTore.Enumerations;
 using System;
 using System.Runtime.InteropServices;
 
-namespace RESTore
+namespace Liberator.RESTore
 {
     /// <summary>
     /// Represents the HTTP Action being undertaken.

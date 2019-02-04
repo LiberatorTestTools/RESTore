@@ -18,7 +18,7 @@
 using System;
 using System.Net.Http;
 
-namespace RESTore
+namespace Liberator.RESTore
 {
     /// <summary>
     /// Timer attached to an HTTP Response Message

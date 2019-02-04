@@ -15,7 +15,7 @@
 // IN THE SOFTWARE.
 
 
-namespace RESTore
+namespace Liberator.RESTore
 {
     /// <summary>
     /// The base class for all RESTore tests.

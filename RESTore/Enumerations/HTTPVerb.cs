@@ -1,4 +1,4 @@
-﻿namespace RESTore.Enumerations
+﻿namespace Liberator.RESTore.Enumerations
 {
     public enum HTTPVerb
     {

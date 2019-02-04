@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RESTore
+namespace Liberator.RESTore
 {
     public class RESToreException : Exception
     {

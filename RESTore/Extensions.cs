@@ -19,7 +19,7 @@ using System;
 using System.Collections;
 using System.Configuration;
 
-namespace RESTore
+namespace Liberator.RESTore
 {
     /// <summary>
     /// Extension methods

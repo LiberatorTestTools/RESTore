@@ -15,7 +15,7 @@
 // IN THE SOFTWARE.
 
 
-namespace RESTore
+namespace Liberator.RESTore
 {
     /// <summary>
     /// Used to contain results from a load test query instance.
