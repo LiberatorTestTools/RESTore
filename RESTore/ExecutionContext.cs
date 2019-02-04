@@ -49,7 +49,7 @@ namespace RESTore
         /// <summary>
         /// The HTTP Client to use for the request.
         /// </summary>
-        private readonly HttpClient _httpClient;
+        private HttpClient _httpClient;
 
         /// <summary>
         /// The compiled responses from the load test.
@@ -66,7 +66,7 @@ namespace RESTore
             _givenContext = givenContext;
             _whenContext = whenContext;
 
-            _httpClient = _givenContext.Client;
+            _httpClient = whenContext.GivenContext.Client;
         }
 
         /// <summary>
@@ -79,8 +79,7 @@ namespace RESTore
             {
                 StartCallsForLoad();
             }
-
-            // var response = AsyncContext.Run(async () => await ExecuteCall());
+            
             var response = ExecuteCall().GetAwaiter().GetResult();
             return BuildFromResponse(response);
         }
@@ -430,7 +429,6 @@ namespace RESTore
             watch.Stop();
             return new TimedResponse
             {
-
                 TimeElapsed = watch.Elapsed,
                 Response = response
             };

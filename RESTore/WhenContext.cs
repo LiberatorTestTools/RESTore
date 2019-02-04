@@ -141,11 +141,8 @@ namespace RESTore
                 throw new ArgumentException("URL must be provided");
             }
 
-            var uri = !string.IsNullOrEmpty(url)
-                ? new Uri(url.FixProtocol(GivenContext.SecureHttp))
-                : new Uri(new Uri(GivenContext.HostName.FixProtocol(GivenContext.SecureHttp)), GivenContext.TargetUri);
-
-            TargetUrl = uri.OriginalString;
+            TargetUrl = new Uri(new Uri(GivenContext.HostName), url).AbsoluteUri;
+            
             return TargetUrl;
         }
 

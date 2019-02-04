@@ -24,7 +24,7 @@ namespace RESTore.Tests
                 .Name("Test suite name")
                 .Host("http://www.totallyratted.com")
                 .When()
-                .Get()
+                .Get("/index.html")
                 .Then()
                 .AssertSuccessStatus()
                 .ToConsole();
