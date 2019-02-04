@@ -16,7 +16,9 @@
 
 
 using HtmlAgilityPack;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -166,9 +168,46 @@ namespace RESTore
             }
             else
             {
-                Assertions.Add("Non-success status found.", true);
+                Assertions.Add("Non-success status found.", false);
             }
             return this;
+        }
+
+        public ThenContext AssertBody(string testName, Func<string, bool> assert)
+        {
+            bool result;
+            try
+            {
+                result = assert(Content);
+            }
+            catch
+            {
+                result = false;
+            }
+
+            Assertions.Add(testName, result);
+            return this;
+        }
+
+        public ThenContext AssertBody<TContent>(string testName, Func<TContent, bool> assert)
+        {
+            bool result;
+            try
+            {
+                result = assert(JsonConvert.DeserializeObject<TContent>(Content));
+            }
+            catch
+            {
+                result = false;
+            }
+
+            Assertions.Add(testName, result);
+            return this;
+        }
+
+        public void AssertPass()
+        {
+            Assert.That(Assertions.All(x => x.Value != false), Is.True);
         }
 
 
@@ -205,7 +244,7 @@ namespace RESTore
         {
             foreach (KeyValuePair<string, bool> assertion in Assertions)
             {
-                Debug.WriteLine(string.Format("Assertion: {0} | {1}", assertion.Key, assertion.Value.ToString().ToUpper()));
+                Console.WriteLine(string.Format("Assertion: {0} | {1}", assertion.Key, assertion.Value.ToString().ToUpper()));
             }
             return this;
         }
