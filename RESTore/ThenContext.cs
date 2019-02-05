@@ -134,14 +134,7 @@ namespace Liberator.RESTore
         /// <returns>The ThenContext representing the response message.</returns>
         public ThenContext AssertStatus(HttpStatusCode httpStatusCode)
         {
-            if (StatusCode.Equals(httpStatusCode))
-            {
-                Assertions.Add(string.Format("Status {0} confirmed.", StatusCode), true);
-            }
-            else
-            {
-                Assertions.Add(string.Format("Status {0} not found. Actual status is {1}.", StatusCode, httpStatusCode), false);
-            }
+            Assertions.Add(String.Format("Status is {0}", httpStatusCode), StatusCode.Equals(httpStatusCode));
             return this;
         }
 
@@ -152,14 +145,7 @@ namespace Liberator.RESTore
         /// <returns></returns>
         public ThenContext AssertSuccessStatus()
         {
-            if (IsSuccessStatus)
-            {
-                Assertions.Add("Success status returned.", true);
-            }
-            else
-            {
-                Assertions.Add("Non-success status found.", false);
-            }
+            Assertions.Add("Status code is success", IsSuccessStatus);
             return this;
         }
 
@@ -197,7 +183,7 @@ namespace Liberator.RESTore
 
         public void AssertPass()
         {
-            Assert.That(Assertions.All(x => x.Value != false), Is.True);
+            Assert.That(Assertions.All(x => x.Value == true), Is.True);
         }
 
         /// <summary>
@@ -221,14 +207,8 @@ namespace Liberator.RESTore
         /// <param name="value">The value to assert.</param>
         private void CheckIfHeaderValueIsConfirmed(string headerType, string value)
         {
-            if (Headers.IsPresentInDictionary(headerType) && Headers[headerType].ToList().Contains(value))
-            {
-                Assertions.Add(string.Format("Header: {0} not found", headerType), false);
-            }
-            else
-            {
-                Assertions.Add(string.Format("Header: {0} | Value: {1}", headerType, value), true);
-            }
+            bool doesHeaderHaveValue = Headers.ContainsKey(headerType) && Headers[headerType].Contains(value);
+            Assertions.Add(String.Format("Header: {0} has Value: {1}", headerType, value), doesHeaderHaveValue);
         }
     }
 }
