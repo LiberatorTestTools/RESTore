@@ -44,11 +44,6 @@ namespace Liberator.RESTore
         public string Content { get; set; }
 
         /// <summary>
-        /// Thenparsed content of the response.
-        /// </summary>
-        public dynamic ParsedContent { get; set; }
-
-        /// <summary>
         /// The headers returned by the response
         /// </summary>
         public Dictionary<string, IEnumerable<string>> Headers { get; set; }
@@ -210,32 +205,6 @@ namespace Liberator.RESTore
             Assert.That(Assertions.All(x => x.Value != false), Is.True);
         }
 
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="func"></param>
-        /// <returns></returns>
-        public ThenContext RetrieveValue(Func<dynamic, object> func)
-        {
-            try
-            {
-                return func.Invoke(ParsedContent).Value;
-            }
-            catch
-            {
-                try
-                {
-                    return func.Invoke(ParsedContent);
-                }
-                catch
-                {
-                    Debug.WriteLine(string.Format("Unable to retrieve the value specified by {0}", func.ToString()));
-                }
-            }
-            return null;
-        }
-
         /// <summary>
         /// Outputs the list of Assertions and their results to the Debug console
         /// </summary>
@@ -274,69 +243,6 @@ namespace Liberator.RESTore
         public void GetContent()
         {
             ContentType = Headers["Content-Type"].First();
-            ParseResponseContent();
-        }
-
-
-        /// <summary>
-        /// Parses the JSON or XML content to an object
-        /// </summary>
-        private void ParseResponseContent()
-        {
-            if (!string.IsNullOrEmpty(Content))
-            {
-                if (ContentType.Contains("json"))
-                {
-                    try
-                    {
-                        ParsedContent = JObject.Parse(Content);
-                        return;
-                    }
-                    catch
-                    {
-                        try
-                        {
-                            ParsedContent = JArray.Parse(Content);
-                            return;
-                        }
-                        catch
-                        {
-                            throw new RESToreException("Cannot parse the JSON response to either an object or an array");
-                        }
-                    }
-
-                }
-                else if (ContentType.Contains("xml"))
-                {
-                    try
-                    {
-                        ParsedContent = XDocument.Parse(Content);
-                        return;
-                    }
-                    catch
-                    {
-                        throw new RESToreException("Cannot parse the XML response.");
-                    }
-
-                }
-                else if (ContentType.Contains("html"))
-                {
-                    try
-                    {
-                        HtmlDocument document = new HtmlDocument();
-                        document.LoadHtml(Content);
-                        ParsedContent = document.DocumentNode;
-                    }
-                    catch
-                    {
-                        throw new RESToreException("Cannot parse the HTML response.");
-                    }
-                    return;
-                }
-            }
-
-            if (!string.IsNullOrEmpty(Content))
-                throw new RESToreException(string.Format("The Content-Type {0} is not supported at present.", ContentType));
         }
     }
 }
