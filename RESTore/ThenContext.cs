@@ -84,11 +84,6 @@ namespace Liberator.RESTore
         /// </summary>
         public List<string> SchemaErrors { get; set; }
 
-        /// <summary>
-        /// The TYpe of Content being returned
-        /// </summary>
-        private string ContentType { get; set; }
-
 
         /// <summary>
         /// The Constructor for the context
@@ -234,15 +229,6 @@ namespace Liberator.RESTore
             {
                 Assertions.Add(string.Format("Header: {0} | Value: {1}", headerType, value), true);
             }
-        }
-
-
-        /// <summary>
-        /// Extracts content types and parses the content
-        /// </summary>
-        public void GetContent()
-        {
-            ContentType = Headers["Content-Type"].First();
         }
     }
 }
