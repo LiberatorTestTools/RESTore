@@ -168,9 +168,10 @@ namespace Liberator.RESTore
             return this;
         }
 
-        public void AssertPass()
+        public ThenContext AssertPass()
         {
             Assert.That(Assertions.All(x => x.Value == true), Is.True);
+            return this;
         }
 
         /// <summary>
