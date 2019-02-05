@@ -70,19 +70,9 @@ namespace Liberator.RESTore
         public List<LoadResponse> LoadResponses { get; set; }
 
         /// <summary>
-        /// If the returned schema is valid.
-        /// </summary>
-        public bool IsSchemaValid { get; set; }
-
-        /// <summary>
         /// Whether the response contains a success status
         /// </summary>
         public bool IsSuccessStatus { get; set; }
-
-        /// <summary>
-        /// The list of schema errors
-        /// </summary>
-        public List<string> SchemaErrors { get; set; }
 
 
         /// <summary>
@@ -93,8 +83,6 @@ namespace Liberator.RESTore
             Headers = new Dictionary<string, IEnumerable<string>>();
             LoadValues = new Dictionary<string, double>();
             Assertions = new Dictionary<string, bool>();
-            IsSchemaValid = true;
-            SchemaErrors = new List<string>();
         }
 
 
@@ -107,7 +95,6 @@ namespace Liberator.RESTore
         public ThenContext AssertHeader(string headerType, string value)
         {
             CheckIfHeaderValueIsConfirmed(headerType, value);
-
             return this;
         }
 
