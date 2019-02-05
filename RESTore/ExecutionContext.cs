@@ -452,7 +452,6 @@ namespace Liberator.RESTore
                 ElapsedExecutionTime = result.TimeElapsed,
                 LoadResponses = _loadReponses.ToList()
             };
-            thenContext.GetContent();
             return thenContext;
         }
 

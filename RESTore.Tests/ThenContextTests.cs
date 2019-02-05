@@ -59,12 +59,5 @@ namespace Liberator.RESTore.Tests
         {
             Assert.That(thenContext.Headers.ContainsKey("Last-Modified"), Is.True);
         }
-
-        [Test]
-        [Category("Then Context : Methods")]
-        public void GetApiCall_IsSchemeValid()
-        {
-            Assert.That(thenContext.IsSchemaValid, Is.True);
-        }
     }
 }

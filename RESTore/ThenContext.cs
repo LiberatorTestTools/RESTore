@@ -44,11 +44,6 @@ namespace Liberator.RESTore
         public string Content { get; set; }
 
         /// <summary>
-        /// Thenparsed content of the response.
-        /// </summary>
-        public dynamic ParsedContent { get; set; }
-
-        /// <summary>
         /// The headers returned by the response
         /// </summary>
         public Dictionary<string, IEnumerable<string>> Headers { get; set; }
@@ -75,24 +70,9 @@ namespace Liberator.RESTore
         public List<LoadResponse> LoadResponses { get; set; }
 
         /// <summary>
-        /// If the returned schema is valid.
-        /// </summary>
-        public bool IsSchemaValid { get; set; }
-
-        /// <summary>
         /// Whether the response contains a success status
         /// </summary>
         public bool IsSuccessStatus { get; set; }
-
-        /// <summary>
-        /// The list of schema errors
-        /// </summary>
-        public List<string> SchemaErrors { get; set; }
-
-        /// <summary>
-        /// The TYpe of Content being returned
-        /// </summary>
-        private string ContentType { get; set; }
 
 
         /// <summary>
@@ -103,8 +83,6 @@ namespace Liberator.RESTore
             Headers = new Dictionary<string, IEnumerable<string>>();
             LoadValues = new Dictionary<string, double>();
             Assertions = new Dictionary<string, bool>();
-            IsSchemaValid = true;
-            SchemaErrors = new List<string>();
         }
 
 
@@ -117,7 +95,6 @@ namespace Liberator.RESTore
         public ThenContext AssertHeader(string headerType, string value)
         {
             CheckIfHeaderValueIsConfirmed(headerType, value);
-
             return this;
         }
 
@@ -144,14 +121,7 @@ namespace Liberator.RESTore
         /// <returns>The ThenContext representing the response message.</returns>
         public ThenContext AssertStatus(HttpStatusCode httpStatusCode)
         {
-            if (StatusCode.Equals(httpStatusCode))
-            {
-                Assertions.Add(string.Format("Status {0} confirmed.", StatusCode), true);
-            }
-            else
-            {
-                Assertions.Add(string.Format("Status {0} not found. Actual status is {1}.", StatusCode, httpStatusCode), false);
-            }
+            Assertions.Add(String.Format("Status is {0}", httpStatusCode), StatusCode.Equals(httpStatusCode));
             return this;
         }
 
@@ -162,14 +132,7 @@ namespace Liberator.RESTore
         /// <returns></returns>
         public ThenContext AssertSuccessStatus()
         {
-            if (IsSuccessStatus)
-            {
-                Assertions.Add("Success status returned.", true);
-            }
-            else
-            {
-                Assertions.Add("Non-success status found.", false);
-            }
+            Assertions.Add("Status code is success", IsSuccessStatus);
             return this;
         }
 
@@ -205,35 +168,10 @@ namespace Liberator.RESTore
             return this;
         }
 
-        public void AssertPass()
+        public ThenContext AssertPass()
         {
-            Assert.That(Assertions.All(x => x.Value != false), Is.True);
-        }
-
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="func"></param>
-        /// <returns></returns>
-        public ThenContext RetrieveValue(Func<dynamic, object> func)
-        {
-            try
-            {
-                return func.Invoke(ParsedContent).Value;
-            }
-            catch
-            {
-                try
-                {
-                    return func.Invoke(ParsedContent);
-                }
-                catch
-                {
-                    Debug.WriteLine(string.Format("Unable to retrieve the value specified by {0}", func.ToString()));
-                }
-            }
-            return null;
+            Assert.That(Assertions.All(x => x.Value == true), Is.True);
+            return this;
         }
 
         /// <summary>
@@ -257,86 +195,8 @@ namespace Liberator.RESTore
         /// <param name="value">The value to assert.</param>
         private void CheckIfHeaderValueIsConfirmed(string headerType, string value)
         {
-            if (Headers.IsPresentInDictionary(headerType) && Headers[headerType].ToList().Contains(value))
-            {
-                Assertions.Add(string.Format("Header: {0} not found", headerType), false);
-            }
-            else
-            {
-                Assertions.Add(string.Format("Header: {0} | Value: {1}", headerType, value), true);
-            }
-        }
-
-
-        /// <summary>
-        /// Extracts content types and parses the content
-        /// </summary>
-        public void GetContent()
-        {
-            ContentType = Headers["Content-Type"].First();
-            ParseResponseContent();
-        }
-
-
-        /// <summary>
-        /// Parses the JSON or XML content to an object
-        /// </summary>
-        private void ParseResponseContent()
-        {
-            if (!string.IsNullOrEmpty(Content))
-            {
-                if (ContentType.Contains("json"))
-                {
-                    try
-                    {
-                        ParsedContent = JObject.Parse(Content);
-                        return;
-                    }
-                    catch
-                    {
-                        try
-                        {
-                            ParsedContent = JArray.Parse(Content);
-                            return;
-                        }
-                        catch
-                        {
-                            throw new RESToreException("Cannot parse the JSON response to either an object or an array");
-                        }
-                    }
-
-                }
-                else if (ContentType.Contains("xml"))
-                {
-                    try
-                    {
-                        ParsedContent = XDocument.Parse(Content);
-                        return;
-                    }
-                    catch
-                    {
-                        throw new RESToreException("Cannot parse the XML response.");
-                    }
-
-                }
-                else if (ContentType.Contains("html"))
-                {
-                    try
-                    {
-                        HtmlDocument document = new HtmlDocument();
-                        document.LoadHtml(Content);
-                        ParsedContent = document.DocumentNode;
-                    }
-                    catch
-                    {
-                        throw new RESToreException("Cannot parse the HTML response.");
-                    }
-                    return;
-                }
-            }
-
-            if (!string.IsNullOrEmpty(Content))
-                throw new RESToreException(string.Format("The Content-Type {0} is not supported at present.", ContentType));
+            bool doesHeaderHaveValue = Headers.ContainsKey(headerType) && Headers[headerType].Contains(value);
+            Assertions.Add(String.Format("Header: {0} has Value: {1}", headerType, value), doesHeaderHaveValue);
         }
     }
 }
