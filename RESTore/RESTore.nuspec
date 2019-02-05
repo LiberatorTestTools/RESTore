@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>$author$</authors>
+    <owners>$author$</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>$description$</description>
+    <releaseNotes>First release of the RESTore API testing package</releaseNotes>
+    <copyright>Copyright 2019</copyright>
+    <tags>REST API Testing</tags>
+    <dependencies>
+      <dependency id="HtmlAgilityPack" version="1.8.14"/>
+      <dependency id="Newtonsoft.Json" version="12.0.1"/>
+      <dependency id="NUnit" version="3.11.0"/>
+    </dependencies>
+    <frameworkAssemblies>
+      <frameworkAssembly assemblyName="System.Configuration" targetFramework="net472"/>
+      <frameworkAssembly assemblyName="System.Data" targetFramework="net472"/>
+      <frameworkAssembly assemblyName="System.Data.DataSetExtensions" targetFramework="net472"/>
+      <frameworkAssembly assemblyName="System.Net.Http" targetFramework="net472"/>
+      <frameworkAssembly assemblyName="System.Web" targetFramework="net472"/>
+      <frameworkAssembly assemblyName="System.Xml" targetFramework="net472"/>
+      <frameworkAssembly assemblyName="System.Xml.Linq" targetFramework="net472"/>
+    </frameworkAssemblies>
+  </metadata>
+  <files>
+    <file src="app.config" target="content" />
+  </files>
+</package>
