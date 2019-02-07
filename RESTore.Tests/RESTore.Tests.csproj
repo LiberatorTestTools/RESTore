@@ -33,6 +33,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="RESTore, Version=0.2.0.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\RESTore\bin\Debug\net472\RESTore.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -48,12 +52,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ThenContextTests.cs" />
     <Compile Include="WhenContextTests.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\RESTore\RESTore.csproj">
-      <Project>{209f9643-0214-402d-a5d5-21f3ceff1ac8}</Project>
-      <Name>RESTore</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="HtmlAgilityPack">
