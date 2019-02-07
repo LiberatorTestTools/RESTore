@@ -4,7 +4,7 @@
     <TargetFrameworks>net472;netstandard2.0</TargetFrameworks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>Liberator.RESTore</PackageId>
-    <Version>0.2.0</Version>
+    <Version>0.2.1</Version>
     <Authors>LiberatorTestTools</Authors>
     <Product>Liberator.RESTore</Product>
     <Copyright>2017-2019, Liberator Test Tools</Copyright>
