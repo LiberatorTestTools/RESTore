@@ -219,7 +219,7 @@ namespace Liberator.RESTore
         private Uri BuildUri()
         {
             var builder = new UriBuilder(_whenContext.TargetUrl);
-            var query = HttpUtility.ParseQueryString(builder.Query);
+            var query =   HttpUtility.ParseQueryString(builder.Query);
 
             foreach (var queryString in _givenContext.QueryStrings)
             {
