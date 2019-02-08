@@ -61,6 +61,11 @@ namespace Liberator.RESTore
         public string RequestBody { get; set; }
 
         /// <summary>
+        /// The address of the proxy being used
+        /// </summary>
+        public string ProxyAddress { get; set; }
+
+        /// <summary>
         /// The files applied to the request.
         /// </summary>
         public List<FileContent> Files { get; set; }
@@ -101,10 +106,7 @@ namespace Liberator.RESTore
         /// </summary>
         public GivenContext()
         {
-            Client = Preferences.UseProxy.Contains("TRUE")
-                ? new HttpClient(AddProxyToClient())
-                : new HttpClient();
-
+            Client = new HttpClient();
             Files = new List<FileContent>();
             SiteCookies = new Dictionary<string, string>();
             RequestHeaders = new Dictionary<string, string>();
@@ -124,6 +126,32 @@ namespace Liberator.RESTore
             SuiteName = name;
             return this;
         }
+
+        /// <summary>
+        /// Adds a proxy using the user's AD account to access sites through a secure proxy
+        /// </summary>
+        /// <param name="address">The address of the proxy.</param>
+        /// <returns>The GivenContext object with the suite name set.</returns>
+        public GivenContext Proxy(string address)
+        {
+            Client = new HttpClient(AddProxyToClient(address));
+            return this;
+        }
+
+        /// <summary>
+        /// Adds a proxy using a username and password to access sites through a secure proxy
+        /// </summary>
+        /// <param name="address">The address of the proxy.</param>
+        /// <param name="userName">The username for the proxy server</param>
+        /// <param name="password">The password for the proxy server</param>
+        /// <returns>The GivenContext object with the suite name set.</returns>
+        public GivenContext Proxy(string address, string userName, string password)
+        {
+            Client = new HttpClient(AddProxyToClient(address, userName, password));
+            return this;
+        }
+
+
 
         /// <summary>
         /// Allows a user to set the name of the host to use for the test suite.
@@ -430,9 +458,11 @@ namespace Liberator.RESTore
             return new WhenContext(this);
         }
 
-        private HttpClientHandler AddProxyToClient()
+        #region Private Methods
+
+        private HttpClientHandler AddProxyToClient(string proxyAddress)
         {
-            WebProxy webProxy = new WebProxy(Preferences.ProxyAddress, false)
+            WebProxy webProxy = new WebProxy(proxyAddress, false)
             {
                 UseDefaultCredentials = true
             };
@@ -444,5 +474,16 @@ namespace Liberator.RESTore
             };
         }
 
+        private HttpClientHandler AddProxyToClient(string proxyAddress, string userName, string password)
+        {
+
+            return new HttpClientHandler()
+            {
+                Proxy = new WebProxy(proxyAddress, true, null, new NetworkCredential(userName, password)),
+                UseProxy = true
+            };
+        } 
+
+        #endregion
     }
 }
