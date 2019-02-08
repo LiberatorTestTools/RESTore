@@ -13,7 +13,20 @@
     <FileVersion>0.2.0.1</FileVersion>
     <PackageReleaseNotes>Added multi-target .NET build</PackageReleaseNotes>
     <Description>A fluent BDD influenced library for testing API endpoints, influenced by the java project RestAssured.</Description>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageLicenseUrl>https://licenses.nuget.org/MIT</PackageLicenseUrl>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net472|AnyCPU'">
+    <DocumentationFile>.\RESTore.xml</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Remove="App.config" />
+    <None Remove="RESTore.nuspec" />
+    <None Remove="RESTore.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App.config" />
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="HtmlAgilityPack" Version="1.8.14" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />

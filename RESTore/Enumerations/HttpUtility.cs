@@ -6,6 +6,7 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 public sealed class HttpUtility // https://github.com/mono/mono/tree/master/mcs/class/System.Web
 {
 
@@ -1484,3 +1485,4 @@ class HttpEncoder
         string ToHtmlString();
     }
 }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member

@@ -6,6 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RESTore", "RESTore\RESTore.csproj", "{209F9643-0214-402D-A5D5-21F3CEFF1AC8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RESTore.Tests", "RESTore.Tests\RESTore.Tests.csproj", "{702945B8-49BE-4363-A05C-8EF4A85CBEC5}"
+	ProjectSection(ProjectDependencies) = postProject
+		{209F9643-0214-402D-A5D5-21F3CEFF1AC8} = {209F9643-0214-402D-A5D5-21F3CEFF1AC8}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
