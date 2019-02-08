@@ -136,6 +136,12 @@ namespace Liberator.RESTore
             return this;
         }
 
+        /// <summary>
+        /// Asserts whether the body meets the requirements of a lambda function
+        /// </summary>
+        /// <param name="testName">The name of the test</param>
+        /// <param name="assert">The assertion in the form of a lambda function</param>
+        /// <returns>The ThenContext representing the response message.</returns>
         public ThenContext AssertBody(string testName, Func<string, bool> assert)
         {
             bool result;
@@ -152,6 +158,13 @@ namespace Liberator.RESTore
             return this;
         }
 
+        /// <summary>
+        /// Asserts whether the body contains a particular type of object
+        /// </summary>
+        /// <typeparam name="TContent">The type of object to use to deserialise the body.</typeparam>
+        /// <param name="testName">The name of the test</param>
+        /// <param name="assert">A lambda function representing the test.</param>
+        /// <returns>The ThenContext representing the response message.</returns>
         public ThenContext AssertBody<TContent>(string testName, Func<TContent, bool> assert)
         {
             bool result;
@@ -168,6 +181,10 @@ namespace Liberator.RESTore
             return this;
         }
 
+        /// <summary>
+        /// Assesses whether the API test passes its validation
+        /// </summary>
+        /// <returns>The ThenContext representing the response message.</returns>
         public ThenContext AssertPass()
         {
             Assert.That(Assertions.All(x => x.Value == true), Is.True);
