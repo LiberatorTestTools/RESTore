@@ -694,12 +694,27 @@
             The Constructor for the context
             </summary>
         </member>
+        <member name="M:Liberator.RESTore.ThenContext.AssessHeader(System.String,System.String)">
+            <summary>
+            Assesses if a header has a specified value.
+            </summary>
+            <param name="headerType">The header type to look for.</param>
+            <param name="value">The value of the header to assert.</param>
+            <returns>The ThenContext representing the response message.</returns>
+        </member>
         <member name="M:Liberator.RESTore.ThenContext.AssertHeader(System.String,System.String)">
             <summary>
             Checks if a header has a specified value.
             </summary>
             <param name="headerType">The header type to look for.</param>
             <param name="value">The value of the header to assert.</param>
+            <returns>The ThenContext representing the response message.</returns>
+        </member>
+        <member name="M:Liberator.RESTore.ThenContext.AssessHeaders(System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            Assesses a series of headers and asserts specific values.
+            </summary>
+            <param name="headers">A collection of headers and their target values.</param>
             <returns>The ThenContext representing the response message.</returns>
         </member>
         <member name="M:Liberator.RESTore.ThenContext.AssertHeaders(System.Collections.Generic.Dictionary{System.String,System.String})">
@@ -709,6 +724,13 @@
             <param name="headers">A collection of headers and their target values.</param>
             <returns>The ThenContext representing the response message.</returns>
         </member>
+        <member name="M:Liberator.RESTore.ThenContext.AssessStatus(System.Net.HttpStatusCode)">
+            <summary>
+            Assesses if the Status Code in the response is as anticipated.
+            </summary>
+            <param name="httpStatusCode">The code anticipated by the test.</param>
+            <returns>The ThenContext representing the response message.</returns>
+        </member>
         <member name="M:Liberator.RESTore.ThenContext.AssertStatus(System.Net.HttpStatusCode)">
             <summary>
             Asserts if the Status Code in the response is as anticipated.
@@ -716,26 +738,59 @@
             <param name="httpStatusCode">The code anticipated by the test.</param>
             <returns>The ThenContext representing the response message.</returns>
         </member>
+        <member name="M:Liberator.RESTore.ThenContext.AssessSuccessStatus">
+            <summary>
+            Asserts whether the response contains a successful status
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:Liberator.RESTore.ThenContext.AssertSuccessStatus">
             <summary>
             Asserts whether the response contains a successful status
             </summary>
             <returns></returns>
         </member>
-        <member name="M:Liberator.RESTore.ThenContext.AssertBody(System.String,System.Func{System.String,System.Boolean})">
+        <member name="M:Liberator.RESTore.ThenContext.AssessFailureStatus">
             <summary>
-            Asserts whether the body meets the requirements of a lambda function
+            Assess whether the response contains a non-success status
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Liberator.RESTore.ThenContext.AssertFailureStatus">
+            <summary>
+            Asserts whether the response contains a non-success status
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Liberator.RESTore.ThenContext.AssessBody(System.String,System.Func{System.String,System.Boolean})">
+            <summary>
+            Assess whether the body meets the requirements of a lambda function
             </summary>
             <param name="testName">The name of the test</param>
             <param name="assert">The assertion in the form of a lambda function</param>
             <returns>The ThenContext representing the response message.</returns>
         </member>
-        <member name="M:Liberator.RESTore.ThenContext.AssertBody``1(System.String,System.Func{``0,System.Boolean})">
+        <member name="M:Liberator.RESTore.ThenContext.AssertBody(System.Func{System.String,System.Boolean})">
+            <summary>
+            Asserts whether the body meets the requirements of a lambda function
+            </summary>
+            <param name="assert">The assertion in the form of a lambda function</param>
+            <returns>The ThenContext representing the response message.</returns>
+        </member>
+        <member name="M:Liberator.RESTore.ThenContext.AssessBody``1(System.String,System.Func{``0,System.Boolean})">
+            <summary>
+            Assess whether the body contains a particular type of object
+            </summary>
+            <typeparam name="TContent">The type of object to use to deserialise the body.</typeparam>
+            <param name="testName">The name of the test</param>
+            <param name="assert">A lambda function representing the test.</param>
+            <returns>The ThenContext representing the response message.</returns>
+        </member>
+        <member name="M:Liberator.RESTore.ThenContext.AssertBody``1(System.Func{``0,System.Boolean})">
             <summary>
             Asserts whether the body contains a particular type of object
             </summary>
             <typeparam name="TContent">The type of object to use to deserialise the body.</typeparam>
-            <param name="testName">The name of the test</param>
             <param name="assert">A lambda function representing the test.</param>
             <returns>The ThenContext representing the response message.</returns>
         </member>

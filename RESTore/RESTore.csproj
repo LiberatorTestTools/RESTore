@@ -20,12 +20,8 @@
     <DocumentationFile>.\RESTore.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <None Remove="App.config" />
     <None Remove="RESTore.nuspec" />
     <None Remove="RESTore.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="App.config" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="HtmlAgilityPack" Version="1.8.14" />

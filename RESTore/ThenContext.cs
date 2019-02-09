@@ -15,16 +15,12 @@
 // IN THE SOFTWARE.
 
 
-using HtmlAgilityPack;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Net;
-using System.Xml.Linq;
 
 namespace Liberator.RESTore
 {
@@ -33,6 +29,8 @@ namespace Liberator.RESTore
     /// </summary>
     public class ThenContext
     {
+        #region Properties
+
         /// <summary>
         /// The returned status code.
         /// </summary>
@@ -72,8 +70,11 @@ namespace Liberator.RESTore
         /// <summary>
         /// Whether the response contains a success status
         /// </summary>
-        public bool IsSuccessStatus { get; set; }
+        public bool IsSuccessStatus { get; set; } 
 
+        #endregion
+
+        #region Constructors
 
         /// <summary>
         /// The Constructor for the context
@@ -83,6 +84,22 @@ namespace Liberator.RESTore
             Headers = new Dictionary<string, IEnumerable<string>>();
             LoadValues = new Dictionary<string, double>();
             Assertions = new Dictionary<string, bool>();
+        } 
+
+        #endregion
+
+        #region Assertions
+
+        /// <summary>
+        /// Assesses if a header has a specified value.
+        /// </summary>
+        /// <param name="headerType">The header type to look for.</param>
+        /// <param name="value">The value of the header to assert.</param>
+        /// <returns>The ThenContext representing the response message.</returns>
+        public ThenContext AssessHeader(string headerType, string value)
+        {
+            CheckIfHeaderValueIsConfirmed(headerType, value);
+            return this;
         }
 
 
@@ -94,7 +111,23 @@ namespace Liberator.RESTore
         /// <returns>The ThenContext representing the response message.</returns>
         public ThenContext AssertHeader(string headerType, string value)
         {
-            CheckIfHeaderValueIsConfirmed(headerType, value);
+            bool doesHeaderHaveValue = Headers.ContainsKey(headerType) && Headers[headerType].Contains(value);
+            Assert.That(doesHeaderHaveValue, Is.True);
+            return this;
+        }
+
+
+        /// <summary>
+        /// Assesses a series of headers and asserts specific values.
+        /// </summary>
+        /// <param name="headers">A collection of headers and their target values.</param>
+        /// <returns>The ThenContext representing the response message.</returns>
+        public ThenContext AssessHeaders(Dictionary<string, string> headers)
+        {
+            foreach (KeyValuePair<string, string> header in headers)
+            {
+                CheckIfHeaderValueIsConfirmed(header.Key, header.Value);
+            }
             return this;
         }
 
@@ -108,8 +141,21 @@ namespace Liberator.RESTore
         {
             foreach (KeyValuePair<string, string> header in headers)
             {
-                CheckIfHeaderValueIsConfirmed(header.Key, header.Value);
+                bool doesHeaderHaveValue = Headers.ContainsKey(header.Key) && Headers[header.Key].Contains(header.Value);
+                Assert.That(doesHeaderHaveValue, Is.True);
             }
+            return this;
+        }
+
+
+        /// <summary>
+        /// Assesses if the Status Code in the response is as anticipated.
+        /// </summary>
+        /// <param name="httpStatusCode">The code anticipated by the test.</param>
+        /// <returns>The ThenContext representing the response message.</returns>
+        public ThenContext AssessStatus(HttpStatusCode httpStatusCode)
+        {
+            Assertions.Add(String.Format("Status is {0}", httpStatusCode), StatusCode.Equals(httpStatusCode));
             return this;
         }
 
@@ -121,7 +167,18 @@ namespace Liberator.RESTore
         /// <returns>The ThenContext representing the response message.</returns>
         public ThenContext AssertStatus(HttpStatusCode httpStatusCode)
         {
-            Assertions.Add(String.Format("Status is {0}", httpStatusCode), StatusCode.Equals(httpStatusCode));
+            Assert.That(StatusCode.Equals(httpStatusCode), Is.True);
+            return this;
+        }
+
+
+        /// <summary>
+        /// Asserts whether the response contains a successful status
+        /// </summary>
+        /// <returns></returns>
+        public ThenContext AssessSuccessStatus()
+        {
+            Assertions.Add("Success status:", IsSuccessStatus);
             return this;
         }
 
@@ -132,17 +189,39 @@ namespace Liberator.RESTore
         /// <returns></returns>
         public ThenContext AssertSuccessStatus()
         {
-            Assertions.Add("Status code is success", IsSuccessStatus);
+            Assert.That(IsSuccessStatus, Is.True);
+            return this;
+        }
+
+
+        /// <summary>
+        /// Assess whether the response contains a non-success status
+        /// </summary>
+        /// <returns></returns>
+        public ThenContext AssessFailureStatus()
+        {
+            Assertions.Add("Failure status:", IsSuccessStatus);
+            return this;
+        }
+
+
+        /// <summary>
+        /// Asserts whether the response contains a non-success status
+        /// </summary>
+        /// <returns></returns>
+        public ThenContext AssertFailureStatus()
+        {
+            Assert.That(IsSuccessStatus, Is.False);
             return this;
         }
 
         /// <summary>
-        /// Asserts whether the body meets the requirements of a lambda function
+        /// Assess whether the body meets the requirements of a lambda function
         /// </summary>
         /// <param name="testName">The name of the test</param>
         /// <param name="assert">The assertion in the form of a lambda function</param>
         /// <returns>The ThenContext representing the response message.</returns>
-        public ThenContext AssertBody(string testName, Func<string, bool> assert)
+        public ThenContext AssessBody(string testName, Func<string, bool> assert)
         {
             bool result;
             try
@@ -159,13 +238,34 @@ namespace Liberator.RESTore
         }
 
         /// <summary>
-        /// Asserts whether the body contains a particular type of object
+        /// Asserts whether the body meets the requirements of a lambda function
+        /// </summary>
+        /// <param name="assert">The assertion in the form of a lambda function</param>
+        /// <returns>The ThenContext representing the response message.</returns>
+        public ThenContext AssertBody(Func<string, bool> assert)
+        {
+            bool result;
+            try
+            {
+                result = assert(Content);
+            }
+            catch
+            {
+                result = false;
+            }
+
+            Assert.That(result, Is.True);
+            return this;
+        }
+
+        /// <summary>
+        /// Assess whether the body contains a particular type of object
         /// </summary>
         /// <typeparam name="TContent">The type of object to use to deserialise the body.</typeparam>
         /// <param name="testName">The name of the test</param>
         /// <param name="assert">A lambda function representing the test.</param>
         /// <returns>The ThenContext representing the response message.</returns>
-        public ThenContext AssertBody<TContent>(string testName, Func<TContent, bool> assert)
+        public ThenContext AssessBody<TContent>(string testName, Func<TContent, bool> assert)
         {
             bool result;
             try
@@ -182,6 +282,28 @@ namespace Liberator.RESTore
         }
 
         /// <summary>
+        /// Asserts whether the body contains a particular type of object
+        /// </summary>
+        /// <typeparam name="TContent">The type of object to use to deserialise the body.</typeparam>
+        /// <param name="assert">A lambda function representing the test.</param>
+        /// <returns>The ThenContext representing the response message.</returns>
+        public ThenContext AssertBody<TContent>(Func<TContent, bool> assert)
+        {
+            bool result;
+            try
+            {
+                result = assert(JsonConvert.DeserializeObject<TContent>(Content));
+            }
+            catch
+            {
+                result = false;
+            }
+
+            Assert.That(result, Is.True);
+            return this;
+        }
+
+        /// <summary>
         /// Assesses whether the API test passes its validation
         /// </summary>
         /// <returns>The ThenContext representing the response message.</returns>
@@ -190,6 +312,10 @@ namespace Liberator.RESTore
             Assert.That(Assertions.All(x => x.Value == true), Is.True);
             return this;
         }
+
+        #endregion
+
+        #region Output
 
         /// <summary>
         /// Outputs the list of Assertions and their results to the Debug console
@@ -202,8 +328,11 @@ namespace Liberator.RESTore
                 Console.WriteLine(string.Format("Assertion: {0} | {1}", assertion.Key, assertion.Value.ToString().ToUpper()));
             }
             return this;
-        }
+        } 
 
+        #endregion
+
+        #region Private Methods
 
         /// <summary>
         /// Checks whether a header contains a particular value.
@@ -214,6 +343,8 @@ namespace Liberator.RESTore
         {
             bool doesHeaderHaveValue = Headers.ContainsKey(headerType) && Headers[headerType].Contains(value);
             Assertions.Add(String.Format("Header: {0} has Value: {1}", headerType, value), doesHeaderHaveValue);
-        }
+        } 
+
+        #endregion
     }
 }

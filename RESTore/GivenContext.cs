@@ -30,6 +30,8 @@ namespace Liberator.RESTore
     /// </summary>
     public class GivenContext
     {
+        #region Public Properties
+
         /// <summary>
         /// The name of the suite.
         /// </summary>
@@ -101,6 +103,10 @@ namespace Liberator.RESTore
         public Dictionary<string, string> QueryParameters { get; set; }
 
 
+        #endregion
+
+        #region Constructor
+    
         /// <summary>
         /// The GivenContext
         /// </summary>
@@ -115,6 +121,9 @@ namespace Liberator.RESTore
             RequestTimeout = new TimeSpan(0, 0, 0, 30, 0);
         }
 
+        #endregion
+
+        #region Given Methods
 
         /// <summary>
         /// Allows a user to set the name of the current test suite.
@@ -389,11 +398,15 @@ namespace Liberator.RESTore
             return this;
         }
 
+        #endregion
+
+        #region Headers
+
         /// <summary>
-		/// Return all headers.
-		/// </summary>
-		/// <returns>A collection of headers as a dictionary.</returns>
-		public Dictionary<string, string> Headers()
+        /// Return all headers.
+        /// </summary>
+        /// <returns>A collection of headers as a dictionary.</returns>
+        public Dictionary<string, string> Headers()
         {
             return RequestHeaders.Select(x => new KeyValuePair<string, string>(x.Key, x.Value)).ToDictionary(x => x.Key, x => x.Value);
         }
@@ -449,6 +462,10 @@ namespace Liberator.RESTore
                 ).ToDictionary(x => x.Key, x => x.Value);
         }
 
+        #endregion
+
+        #region When Context Initialiser
+
         /// <summary>
         /// Used to initialise the WhenCOntext
         /// </summary>
@@ -456,7 +473,9 @@ namespace Liberator.RESTore
         public WhenContext When()
         {
             return new WhenContext(this);
-        }
+        } 
+
+        #endregion
 
         #region Private Methods
 
