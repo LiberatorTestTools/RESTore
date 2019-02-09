@@ -166,27 +166,12 @@
             Extension methods
             </summary>
         </member>
-        <member name="M:Liberator.RESTore.Extensions.FixProtocol(System.String,System.Boolean)">
-            <summary>
-            Fixes the protocol if the request is to a secure endpoint
-            </summary>
-            <param name="source">The source URL.</param>
-            <param name="useHttps">Whether to use HTTPS</param>
-            <returns>The fixed protocol</returns>
-        </member>
         <member name="M:Liberator.RESTore.Extensions.Quote(System.String)">
             <summary>
             Allows a string value to be quoted.
             </summary>
             <param name="source"></param>
             <returns></returns>
-        </member>
-        <member name="M:Liberator.RESTore.Extensions.SchemeAndHost(System.Uri)">
-            <summary>
-            Returns a URI as a string.
-            </summary>
-            <param name="source">The source Uri</param>
-            <returns>The URL as a string</returns>
         </member>
         <member name="M:Liberator.RESTore.Extensions.IsPresentInDictionary(System.Collections.IEnumerable,System.Object)">
             <summary>

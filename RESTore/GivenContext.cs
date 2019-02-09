@@ -388,16 +388,6 @@ namespace Liberator.RESTore
             return this;
         }
 
-        /// <summary>
-        /// Specifies that the request uses a secure connection.
-        /// </summary>
-        /// <returns>The GivenContext representing the setup of the request.</returns>
-        public GivenContext UseHttps()
-        {
-            SecureHttp = true;
-            return this;
-        }
-
         #endregion
 
         #region Headers
