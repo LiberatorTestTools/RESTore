@@ -4,65 +4,6 @@
         <name>RESTore</name>
     </assembly>
     <members>
-        <member name="P:Liberator.RESTore.ConfigReader.FilePath">
-            <summary>
-            The file path of the configuration file
-            </summary>
-        </member>
-        <member name="P:Liberator.RESTore.ConfigReader.FileMap">
-            <summary>
-            Represents a file mapping for the configuration file
-            </summary>
-        </member>
-        <member name="P:Liberator.RESTore.ConfigReader.Config">
-            <summary>
-            Represents the configuration file being interpreted
-            </summary>
-        </member>
-        <member name="P:Liberator.RESTore.ConfigReader.AppSettings">
-            <summary>
-            Contains the AppSettings element of the configuration file
-            </summary>
-        </member>
-        <member name="M:Liberator.RESTore.ConfigReader.#ctor">
-            <summary>
-            Base constructor for the config reader
-            </summary>
-        </member>
-        <member name="M:Liberator.RESTore.ConfigReader.#ctor(System.String)">
-            <summary>
-            Constructor for the config reader
-            </summary>
-            <param name="filePath">Path of the config file</param>
-        </member>
-        <member name="M:Liberator.RESTore.ConfigReader.Dispose">
-            <summary>
-            Disposes of the instance
-            </summary>
-        </member>
-        <member name="M:Liberator.RESTore.ConfigReader.Dispose(System.Boolean)">
-            <summary>
-            Disposes of the instance
-            </summary>
-            <param name="disposing">Whether the object is disposing</param>
-        </member>
-        <member name="M:Liberator.RESTore.ConfigReader.GetSetting(System.String)">
-            <summary>
-            Get a setting from the configuration file
-            </summary>
-            <param name="setting">The name of the setting</param>
-            <returns>The setting from the configuration file</returns>
-        </member>
-        <member name="M:Liberator.RESTore.ConfigReader.GetAppSettings">
-            <summary>
-            Gets the file map and maps the config file and extracts the app settings section
-            </summary>
-        </member>
-        <member name="M:Liberator.RESTore.ConfigReader.GetConfiguration">
-            <summary>
-            Gets the file map and maps the config file
-            </summary>
-        </member>
         <member name="T:Liberator.RESTore.Enumerations.HeaderType">
             <summary>
             Headers as listed at the Mozilla project MDN Web Docs
@@ -580,47 +521,6 @@
             The status code returned..
             </summary>
         </member>
-        <member name="T:Liberator.RESTore.Preferences">
-            <summary>
-            Preferences loaded from the App.config file
-            </summary>
-        </member>
-        <member name="F:Liberator.RESTore.Preferences._kvList">
-            <summary>
-            List of settings from the App.config as a KeyValue collection
-            </summary>
-        </member>
-        <member name="F:Liberator.RESTore.Preferences._reader">
-            <summary>
-            The reader for the config file
-            </summary>
-        </member>
-        <member name="F:Liberator.RESTore.Preferences._appSettings">
-            <summary>
-            The app settings section of the App.config file
-            </summary>
-        </member>
-        <member name="P:Liberator.RESTore.Preferences.ProxyAddress">
-            <summary>
-            The adress of the proxy server
-            </summary>
-        </member>
-        <member name="P:Liberator.RESTore.Preferences.UseProxy">
-            <summary>
-            Whether to use a proxy server
-            </summary>
-        </member>
-        <member name="M:Liberator.RESTore.Preferences.#cctor">
-            <summary>
-            Internal static constructor
-            </summary>
-        </member>
-        <member name="M:Liberator.RESTore.Preferences.GetDriverReader">
-            <summary>
-            Loads the App.config file and populates the Preferences
-            </summary>
-            <returns>A config reader</returns>
-        </member>
         <member name="T:Liberator.RESTore.RESTore">
             <summary>
             The base class for all RESTore tests.
@@ -865,13 +765,13 @@
         </member>
         <member name="M:Liberator.RESTore.WhenContext.#ctor(Liberator.RESTore.GivenContext)">
             <summary>
-            Constructor for the WehnContext class.
+            Constructor for the WhenContext class.
             </summary>
             <param name="givenContext">The GivenContext object required.</param>
         </member>
         <member name="M:Liberator.RESTore.WhenContext.LoadTest(System.Int32,System.Int32)">
             <summary>
-            Allows a user to define the basic parameters of a load test.
+            Allows a user to define the basic parameters of a primitive load test.
             </summary>
             <param name="seconds">Number of seconds to run the load test for.</param>
             <param name="threads">The number of threads to allow during the test.</param>
