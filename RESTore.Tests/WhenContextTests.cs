@@ -1,5 +1,4 @@
 ﻿using NUnit.Framework;
-using System;
 
 namespace Liberator.RESTore.Tests
 {
@@ -46,7 +45,7 @@ namespace Liberator.RESTore.Tests
 
         [Test]
         [Category("When Context : Executions")]
-        public void GetRequestConectType()
+        public void GetRequestContextType()
         {
             ExecutionContext context = new RESTore()
                 .Given()
@@ -60,7 +59,7 @@ namespace Liberator.RESTore.Tests
 
         [Test]
         [Category("When Context : Executions")]
-        public void GetRequestConectTypeException()
+        public void GetHostException()
         {
             Assert.That(() =>
            {
