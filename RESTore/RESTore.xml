@@ -443,12 +443,6 @@
             <param name="client"></param>
             <returns>The GivenContext representing the setup of the request.</returns>
         </member>
-        <member name="M:Liberator.RESTore.GivenContext.UseHttps">
-            <summary>
-            Specifies that the request uses a secure connection.
-            </summary>
-            <returns>The GivenContext representing the setup of the request.</returns>
-        </member>
         <member name="M:Liberator.RESTore.GivenContext.Headers">
             <summary>
             Return all headers.
