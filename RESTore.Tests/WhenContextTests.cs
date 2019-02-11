@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using Liberator.RESTore;
 
 namespace Liberator.RESTore.Tests
 {

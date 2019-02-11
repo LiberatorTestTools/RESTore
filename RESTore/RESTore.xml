@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <doc>
     <assembly>
-        <name>RESTore</name>
+        <name>Liberator.RESTore</name>
     </assembly>
     <members>
         <member name="T:Liberator.RESTore.Enumerations.HeaderType">
