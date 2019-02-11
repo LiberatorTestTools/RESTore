@@ -26,6 +26,8 @@ namespace Liberator.RESTore
     /// </summary>
     public class WhenContext
     {
+        #region Public Properties
+
         /// <summary>
         /// Whether the test us a load test.
         /// </summary>
@@ -56,8 +58,12 @@ namespace Liberator.RESTore
         /// </summary>
         public int Seconds { get; set; }
 
+        #endregion
+
+        #region Constructor
+
         /// <summary>
-        /// Constructor for the WehnContext class.
+        /// Constructor for the WhenContext class.
         /// </summary>
         /// <param name="givenContext">The GivenContext object required.</param>
         public WhenContext(GivenContext givenContext)
@@ -65,8 +71,12 @@ namespace Liberator.RESTore
             GivenContext = givenContext;
         }
 
+        #endregion
+
+        #region Primitive Load Testing
+
         /// <summary>
-        /// Allows a user to define the basic parameters of a load test.
+        /// Allows a user to define the basic parameters of a primitive load test.
         /// </summary>
         /// <param name="seconds">Number of seconds to run the load test for.</param>
         /// <param name="threads">The number of threads to allow during the test.</param>
@@ -78,6 +88,10 @@ namespace Liberator.RESTore
             Seconds = seconds < 0 ? 60 : seconds;
             return this;
         }
+
+        #endregion
+
+        #region Execution Context for Actions
 
         /// <summary>
         /// Allows the user to set and execute a GET request.
@@ -129,6 +143,10 @@ namespace Liberator.RESTore
             return SetHttpAction(url, HTTPVerb.DELETE);
         }
 
+        #endregion
+
+        #region Private Methods
+
         /// <summary>
         /// Sets the target URL.
         /// </summary>
@@ -142,7 +160,7 @@ namespace Liberator.RESTore
             }
 
             TargetUrl = new Uri(new Uri(GivenContext.HostName), url).AbsoluteUri;
-            
+
             return TargetUrl;
         }
 
@@ -158,5 +176,7 @@ namespace Liberator.RESTore
             HttpVerbUsed = httpVerb;
             return new ExecutionContext(GivenContext, this);
         }
+
+        #endregion
     }
 }

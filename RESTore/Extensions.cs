@@ -15,7 +15,6 @@
 // IN THE SOFTWARE.
 
 
-using System;
 using System.Collections;
 using System.Configuration;
 
@@ -26,20 +25,6 @@ namespace Liberator.RESTore
     /// </summary>
     internal static class Extensions
     {
-        /// <summary>
-        /// Fixes the protocol if the request is to a secure endpoint
-        /// </summary>
-        /// <param name="source">The source URL.</param>
-        /// <param name="useHttps">Whether to use HTTPS</param>
-        /// <returns>The fixed protocol</returns>
-        internal static string FixProtocol(this string source, bool useHttps)
-        {
-            var defaultPortocol = useHttps ? "https" : "http";
-            if (!source.StartsWith("http://") && !source.StartsWith("https://"))
-                return $"{defaultPortocol}://" + source;
-
-            return source;
-        }
 
         /// <summary>
         /// Allows a string value to be quoted.
@@ -49,16 +34,6 @@ namespace Liberator.RESTore
         internal static string Quote(this string source)
         {
             return "\"" + source + "\"";
-        }
-
-        /// <summary>
-        /// Returns a URI as a string.
-        /// </summary>
-        /// <param name="source">The source Uri</param>
-        /// <returns>The URL as a string</returns>
-        internal static string SchemeAndHost(this Uri source)
-        {
-            return source.Scheme + "://" + source.Host;
         }
 
         /// <summary>

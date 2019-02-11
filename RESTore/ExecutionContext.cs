@@ -27,7 +27,6 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace Liberator.RESTore
 {
@@ -36,6 +35,8 @@ namespace Liberator.RESTore
     /// </summary>
     public class ExecutionContext
     {
+        #region Private Properties
+
         /// <summary>
         /// Represents the setup of the request.
         /// </summary>
@@ -56,6 +57,10 @@ namespace Liberator.RESTore
         /// </summary>
         private ConcurrentQueue<LoadResponse> _loadReponses = new ConcurrentQueue<LoadResponse>();
 
+        #endregion
+
+        #region Constructor
+
         /// <summary>
         /// The constructor for the ThenContext
         /// </summary>
@@ -69,6 +74,10 @@ namespace Liberator.RESTore
             _httpClient = whenContext.GivenContext.Client;
         }
 
+        #endregion
+
+        #region ThenContext Initialiser
+
         /// <summary>
         /// Initialises the sending of the request.
         /// </summary>
@@ -79,10 +88,12 @@ namespace Liberator.RESTore
             {
                 StartCallsForLoad();
             }
-            
+
             var response = ExecuteCall().GetAwaiter().GetResult();
             return BuildFromResponse(response);
         }
+
+        #endregion
 
         #region HttpAction Strategy
 

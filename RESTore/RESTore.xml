@@ -4,65 +4,6 @@
         <name>RESTore</name>
     </assembly>
     <members>
-        <member name="P:Liberator.RESTore.ConfigReader.FilePath">
-            <summary>
-            The file path of the configuration file
-            </summary>
-        </member>
-        <member name="P:Liberator.RESTore.ConfigReader.FileMap">
-            <summary>
-            Represents a file mapping for the configuration file
-            </summary>
-        </member>
-        <member name="P:Liberator.RESTore.ConfigReader.Config">
-            <summary>
-            Represents the configuration file being interpreted
-            </summary>
-        </member>
-        <member name="P:Liberator.RESTore.ConfigReader.AppSettings">
-            <summary>
-            Contains the AppSettings element of the configuration file
-            </summary>
-        </member>
-        <member name="M:Liberator.RESTore.ConfigReader.#ctor">
-            <summary>
-            Base constructor for the config reader
-            </summary>
-        </member>
-        <member name="M:Liberator.RESTore.ConfigReader.#ctor(System.String)">
-            <summary>
-            Constructor for the config reader
-            </summary>
-            <param name="filePath">Path of the config file</param>
-        </member>
-        <member name="M:Liberator.RESTore.ConfigReader.Dispose">
-            <summary>
-            Disposes of the instance
-            </summary>
-        </member>
-        <member name="M:Liberator.RESTore.ConfigReader.Dispose(System.Boolean)">
-            <summary>
-            Disposes of the instance
-            </summary>
-            <param name="disposing">Whether the object is disposing</param>
-        </member>
-        <member name="M:Liberator.RESTore.ConfigReader.GetSetting(System.String)">
-            <summary>
-            Get a setting from the configuration file
-            </summary>
-            <param name="setting">The name of the setting</param>
-            <returns>The setting from the configuration file</returns>
-        </member>
-        <member name="M:Liberator.RESTore.ConfigReader.GetAppSettings">
-            <summary>
-            Gets the file map and maps the config file and extracts the app settings section
-            </summary>
-        </member>
-        <member name="M:Liberator.RESTore.ConfigReader.GetConfiguration">
-            <summary>
-            Gets the file map and maps the config file
-            </summary>
-        </member>
         <member name="T:Liberator.RESTore.Enumerations.HeaderType">
             <summary>
             Headers as listed at the Mozilla project MDN Web Docs
@@ -225,27 +166,12 @@
             Extension methods
             </summary>
         </member>
-        <member name="M:Liberator.RESTore.Extensions.FixProtocol(System.String,System.Boolean)">
-            <summary>
-            Fixes the protocol if the request is to a secure endpoint
-            </summary>
-            <param name="source">The source URL.</param>
-            <param name="useHttps">Whether to use HTTPS</param>
-            <returns>The fixed protocol</returns>
-        </member>
         <member name="M:Liberator.RESTore.Extensions.Quote(System.String)">
             <summary>
             Allows a string value to be quoted.
             </summary>
             <param name="source"></param>
             <returns></returns>
-        </member>
-        <member name="M:Liberator.RESTore.Extensions.SchemeAndHost(System.Uri)">
-            <summary>
-            Returns a URI as a string.
-            </summary>
-            <param name="source">The source Uri</param>
-            <returns>The URL as a string</returns>
         </member>
         <member name="M:Liberator.RESTore.Extensions.IsPresentInDictionary(System.Collections.IEnumerable,System.Object)">
             <summary>
@@ -517,12 +443,6 @@
             <param name="client"></param>
             <returns>The GivenContext representing the setup of the request.</returns>
         </member>
-        <member name="M:Liberator.RESTore.GivenContext.UseHttps">
-            <summary>
-            Specifies that the request uses a secure connection.
-            </summary>
-            <returns>The GivenContext representing the setup of the request.</returns>
-        </member>
         <member name="M:Liberator.RESTore.GivenContext.Headers">
             <summary>
             Return all headers.
@@ -579,47 +499,6 @@
             <summary>
             The status code returned..
             </summary>
-        </member>
-        <member name="T:Liberator.RESTore.Preferences">
-            <summary>
-            Preferences loaded from the App.config file
-            </summary>
-        </member>
-        <member name="F:Liberator.RESTore.Preferences._kvList">
-            <summary>
-            List of settings from the App.config as a KeyValue collection
-            </summary>
-        </member>
-        <member name="F:Liberator.RESTore.Preferences._reader">
-            <summary>
-            The reader for the config file
-            </summary>
-        </member>
-        <member name="F:Liberator.RESTore.Preferences._appSettings">
-            <summary>
-            The app settings section of the App.config file
-            </summary>
-        </member>
-        <member name="P:Liberator.RESTore.Preferences.ProxyAddress">
-            <summary>
-            The adress of the proxy server
-            </summary>
-        </member>
-        <member name="P:Liberator.RESTore.Preferences.UseProxy">
-            <summary>
-            Whether to use a proxy server
-            </summary>
-        </member>
-        <member name="M:Liberator.RESTore.Preferences.#cctor">
-            <summary>
-            Internal static constructor
-            </summary>
-        </member>
-        <member name="M:Liberator.RESTore.Preferences.GetDriverReader">
-            <summary>
-            Loads the App.config file and populates the Preferences
-            </summary>
-            <returns>A config reader</returns>
         </member>
         <member name="T:Liberator.RESTore.RESTore">
             <summary>
@@ -694,12 +573,27 @@
             The Constructor for the context
             </summary>
         </member>
+        <member name="M:Liberator.RESTore.ThenContext.AssessHeader(System.String,System.String)">
+            <summary>
+            Assesses if a header has a specified value.
+            </summary>
+            <param name="headerType">The header type to look for.</param>
+            <param name="value">The value of the header to assert.</param>
+            <returns>The ThenContext representing the response message.</returns>
+        </member>
         <member name="M:Liberator.RESTore.ThenContext.AssertHeader(System.String,System.String)">
             <summary>
             Checks if a header has a specified value.
             </summary>
             <param name="headerType">The header type to look for.</param>
             <param name="value">The value of the header to assert.</param>
+            <returns>The ThenContext representing the response message.</returns>
+        </member>
+        <member name="M:Liberator.RESTore.ThenContext.AssessHeaders(System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            Assesses a series of headers and asserts specific values.
+            </summary>
+            <param name="headers">A collection of headers and their target values.</param>
             <returns>The ThenContext representing the response message.</returns>
         </member>
         <member name="M:Liberator.RESTore.ThenContext.AssertHeaders(System.Collections.Generic.Dictionary{System.String,System.String})">
@@ -709,6 +603,13 @@
             <param name="headers">A collection of headers and their target values.</param>
             <returns>The ThenContext representing the response message.</returns>
         </member>
+        <member name="M:Liberator.RESTore.ThenContext.AssessStatus(System.Net.HttpStatusCode)">
+            <summary>
+            Assesses if the Status Code in the response is as anticipated.
+            </summary>
+            <param name="httpStatusCode">The code anticipated by the test.</param>
+            <returns>The ThenContext representing the response message.</returns>
+        </member>
         <member name="M:Liberator.RESTore.ThenContext.AssertStatus(System.Net.HttpStatusCode)">
             <summary>
             Asserts if the Status Code in the response is as anticipated.
@@ -716,26 +617,59 @@
             <param name="httpStatusCode">The code anticipated by the test.</param>
             <returns>The ThenContext representing the response message.</returns>
         </member>
+        <member name="M:Liberator.RESTore.ThenContext.AssessSuccessStatus">
+            <summary>
+            Asserts whether the response contains a successful status
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:Liberator.RESTore.ThenContext.AssertSuccessStatus">
             <summary>
             Asserts whether the response contains a successful status
             </summary>
             <returns></returns>
         </member>
-        <member name="M:Liberator.RESTore.ThenContext.AssertBody(System.String,System.Func{System.String,System.Boolean})">
+        <member name="M:Liberator.RESTore.ThenContext.AssessFailureStatus">
             <summary>
-            Asserts whether the body meets the requirements of a lambda function
+            Assess whether the response contains a non-success status
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Liberator.RESTore.ThenContext.AssertFailureStatus">
+            <summary>
+            Asserts whether the response contains a non-success status
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Liberator.RESTore.ThenContext.AssessBody(System.String,System.Func{System.String,System.Boolean})">
+            <summary>
+            Assess whether the body meets the requirements of a lambda function
             </summary>
             <param name="testName">The name of the test</param>
             <param name="assert">The assertion in the form of a lambda function</param>
             <returns>The ThenContext representing the response message.</returns>
         </member>
-        <member name="M:Liberator.RESTore.ThenContext.AssertBody``1(System.String,System.Func{``0,System.Boolean})">
+        <member name="M:Liberator.RESTore.ThenContext.AssertBody(System.Func{System.String,System.Boolean})">
+            <summary>
+            Asserts whether the body meets the requirements of a lambda function
+            </summary>
+            <param name="assert">The assertion in the form of a lambda function</param>
+            <returns>The ThenContext representing the response message.</returns>
+        </member>
+        <member name="M:Liberator.RESTore.ThenContext.AssessBody``1(System.String,System.Func{``0,System.Boolean})">
+            <summary>
+            Assess whether the body contains a particular type of object
+            </summary>
+            <typeparam name="TContent">The type of object to use to deserialise the body.</typeparam>
+            <param name="testName">The name of the test</param>
+            <param name="assert">A lambda function representing the test.</param>
+            <returns>The ThenContext representing the response message.</returns>
+        </member>
+        <member name="M:Liberator.RESTore.ThenContext.AssertBody``1(System.Func{``0,System.Boolean})">
             <summary>
             Asserts whether the body contains a particular type of object
             </summary>
             <typeparam name="TContent">The type of object to use to deserialise the body.</typeparam>
-            <param name="testName">The name of the test</param>
             <param name="assert">A lambda function representing the test.</param>
             <returns>The ThenContext representing the response message.</returns>
         </member>
@@ -810,13 +744,13 @@
         </member>
         <member name="M:Liberator.RESTore.WhenContext.#ctor(Liberator.RESTore.GivenContext)">
             <summary>
-            Constructor for the WehnContext class.
+            Constructor for the WhenContext class.
             </summary>
             <param name="givenContext">The GivenContext object required.</param>
         </member>
         <member name="M:Liberator.RESTore.WhenContext.LoadTest(System.Int32,System.Int32)">
             <summary>
-            Allows a user to define the basic parameters of a load test.
+            Allows a user to define the basic parameters of a primitive load test.
             </summary>
             <param name="seconds">Number of seconds to run the load test for.</param>
             <param name="threads">The number of threads to allow during the test.</param>
