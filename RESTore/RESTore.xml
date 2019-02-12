@@ -742,6 +742,11 @@
             The number of seconds to run a load test.
             </summary>
         </member>
+        <member name="P:Liberator.RESTore.WhenContext.PathParams">
+            <summary>
+            The path parameters and their values.
+            </summary>
+        </member>
         <member name="M:Liberator.RESTore.WhenContext.#ctor(Liberator.RESTore.GivenContext)">
             <summary>
             Constructor for the WhenContext class.
@@ -755,6 +760,21 @@
             <param name="seconds">Number of seconds to run the load test for.</param>
             <param name="threads">The number of threads to allow during the test.</param>
             <returns>The WhenContext object with the load test parameters set.</returns>
+        </member>
+        <member name="M:Liberator.RESTore.WhenContext.PathParameter(System.String,System.String)">
+            <summary>
+            Adds a single path parameter to the url.
+            </summary>
+            <param name="parameter">The parameter in the url.</param>
+            <param name="value">The value to replace it with.</param>
+            <returns>The When Context that we are building.</returns>
+        </member>
+        <member name="M:Liberator.RESTore.WhenContext.PathParameters(System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            Adds multiple path parameters to the url.
+            </summary>
+            <param name="pathParameters">The parameters with their name and value pairs.</param>
+            <returns>The When Context that we are building.</returns>
         </member>
         <member name="M:Liberator.RESTore.WhenContext.Get(System.String)">
             <summary>

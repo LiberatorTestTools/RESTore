@@ -17,7 +17,9 @@
 
 using Liberator.RESTore.Enumerations;
 using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace Liberator.RESTore
 {
@@ -58,6 +60,11 @@ namespace Liberator.RESTore
         /// </summary>
         public int Seconds { get; set; }
 
+        /// <summary>
+        /// The path parameters and their values.
+        /// </summary>
+        public Dictionary<string, string> PathParams { get; set; }
+
         #endregion
 
         #region Constructor
@@ -69,6 +76,7 @@ namespace Liberator.RESTore
         public WhenContext(GivenContext givenContext)
         {
             GivenContext = givenContext;
+            PathParams = new Dictionary<string, string>();
         }
 
         #endregion
@@ -92,6 +100,32 @@ namespace Liberator.RESTore
         #endregion
 
         #region Execution Context for Actions
+
+        /// <summary>
+        /// Adds a single path parameter to the url.
+        /// </summary>
+        /// <param name="parameter">The parameter in the url.</param>
+        /// <param name="value">The value to replace it with.</param>
+        /// <returns>The When Context that we are building.</returns>
+        public WhenContext PathParameter(string parameter, string value)
+        {
+            PathParams.Add(parameter, value);
+            return this;
+        }
+
+        /// <summary>
+        /// Adds multiple path parameters to the url.
+        /// </summary>
+        /// <param name="pathParameters">The parameters with their name and value pairs.</param>
+        /// <returns>The When Context that we are building.</returns>
+        public WhenContext PathParameters(Dictionary<string, string> pathParameters)
+        {
+            foreach (var entry in pathParameters)
+            {
+                PathParams.Add(entry.Key, entry.Value);
+            }
+            return this;
+        }
 
         /// <summary>
         /// Allows the user to set and execute a GET request.
@@ -159,7 +193,14 @@ namespace Liberator.RESTore
                 throw new ArgumentException("URL must be provided");
             }
 
-            TargetUrl = new Uri(new Uri(GivenContext.HostName), url).AbsoluteUri;
+            StringBuilder urlBuilder = new StringBuilder(url);
+
+            foreach (var pathParam in PathParams)
+            {
+                urlBuilder.Replace($"{{{pathParam.Key}}}", pathParam.Value);
+            }
+
+            TargetUrl = new Uri(new Uri(GivenContext.HostName), urlBuilder.ToString()).AbsoluteUri;
 
             return TargetUrl;
         }
