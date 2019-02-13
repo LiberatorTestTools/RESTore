@@ -1,0 +1,851 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Liberator.RESTore</name>
+    </assembly>
+    <members>
+        <member name="T:Liberator.RESTore.Enumerations.HeaderType">
+            <summary>
+            Headers as listed at the Mozilla project MDN Web Docs
+            </summary>
+        </member>
+        <member name="T:Liberator.RESTore.ExecutionContext">
+            <summary>
+            Represents the executing request
+            </summary>
+        </member>
+        <member name="F:Liberator.RESTore.ExecutionContext._givenContext">
+            <summary>
+            Represents the setup of the request.
+            </summary>
+        </member>
+        <member name="F:Liberator.RESTore.ExecutionContext._whenContext">
+            <summary>
+            Represents the action to be executed.
+            </summary>
+        </member>
+        <member name="F:Liberator.RESTore.ExecutionContext._httpClient">
+            <summary>
+            The HTTP Client to use for the request.
+            </summary>
+        </member>
+        <member name="F:Liberator.RESTore.ExecutionContext._loadReponses">
+            <summary>
+            The compiled responses from the load test.
+            </summary>
+        </member>
+        <member name="M:Liberator.RESTore.ExecutionContext.#ctor(Liberator.RESTore.GivenContext,Liberator.RESTore.WhenContext)">
+            <summary>
+            The constructor for the ThenContext
+            </summary>
+            <param name="givenContext">The setup to use for the reques.</param>
+            <param name="whenContext">The action to use for the request.</param>
+        </member>
+        <member name="M:Liberator.RESTore.ExecutionContext.Then">
+            <summary>
+            Initialises the sending of the request.
+            </summary>
+            <returns>The built response from the server.</returns>
+        </member>
+        <member name="M:Liberator.RESTore.ExecutionContext.BuildRequest">
+            <summary>
+            Builds a request based on the verb used.
+            </summary>
+            <returns>The HTTP Request object representing the request.</returns>
+        </member>
+        <member name="M:Liberator.RESTore.ExecutionContext.BuildGet">
+            <summary>
+            Builds a GET request.
+            </summary>
+            <returns>The HTTP Request object representing the GET request.</returns>
+        </member>
+        <member name="M:Liberator.RESTore.ExecutionContext.BuildPost">
+            <summary>
+            Builds a POST request.
+            </summary>
+            <returns>The HTTP Request object representing the POST request.</returns>
+        </member>
+        <member name="M:Liberator.RESTore.ExecutionContext.BuildPut">
+            <summary>
+            Builds a PUT request.
+            </summary>
+            <returns>The HTTP Request object representing the PUT request.</returns>
+        </member>
+        <member name="M:Liberator.RESTore.ExecutionContext.BuildPatch">
+            <summary>
+            Builds a PATCH request
+            </summary>
+            <returns>The HTTP Request object representing the PATCH request.</returns>
+        </member>
+        <member name="M:Liberator.RESTore.ExecutionContext.BuildDelete">
+            <summary>
+            Builds a DELETE request.
+            </summary>
+            <returns>The HTTP Request object representing the DELETE request.</returns>
+        </member>
+        <member name="M:Liberator.RESTore.ExecutionContext.BuildUri">
+            <summary>
+            Builds the URL for the request.
+            </summary>
+            <returns>The URI used in the request.</returns>
+        </member>
+        <member name="M:Liberator.RESTore.ExecutionContext.AppendHeaders(System.Net.Http.HttpRequestMessage)">
+            <summary>
+            Adds the request headers to the default request headers collection
+            </summary>
+            <param name="request">The request to be sent to the endpoint.</param>
+        </member>
+        <member name="M:Liberator.RESTore.ExecutionContext.AppendCookies(System.Net.Http.HttpRequestMessage)">
+            <summary>
+            Appends cookies to the request.
+            </summary>
+            <param name="request">The request to be sent to the endpoint.</param>
+        </member>
+        <member name="M:Liberator.RESTore.ExecutionContext.SetTimeout">
+            <summary>
+            Sets the timeout for the HTTP requests.
+            </summary>
+        </member>
+        <member name="M:Liberator.RESTore.ExecutionContext.BuildContent">
+            <summary>
+            Builds any file content required
+            </summary>
+            <returns>The content of the requestb to be sent.</returns>
+        </member>
+        <member name="M:Liberator.RESTore.ExecutionContext.BuildMultipartContent">
+            <summary>
+            Builds content from multipart files.
+            </summary>
+            <returns>The content of the requestb to be sent.</returns>
+        </member>
+        <member name="M:Liberator.RESTore.ExecutionContext.BuildFormContent">
+            <summary>
+            Builds query parameters from the contents of a form.
+            </summary>
+            <returns>The content of the requestb to be sent.</returns>
+        </member>
+        <member name="M:Liberator.RESTore.ExecutionContext.BuildStringContent">
+            <summary>
+            Adds request bodies and content types to a request.
+            </summary>
+            <returns>The content of the request to be sent.</returns>
+        </member>
+        <member name="M:Liberator.RESTore.ExecutionContext.StartCallsForLoad">
+            <summary>
+            Starts the load test element of the request.
+            </summary>
+        </member>
+        <member name="M:Liberator.RESTore.ExecutionContext.SingleThread(System.Threading.CancellationToken)">
+            <summary>
+            Creates a single thread for load testing
+            </summary>
+            <param name="cancellationToken">The type of token used to cancel the request.</param>
+            <returns>The underlying task object.</returns>
+        </member>
+        <member name="M:Liberator.RESTore.ExecutionContext.MapCall">
+            <summary>
+            Maps the results of a load test call to a load response object.
+            </summary>
+            <returns>The underlying task object.</returns>
+        </member>
+        <member name="M:Liberator.RESTore.ExecutionContext.ExecuteCall">
+            <summary>
+            Executes the call to the host.
+            </summary>
+            <returns>A task representing the executed call.</returns>
+        </member>
+        <member name="M:Liberator.RESTore.ExecutionContext.BuildFromResponse(Liberator.RESTore.TimedResponse)">
+            <summary>
+            Populates the context with the values from the response.
+            </summary>
+            <param name="result">The result from host.</param>
+            <returns>The ThenConext object representing the result.</returns>
+        </member>
+        <member name="T:Liberator.RESTore.Extensions">
+            <summary>
+            Extension methods
+            </summary>
+        </member>
+        <member name="M:Liberator.RESTore.Extensions.Quote(System.String)">
+            <summary>
+            Allows a string value to be quoted.
+            </summary>
+            <param name="source"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Liberator.RESTore.Extensions.IsPresentInDictionary(System.Collections.IEnumerable,System.Object)">
+            <summary>
+            Checks if a value is present in a dictionary
+            </summary>
+            <param name="dictionary">The dictionary being checked.</param>
+            <param name="value">The value of the key to locate.</param>
+            <returns>True if the element is found in the dictionary.</returns>
+        </member>
+        <member name="M:Liberator.RESTore.Extensions.IsPresentInCollection(System.Configuration.KeyValueConfigurationCollection,System.String)">
+            <summary>
+            Checks if a value is present in a KeyValueConfigurationCollection.
+            </summary>
+            <param name="configurationCollection">The collection of settings.</param>
+            <param name="value">the setting required.</param>
+            <returns>Whether the setting is in the collection passed.</returns>
+        </member>
+        <member name="T:Liberator.RESTore.FileContent">
+            <summary>
+            Details of files for HTTP Actions
+            </summary>
+        </member>
+        <member name="P:Liberator.RESTore.FileContent.FileName">
+            <summary>
+            The name of the file.
+            </summary>
+        </member>
+        <member name="P:Liberator.RESTore.FileContent.ContentType">
+            <summary>
+            The ContentType for the File.
+            </summary>
+        </member>
+        <member name="P:Liberator.RESTore.FileContent.ContentDispositionName">
+            <summary>
+            A header indicating if the content is expected to be displayed inline in the browser.
+            </summary>
+        </member>
+        <member name="P:Liberator.RESTore.FileContent.Content">
+            <summary>
+            The Content of the file as an array of bytes.
+            </summary>
+        </member>
+        <member name="T:Liberator.RESTore.GivenContext">
+            <summary>
+            The setup for the request.
+            </summary>
+        </member>
+        <member name="P:Liberator.RESTore.GivenContext.SuiteName">
+            <summary>
+            The name of the suite.
+            </summary>
+        </member>
+        <member name="P:Liberator.RESTore.GivenContext.HostName">
+            <summary>
+            The name of the host.
+            </summary>
+        </member>
+        <member name="P:Liberator.RESTore.GivenContext.HostPort">
+            <summary>
+            The port to use on the host.
+            </summary>
+        </member>
+        <member name="P:Liberator.RESTore.GivenContext.TargetUri">
+            <summary>
+            The target URL for the request.
+            </summary>
+        </member>
+        <member name="P:Liberator.RESTore.GivenContext.RequestTimeout">
+            <summary>
+            The timeout for the request.
+            </summary>
+        </member>
+        <member name="P:Liberator.RESTore.GivenContext.RequestBody">
+            <summary>
+            The body of the request.
+            </summary>
+        </member>
+        <member name="P:Liberator.RESTore.GivenContext.ProxyAddress">
+            <summary>
+            The address of the proxy being used
+            </summary>
+        </member>
+        <member name="P:Liberator.RESTore.GivenContext.Files">
+            <summary>
+            The files applied to the request.
+            </summary>
+        </member>
+        <member name="P:Liberator.RESTore.GivenContext.SiteCookies">
+            <summary>
+            Cookies for the request.
+            </summary>
+        </member>
+        <member name="P:Liberator.RESTore.GivenContext.RequestHeaders">
+            <summary>
+            Headers for the request.
+            </summary>
+        </member>
+        <member name="P:Liberator.RESTore.GivenContext.SecureHttp">
+            <summary>
+            Whether to use a secure HTTP connection
+            </summary>
+        </member>
+        <member name="P:Liberator.RESTore.GivenContext.Client">
+            <summary>
+            HTTP Client for the request.
+            </summary>
+        </member>
+        <member name="P:Liberator.RESTore.GivenContext.QueryStrings">
+            <summary>
+            The Query Strings for the request.
+            </summary>
+        </member>
+        <member name="P:Liberator.RESTore.GivenContext.QueryParameters">
+            <summary>
+            The Query Parameters for the request.
+            </summary>
+        </member>
+        <member name="M:Liberator.RESTore.GivenContext.#ctor">
+            <summary>
+            The GivenContext
+            </summary>
+        </member>
+        <member name="M:Liberator.RESTore.GivenContext.Name(System.String)">
+            <summary>
+            Allows a user to set the name of the current test suite.
+            </summary>
+            <param name="name">The name to apply to the current test suite.</param>
+            <returns>The GivenContext object with the suite name set.</returns>
+        </member>
+        <member name="M:Liberator.RESTore.GivenContext.Proxy(System.String)">
+            <summary>
+            Adds a proxy using the user's AD account to access sites through a secure proxy
+            </summary>
+            <param name="address">The address of the proxy.</param>
+            <returns>The GivenContext object with the suite name set.</returns>
+        </member>
+        <member name="M:Liberator.RESTore.GivenContext.Proxy(System.String,System.String,System.String)">
+            <summary>
+            Adds a proxy using a username and password to access sites through a secure proxy
+            </summary>
+            <param name="address">The address of the proxy.</param>
+            <param name="userName">The username for the proxy server</param>
+            <param name="password">The password for the proxy server</param>
+            <returns>The GivenContext object with the suite name set.</returns>
+        </member>
+        <member name="M:Liberator.RESTore.GivenContext.Host(System.String)">
+            <summary>
+            Allows a user to set the name of the host to use for the test suite.
+            </summary>
+            <param name="host">The name of the host to use for the test suite.</param>
+            <returns>The GivenContext object with the host name set.</returns>
+        </member>
+        <member name="M:Liberator.RESTore.GivenContext.Port(System.Int32)">
+            <summary>
+            Allows a user to set the name of the port on the host to use for the test.
+            </summary>
+            <param name="port">The port number to use within the test.</param>
+            <returns>The GivenContext object with the port number set.</returns>
+        </member>
+        <member name="M:Liberator.RESTore.GivenContext.HostNameWithPort">
+            <summary>
+            Calculates the fully qualified name for the host with optional port.
+            </summary>
+            <returns>The fully qualified name for the host.</returns>
+        </member>
+        <member name="M:Liberator.RESTore.GivenContext.Uri(System.String)">
+            <summary>
+            Allows a user to set the name of the URI of the endpoint itself.
+            </summary>
+            <param name="uri">The URI to use for the endpoint.</param>
+            <returns>The GivenContext object with the endpoint URI set.</returns>
+        </member>
+        <member name="M:Liberator.RESTore.GivenContext.Timeout(System.Int32)">
+            <summary>
+            Allows the user to set a timeout for the HTTP request.
+            </summary>
+            <param name="milliseconds">The number of milliseconds to wait.</param>
+            <returns>The GivenContext object with the timeout set.</returns>
+        </member>
+        <member name="M:Liberator.RESTore.GivenContext.Body(System.String)">
+            <summary>
+            Allows a user to set the body of the request.
+            </summary>
+            <param name="body">The body to be sent with the request.</param>
+            <returns>The GivenContext object with the request body set.</returns>
+        </member>
+        <member name="M:Liberator.RESTore.GivenContext.Body``1(``0)">
+            <summary>
+            Allows a user to add a body based on an Object and serialises it.
+            </summary>
+            <typeparam name="T">The type of object being passed.</typeparam>
+            <param name="body">The body object.</param>
+            <returns>The GivenContext object with the request body set.</returns>
+        </member>
+        <member name="M:Liberator.RESTore.GivenContext.File(System.String,System.String,System.String,System.Byte[])">
+            <summary>
+            Allows a user to add a file to the request.
+            </summary>
+            <param name="fileName">The name of the file to add.</param>
+            <param name="contentDispositionName">A header that indicates if the file is to displayed inline in the browser.</param>
+            <param name="contentType">The content-type of the file.</param>
+            <param name="content">The content of the file as a byte array.</param>
+            <returns>The GivenContext representing the setup of the request.</returns>
+        </member>
+        <member name="M:Liberator.RESTore.GivenContext.Cookie(System.String,System.String)">
+            <summary>
+            Allows a user to add a single cookie to a request.
+            </summary>
+            <param name="name">The name of the cookie parameter.</param>
+            <param name="value">The value of the cookie parameter.</param>
+            <returns>The GivenContext representing the setup of the request.</returns>
+        </member>
+        <member name="M:Liberator.RESTore.GivenContext.Cookies(System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            Allows a user to add a collection of cookies to a request.
+            </summary>
+            <param name="cookies">The dictionary representing the cookies for the request.</param>
+            <returns>The GivenContext representing the setup of the request.</returns>
+        </member>
+        <member name="M:Liberator.RESTore.GivenContext.Headers(System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            Allows a user to add a collection of headers to a request.
+            </summary>
+            <param name="headers">The dictionary representing the query parameters for the request.</param>
+            <returns>The GivenContext representing the setup of the request.</returns>
+        </member>
+        <member name="M:Liberator.RESTore.GivenContext.Header(System.String,System.String)">
+            <summary>
+            Allows a user to add a single header to a request.
+            </summary>
+            <param name="headerType">The type of header to use.</param>
+            <param name="value">The value to use for the header.</param>
+            <returns>The GivenContext representing the setup of the request.</returns>
+        </member>
+        <member name="M:Liberator.RESTore.GivenContext.Parameter(System.String,System.String)">
+            <summary>
+            Allows a user to add a single query parameter to a request.
+            </summary>
+            <param name="key">The key of the query parameter.</param>
+            <param name="value">The value of the query parameter to use.</param>
+            <returns>The GivenContext representing the setup of the request.</returns>
+        </member>
+        <member name="M:Liberator.RESTore.GivenContext.Parameters(System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            Allows a user to add a collection of query parameters to a request.
+            </summary>
+            <param name="parameters">The dictionary representing the query parameters for the request.</param>
+            <returns>The GivenContext representing the setup of the request.</returns>
+        </member>
+        <member name="M:Liberator.RESTore.GivenContext.Query(System.String,System.String)">
+            <summary>
+            Allows a user to add a single query string to a request.
+            </summary>
+            <param name="key">The key of the query.</param>
+            <param name="value">The value of the query string to use.</param>
+            <returns>The GivenContext representing the setup of the request.</returns>
+        </member>
+        <member name="M:Liberator.RESTore.GivenContext.Queries(System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            Allows a user to add a series of query strings to a request.
+            </summary>
+            <param name="queries">A dictionary represnting the collection of query strings.</param>
+            <returns>The GivenContext representing the setup of the request.</returns>
+        </member>
+        <member name="M:Liberator.RESTore.GivenContext.HttpClient(System.Net.Http.HttpClient)">
+            <summary>
+            Allows a user to specify the HTTP Client to be used for the request.
+            </summary>
+            <param name="client"></param>
+            <returns>The GivenContext representing the setup of the request.</returns>
+        </member>
+        <member name="M:Liberator.RESTore.GivenContext.Headers">
+            <summary>
+            Return all headers.
+            </summary>
+            <returns>A collection of headers as a dictionary.</returns>
+        </member>
+        <member name="M:Liberator.RESTore.GivenContext.HeaderContentType">
+            <summary>
+            Return the value for a content-type header.
+            </summary>
+            <returns>The content-type header for the request.</returns>
+        </member>
+        <member name="M:Liberator.RESTore.GivenContext.HeaderAccept">
+            <summary>
+            Return the value for an accept header.
+            </summary>
+            <returns>The accept header for the request</returns>
+        </member>
+        <member name="M:Liberator.RESTore.GivenContext.HeaderAcceptEncoding">
+            <summary>
+            Return the value for an accept-encoding header.
+            </summary>
+            <returns>The accept-encoding header for the request.</returns>
+        </member>
+        <member name="M:Liberator.RESTore.GivenContext.HeaderAcceptCharset">
+            <summary>
+            Return the value for an accept-charset header.
+            </summary>
+            <returns>The accept-charset header for the request.</returns>
+        </member>
+        <member name="M:Liberator.RESTore.GivenContext.OtherHeaders">
+            <summary>
+            Return all headers except for content-type, accept, accept-encoding and accept-charset
+            </summary>
+            <returns>A dictionary representing other headers.</returns>
+        </member>
+        <member name="M:Liberator.RESTore.GivenContext.When">
+            <summary>
+            Used to initialise the WhenCOntext
+            </summary>
+            <returns>The WhenContext being used.</returns>
+        </member>
+        <member name="T:Liberator.RESTore.LoadResponse">
+            <summary>
+            Used to contain results from a load test query instance.
+            </summary>
+        </member>
+        <member name="P:Liberator.RESTore.LoadResponse.Ticks">
+            <summary>
+            Number of ticks elapsed for the test
+            </summary>
+        </member>
+        <member name="P:Liberator.RESTore.LoadResponse.StatusCode">
+            <summary>
+            The status code returned..
+            </summary>
+        </member>
+        <member name="T:Liberator.RESTore.RESTore">
+            <summary>
+            The base class for all RESTore tests.
+            </summary>
+        </member>
+        <member name="M:Liberator.RESTore.RESTore.Given">
+            <summary>
+            Allows a user to define the setup of post request
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Liberator.RESTore.RESToreException">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Liberator.RESTore.RESToreException.#ctor(System.String)">
+            <summary>
+            An exception thrown by the library
+            </summary>
+            <param name="message">The message to send to the exception</param>
+        </member>
+        <member name="T:Liberator.RESTore.ThenContext">
+            <summary>
+            The response for the request.
+            </summary>
+        </member>
+        <member name="P:Liberator.RESTore.ThenContext.StatusCode">
+            <summary>
+            The returned status code.
+            </summary>
+        </member>
+        <member name="P:Liberator.RESTore.ThenContext.Content">
+            <summary>
+            The returned content
+            </summary>
+        </member>
+        <member name="P:Liberator.RESTore.ThenContext.Headers">
+            <summary>
+            The headers returned by the response
+            </summary>
+        </member>
+        <member name="P:Liberator.RESTore.ThenContext.ElapsedExecutionTime">
+            <summary>
+            The elapsed execution time.
+            </summary>
+            
+        </member>
+        <member name="P:Liberator.RESTore.ThenContext.LoadValues">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Liberator.RESTore.ThenContext.Assertions">
+            <summary>
+            The list of assertions.
+            </summary>
+        </member>
+        <member name="P:Liberator.RESTore.ThenContext.LoadResponses">
+            <summary>
+            The responses from a load test.
+            </summary>
+        </member>
+        <member name="P:Liberator.RESTore.ThenContext.IsSuccessStatus">
+            <summary>
+            Whether the response contains a success status
+            </summary>
+        </member>
+        <member name="M:Liberator.RESTore.ThenContext.#ctor">
+            <summary>
+            The Constructor for the context
+            </summary>
+        </member>
+        <member name="M:Liberator.RESTore.ThenContext.AssessHeader(System.String,System.String)">
+            <summary>
+            Assesses if a header has a specified value.
+            </summary>
+            <param name="headerType">The header type to look for.</param>
+            <param name="value">The value of the header to assert.</param>
+            <returns>The ThenContext representing the response message.</returns>
+        </member>
+        <member name="M:Liberator.RESTore.ThenContext.AssertHeader(System.String,System.String)">
+            <summary>
+            Checks if a header has a specified value.
+            </summary>
+            <param name="headerType">The header type to look for.</param>
+            <param name="value">The value of the header to assert.</param>
+            <returns>The ThenContext representing the response message.</returns>
+        </member>
+        <member name="M:Liberator.RESTore.ThenContext.AssessHeaders(System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            Assesses a series of headers and asserts specific values.
+            </summary>
+            <param name="headers">A collection of headers and their target values.</param>
+            <returns>The ThenContext representing the response message.</returns>
+        </member>
+        <member name="M:Liberator.RESTore.ThenContext.AssertHeaders(System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            Checks a series of headers and asserts specific values.
+            </summary>
+            <param name="headers">A collection of headers and their target values.</param>
+            <returns>The ThenContext representing the response message.</returns>
+        </member>
+        <member name="M:Liberator.RESTore.ThenContext.AssessStatus(System.Net.HttpStatusCode)">
+            <summary>
+            Assesses if the Status Code in the response is as anticipated.
+            </summary>
+            <param name="httpStatusCode">The code anticipated by the test.</param>
+            <returns>The ThenContext representing the response message.</returns>
+        </member>
+        <member name="M:Liberator.RESTore.ThenContext.AssertStatus(System.Net.HttpStatusCode)">
+            <summary>
+            Asserts if the Status Code in the response is as anticipated.
+            </summary>
+            <param name="httpStatusCode">The code anticipated by the test.</param>
+            <returns>The ThenContext representing the response message.</returns>
+        </member>
+        <member name="M:Liberator.RESTore.ThenContext.AssessSuccessStatus">
+            <summary>
+            Asserts whether the response contains a successful status
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Liberator.RESTore.ThenContext.AssertSuccessStatus">
+            <summary>
+            Asserts whether the response contains a successful status
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Liberator.RESTore.ThenContext.AssessFailureStatus">
+            <summary>
+            Assess whether the response contains a non-success status
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Liberator.RESTore.ThenContext.AssertFailureStatus">
+            <summary>
+            Asserts whether the response contains a non-success status
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Liberator.RESTore.ThenContext.AssessBody(System.String,System.Func{System.String,System.Boolean})">
+            <summary>
+            Assess whether the body meets the requirements of a lambda function
+            </summary>
+            <param name="testName">The name of the test</param>
+            <param name="assert">The assertion in the form of a lambda function</param>
+            <returns>The ThenContext representing the response message.</returns>
+        </member>
+        <member name="M:Liberator.RESTore.ThenContext.AssertBody(System.Func{System.String,System.Boolean})">
+            <summary>
+            Asserts whether the body meets the requirements of a lambda function
+            </summary>
+            <param name="assert">The assertion in the form of a lambda function</param>
+            <returns>The ThenContext representing the response message.</returns>
+        </member>
+        <member name="M:Liberator.RESTore.ThenContext.AssessBody``1(System.String,System.Func{``0,System.Boolean})">
+            <summary>
+            Assess whether the body contains a particular type of object
+            </summary>
+            <typeparam name="TContent">The type of object to use to deserialise the body.</typeparam>
+            <param name="testName">The name of the test</param>
+            <param name="assert">A lambda function representing the test.</param>
+            <returns>The ThenContext representing the response message.</returns>
+        </member>
+        <member name="M:Liberator.RESTore.ThenContext.AssertBody``1(System.Func{``0,System.Boolean})">
+            <summary>
+            Asserts whether the body contains a particular type of object
+            </summary>
+            <typeparam name="TContent">The type of object to use to deserialise the body.</typeparam>
+            <param name="assert">A lambda function representing the test.</param>
+            <returns>The ThenContext representing the response message.</returns>
+        </member>
+        <member name="M:Liberator.RESTore.ThenContext.AssertPass">
+            <summary>
+            Assesses whether the API test passes its validation
+            </summary>
+            <returns>The ThenContext representing the response message.</returns>
+        </member>
+        <member name="M:Liberator.RESTore.ThenContext.ToConsole">
+            <summary>
+            Outputs the list of Assertions and their results to the Debug console
+            </summary>
+            <returns>The ThenContext representing the response message.</returns>
+        </member>
+        <member name="M:Liberator.RESTore.ThenContext.CheckIfHeaderValueIsConfirmed(System.String,System.String)">
+            <summary>
+            Checks whether a header contains a particular value.
+            </summary>
+            <param name="headerType">The type of header to test.</param>
+            <param name="value">The value to assert.</param>
+        </member>
+        <member name="T:Liberator.RESTore.TimedResponse">
+            <summary>
+            Timer attached to an HTTP Response Message
+            </summary>
+        </member>
+        <member name="P:Liberator.RESTore.TimedResponse.Response">
+            <summary>
+            Represents the HTTP Response Message.
+            </summary>
+        </member>
+        <member name="P:Liberator.RESTore.TimedResponse.TimeElapsed">
+            <summary>
+            The time elapsed for the execution of the request.
+            </summary>
+        </member>
+        <member name="T:Liberator.RESTore.WhenContext">
+            <summary>
+            Represents the HTTP Action being undertaken.
+            </summary>
+        </member>
+        <member name="P:Liberator.RESTore.WhenContext.IsLoadTest">
+            <summary>
+            Whether the test us a load test.
+            </summary>
+        </member>
+        <member name="P:Liberator.RESTore.WhenContext.HttpVerbUsed">
+            <summary>
+            Which HTTP Verb should be used.
+            </summary>
+        </member>
+        <member name="P:Liberator.RESTore.WhenContext.GivenContext">
+            <summary>
+            The GivenContext representing the setup of the request.
+            </summary>
+        </member>
+        <member name="P:Liberator.RESTore.WhenContext.TargetUrl">
+            <summary>
+            The target URL for the request.
+            </summary>
+        </member>
+        <member name="P:Liberator.RESTore.WhenContext.Threads">
+            <summary>
+            The number of threads to run a load test.
+            </summary>
+        </member>
+        <member name="P:Liberator.RESTore.WhenContext.Seconds">
+            <summary>
+            The number of seconds to run a load test.
+            </summary>
+        </member>
+        <member name="P:Liberator.RESTore.WhenContext.PathParams">
+            <summary>
+            The path parameters and their values.
+            </summary>
+        </member>
+        <member name="M:Liberator.RESTore.WhenContext.#ctor(Liberator.RESTore.GivenContext)">
+            <summary>
+            Constructor for the WhenContext class.
+            </summary>
+            <param name="givenContext">The GivenContext object required.</param>
+        </member>
+        <member name="M:Liberator.RESTore.WhenContext.LoadTest(System.Int32,System.Int32)">
+            <summary>
+            Allows a user to define the basic parameters of a primitive load test.
+            </summary>
+            <param name="seconds">Number of seconds to run the load test for.</param>
+            <param name="threads">The number of threads to allow during the test.</param>
+            <returns>The WhenContext object with the load test parameters set.</returns>
+        </member>
+        <member name="M:Liberator.RESTore.WhenContext.PathParameter(System.String,System.String)">
+            <summary>
+            Adds a single path parameter to the url.
+            </summary>
+            <param name="parameter">The parameter in the url.</param>
+            <param name="value">The value to replace it with.</param>
+            <returns>The When Context that we are building.</returns>
+        </member>
+        <member name="M:Liberator.RESTore.WhenContext.PathParameters(System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            Adds multiple path parameters to the url.
+            </summary>
+            <param name="pathParameters">The parameters with their name and value pairs.</param>
+            <returns>The When Context that we are building.</returns>
+        </member>
+        <member name="M:Liberator.RESTore.WhenContext.Get(System.String)">
+            <summary>
+            Allows the user to set and execute a GET request.
+            </summary>
+            <param name="url">The URL to send the GET request to.</param>
+            <returns>The ExecutionContext that represents the executing query.</returns>
+        </member>
+        <member name="M:Liberator.RESTore.WhenContext.Post(System.String)">
+            <summary>
+            Allows the user to set and execute a POST request.
+            </summary>
+            <param name="url">The URL to send the POST request to.</param>
+            <returns>The ExecutionContext that represents the executing query.</returns>
+        </member>
+        <member name="M:Liberator.RESTore.WhenContext.Put(System.String)">
+            <summary>
+            Allows the user to set and execute a PUT request.
+            </summary>
+            <param name="url">The URL to send the PUT request to.</param>
+            <returns>The ExecutionContext that represents the executing query.</returns>
+        </member>
+        <member name="M:Liberator.RESTore.WhenContext.Patch(System.String)">
+            <summary>
+            Allows the user to set and execute a PATCH request.
+            </summary>
+            <param name="url">The URL to send the PATCH request to.</param>
+            <returns>The ExecutionContext that represents the executing query.</returns>
+        </member>
+        <member name="M:Liberator.RESTore.WhenContext.Delete(System.String)">
+            <summary>
+            Allows the user to set and execute a DELETE request.
+            </summary>
+            <param name="url">The URL to send the DELETE request to.</param>
+            <returns>The ExecutionContext that represents the executing query.</returns>
+        </member>
+        <member name="M:Liberator.RESTore.WhenContext.SetUrl(System.String)">
+            <summary>
+            Sets the target URL.
+            </summary>
+            <param name="url">The URL to be set.</param>
+            <returns>The full target URL.</returns>
+        </member>
+        <member name="M:Liberator.RESTore.WhenContext.SetHttpAction(System.String,Liberator.RESTore.Enumerations.HTTPVerb)">
+            <summary>
+            Sets the HTTP Action
+            </summary>
+            <param name="url">The URL to be targetted.</param>
+            <param name="httpVerb">The verb describing the HTTP Action</param>
+            <returns>The ExecutionContext that represents the executing query.</returns>
+        </member>
+        <member name="M:HttpUtility.HtmlDecode(System.String)">
+            <summary>
+            Decodes an HTML-encoded string and returns the decoded string.
+            </summary>
+            <param name="s">The HTML string to decode. </param>
+            <returns>The decoded text.</returns>
+        </member>
+        <member name="M:HttpUtility.HtmlDecode(System.String,System.IO.TextWriter)">
+            <summary>
+            Decodes an HTML-encoded string and sends the resulting output to a TextWriter output stream.
+            </summary>
+            <param name="s">The HTML string to decode</param>
+            <param name="output">The TextWriter output stream containing the decoded string. </param>
+        </member>
+        <member name="M:HttpUtility.HtmlEncode(System.String,System.IO.TextWriter)">
+            <summary>
+            HTML-encodes a string and sends the resulting output to a TextWriter output stream.
+            </summary>
+            <param name="s">The string to encode. </param>
+            <param name="output">The TextWriter output stream containing the encoded string. </param>
+        </member>
+    </members>
+</doc>

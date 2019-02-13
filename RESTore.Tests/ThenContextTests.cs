@@ -20,37 +20,33 @@ namespace Liberator.RESTore.Tests
 
             thenContext = new RESTore()
                 .Given()
-                .Headers(header)
-                .Name("Test suite name")
-                .Host("http://www.totallyratted.com")
+                    .Headers(header)
+                    .Name("Test suite name")
+                    .Host("http://www.totallyratted.com")
                 .When()
-                .Get("/index.html")
-                .Then()
-                .AssertSuccessStatus()
-                .ToConsole();
+                    .Get("/index.html")
+                .Then();
         }
 
         [Test]
         [Category("Then Context : Methods")]
         public void GetApiCall_StatusIsOK()
         {
-            Assert.That(thenContext.StatusCode == HttpStatusCode.OK, Is.True);
+            thenContext.AssertStatus(HttpStatusCode.OK);
         }
 
         [Test]
         [Category("Then Context : Methods")]
         public void GetApiCall_ContentLengthCorrect()
         {
-            Assert.That(thenContext.Headers.ContainsKey("Content-Length"), Is.True);
-            Assert.That(thenContext.Headers["Content-Length"].Contains("10883"), Is.True);
+            thenContext.AssertHeader(HeaderType.ContentLength, "10883");
         }
 
         [Test]
         [Category("Then Context : Methods")]
         public void GetApiCall_ContentTypeCorrect()
         {
-            Assert.That(thenContext.Headers.ContainsKey("Content-Type"), Is.True);
-            Assert.That(thenContext.Headers["Content-Type"].Contains("text/html"), Is.True);
+            thenContext.AssertHeader(HeaderType.ContentType, "text/html");
         }
 
         [Test]
@@ -59,5 +55,14 @@ namespace Liberator.RESTore.Tests
         {
             Assert.That(thenContext.Headers.ContainsKey("Last-Modified"), Is.True);
         }
+
+        [Test]
+        [Category("Then Context : Methods")]
+        public void GetApiCall_AssertSuccessStatus()
+        {
+            thenContext.AssertSuccessStatus();
+        }
+
+
     }
 }

@@ -260,18 +260,6 @@ namespace Liberator.RESTore.Tests
 
         [Test]
         [Category("Given Context : Properties")]
-        public void EnsureUseHttpsAddedToProperty()
-        {
-            GivenContext context
-                = new RESTore()
-                .Given()
-                .UseHttps();
-
-            Assert.That(context.SecureHttp, Is.True);
-        }
-
-        [Test]
-        [Category("Given Context : Properties")]
         public void CheckHeadersMethodReturnsCorrectly()
         {
             GivenContext context

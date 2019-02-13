@@ -1,9 +1,10 @@
 ﻿namespace Liberator.RESTore.Enumerations
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+
     /// <summary>
     /// Headers as listed at the Mozilla project MDN Web Docs
     /// </summary>
-    /// <see cref="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers"/>
     public static class HeaderType
     {
         public static readonly string Accept = "Accept";
@@ -94,4 +95,5 @@
         public static readonly string XFrameOptions = "X-Frame-Options";
         public static readonly string XXSSProtection = "X-XSS-Protection";
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

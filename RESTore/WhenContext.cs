@@ -17,7 +17,9 @@
 
 using Liberator.RESTore.Enumerations;
 using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace Liberator.RESTore
 {
@@ -26,6 +28,8 @@ namespace Liberator.RESTore
     /// </summary>
     public class WhenContext
     {
+        #region Public Properties
+
         /// <summary>
         /// Whether the test us a load test.
         /// </summary>
@@ -57,16 +61,30 @@ namespace Liberator.RESTore
         public int Seconds { get; set; }
 
         /// <summary>
-        /// Constructor for the WehnContext class.
+        /// The path parameters and their values.
+        /// </summary>
+        public Dictionary<string, string> PathParams { get; set; }
+
+        #endregion
+
+        #region Constructor
+
+        /// <summary>
+        /// Constructor for the WhenContext class.
         /// </summary>
         /// <param name="givenContext">The GivenContext object required.</param>
         public WhenContext(GivenContext givenContext)
         {
             GivenContext = givenContext;
+            PathParams = new Dictionary<string, string>();
         }
 
+        #endregion
+
+        #region Primitive Load Testing
+
         /// <summary>
-        /// Allows a user to define the basic parameters of a load test.
+        /// Allows a user to define the basic parameters of a primitive load test.
         /// </summary>
         /// <param name="seconds">Number of seconds to run the load test for.</param>
         /// <param name="threads">The number of threads to allow during the test.</param>
@@ -76,6 +94,36 @@ namespace Liberator.RESTore
             IsLoadTest = true;
             Threads = threads < 0 ? 1 : threads;
             Seconds = seconds < 0 ? 60 : seconds;
+            return this;
+        }
+
+        #endregion
+
+        #region Execution Context for Actions
+
+        /// <summary>
+        /// Adds a single path parameter to the url.
+        /// </summary>
+        /// <param name="parameter">The parameter in the url.</param>
+        /// <param name="value">The value to replace it with.</param>
+        /// <returns>The When Context that we are building.</returns>
+        public WhenContext PathParameter(string parameter, string value)
+        {
+            PathParams.Add(parameter, value);
+            return this;
+        }
+
+        /// <summary>
+        /// Adds multiple path parameters to the url.
+        /// </summary>
+        /// <param name="pathParameters">The parameters with their name and value pairs.</param>
+        /// <returns>The When Context that we are building.</returns>
+        public WhenContext PathParameters(Dictionary<string, string> pathParameters)
+        {
+            foreach (var entry in pathParameters)
+            {
+                PathParams.Add(entry.Key, entry.Value);
+            }
             return this;
         }
 
@@ -129,6 +177,10 @@ namespace Liberator.RESTore
             return SetHttpAction(url, HTTPVerb.DELETE);
         }
 
+        #endregion
+
+        #region Private Methods
+
         /// <summary>
         /// Sets the target URL.
         /// </summary>
@@ -141,8 +193,15 @@ namespace Liberator.RESTore
                 throw new ArgumentException("URL must be provided");
             }
 
-            TargetUrl = new Uri(new Uri(GivenContext.HostName), url).AbsoluteUri;
-            
+            StringBuilder urlBuilder = new StringBuilder(url);
+
+            foreach (var pathParam in PathParams)
+            {
+                urlBuilder.Replace($"{{{pathParam.Key}}}", pathParam.Value);
+            }
+
+            TargetUrl = new Uri(new Uri(GivenContext.HostName), urlBuilder.ToString()).AbsoluteUri;
+
             return TargetUrl;
         }
 
@@ -158,5 +217,7 @@ namespace Liberator.RESTore
             HttpVerbUsed = httpVerb;
             return new ExecutionContext(GivenContext, this);
         }
+
+        #endregion
     }
 }
