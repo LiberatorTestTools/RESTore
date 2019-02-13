@@ -155,7 +155,7 @@ namespace Liberator.RESTore
         /// <returns>The ThenContext representing the response message.</returns>
         public ThenContext AssessStatus(HttpStatusCode httpStatusCode)
         {
-            Assertions.Add(String.Format("Status is {0}", httpStatusCode), StatusCode.Equals(httpStatusCode));
+            Assertions.Add($"Status is {httpStatusCode}", StatusCode.Equals(httpStatusCode));
             return this;
         }
 
@@ -325,7 +325,7 @@ namespace Liberator.RESTore
         {
             foreach (KeyValuePair<string, bool> assertion in Assertions)
             {
-                Console.WriteLine(string.Format("Assertion: {0} | {1}", assertion.Key, assertion.Value.ToString().ToUpper()));
+                Console.WriteLine($"Assertion: {assertion.Key} | {assertion.Value.ToString().ToUpper()}");
             }
             return this;
         } 
@@ -342,7 +342,7 @@ namespace Liberator.RESTore
         private void CheckIfHeaderValueIsConfirmed(string headerType, string value)
         {
             bool doesHeaderHaveValue = Headers.ContainsKey(headerType) && Headers[headerType].Contains(value);
-            Assertions.Add(String.Format("Header: {0} has Value: {1}", headerType, value), doesHeaderHaveValue);
+            Assertions.Add($"Header: {headerType} has Value: {value}", doesHeaderHaveValue);
         } 
 
         #endregion
