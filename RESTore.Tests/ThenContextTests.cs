@@ -1,7 +1,6 @@
-﻿using NUnit.Framework;
-using Liberator.RESTore.Enumerations;
+﻿using Liberator.RESTore.Enumerations;
+using NUnit.Framework;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 
 namespace Liberator.RESTore.Tests
