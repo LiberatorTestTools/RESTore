@@ -337,10 +337,10 @@ namespace Liberator.RESTore
             AddAndLogAssessment($"Header: {headerType} has Value: {value}", doesHeaderHaveValue);
         }
 
-        private void AddAndLogAssessment(string key, bool value)
+        private void AddAndLogAssessment(string assessment, bool value)
         {
-            Assertions.Add(key, value);
-            Console.WriteLine($"Assertion: {key} | {value.ToString().ToUpper()}");
+            Assertions.Add(assessment, value);
+            Console.WriteLine($"Assertion: {assessment} | {value.ToString().ToUpper()}");
         }
 
         #endregion
