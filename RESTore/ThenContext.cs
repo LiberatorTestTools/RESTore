@@ -111,8 +111,13 @@ namespace Liberator.RESTore
         /// <returns>The ThenContext representing the response message.</returns>
         public ThenContext AssertHeader(string headerType, string value)
         {
-            bool doesHeaderHaveValue = Headers.ContainsKey(headerType) && Headers[headerType].Contains(value);
-            Assert.That(doesHeaderHaveValue, Is.True);
+            bool isHeaderPresent = Headers.ContainsKey(headerType);
+            Console.WriteLine($"{headerType} is present in the response: {isHeaderPresent}");
+
+            bool doesHeaderHaveValue = isHeaderPresent && Headers[headerType].Contains(value);
+            Console.WriteLine($"{headerType} contains {value}: {doesHeaderHaveValue}");
+
+            Assert.That(doesHeaderHaveValue, Is.True, $"{headerType} does not contain value {value}");
             return this;
         }
 
@@ -141,8 +146,13 @@ namespace Liberator.RESTore
         {
             foreach (KeyValuePair<string, string> header in headers)
             {
-                bool doesHeaderHaveValue = Headers.ContainsKey(header.Key) && Headers[header.Key].Contains(header.Value);
-                Assert.That(doesHeaderHaveValue, Is.True);
+                bool isHeaderPresent = Headers.ContainsKey(header.Key);
+                Console.WriteLine($"{header.Key} is present in the response: {isHeaderPresent}");
+
+                bool doesHeaderHaveValue = isHeaderPresent && Headers[header.Key].Contains(header.Value);
+                Console.WriteLine($"{header.Key} contains {header.Value}: {doesHeaderHaveValue}");
+
+                Assert.That(doesHeaderHaveValue, Is.True, $"{header.Key} does not contain value {header.Value}");
             }
             return this;
         }
@@ -155,7 +165,7 @@ namespace Liberator.RESTore
         /// <returns>The ThenContext representing the response message.</returns>
         public ThenContext AssessStatus(HttpStatusCode httpStatusCode)
         {
-            Assertions.Add($"Status is {httpStatusCode}", StatusCode.Equals(httpStatusCode));
+            AddAndLogAssessment(httpStatusCode.ToString(), StatusCode.Equals(httpStatusCode));
             return this;
         }
 
@@ -167,7 +177,7 @@ namespace Liberator.RESTore
         /// <returns>The ThenContext representing the response message.</returns>
         public ThenContext AssertStatus(HttpStatusCode httpStatusCode)
         {
-            Assert.That(StatusCode.Equals(httpStatusCode), Is.True);
+            Assert.That(StatusCode.Equals(httpStatusCode), Is.True, $"Expected HTTP Status: {httpStatusCode} but actual status is: {StatusCode}");
             return this;
         }
 
@@ -178,7 +188,7 @@ namespace Liberator.RESTore
         /// <returns></returns>
         public ThenContext AssessSuccessStatus()
         {
-            Assertions.Add("Success status:", IsSuccessStatus);
+            AddAndLogAssessment("Responded with success status", IsSuccessStatus);
             return this;
         }
 
@@ -189,7 +199,7 @@ namespace Liberator.RESTore
         /// <returns></returns>
         public ThenContext AssertSuccessStatus()
         {
-            Assert.That(IsSuccessStatus, Is.True);
+            Assert.That(IsSuccessStatus, Is.True, $"HTTP Status: {StatusCode} does not indicate success");
             return this;
         }
 
@@ -200,7 +210,7 @@ namespace Liberator.RESTore
         /// <returns></returns>
         public ThenContext AssessFailureStatus()
         {
-            Assertions.Add("Failure status:", IsSuccessStatus);
+            AddAndLogAssessment("Responded with failure status", !IsSuccessStatus);
             return this;
         }
 
@@ -211,7 +221,7 @@ namespace Liberator.RESTore
         /// <returns></returns>
         public ThenContext AssertFailureStatus()
         {
-            Assert.That(IsSuccessStatus, Is.False);
+            Assert.That(IsSuccessStatus, Is.False, $"HTTP Status: {StatusCode} does not indicate failure");
             return this;
         }
 
@@ -233,7 +243,7 @@ namespace Liberator.RESTore
                 result = false;
             }
 
-            Assertions.Add(testName, result);
+            AddAndLogAssessment(testName, result);
             return this;
         }
 
@@ -254,7 +264,7 @@ namespace Liberator.RESTore
                 result = false;
             }
 
-            Assert.That(result, Is.True);
+            Assert.That(result, Is.True, "Condition used for Assert Body has failed");
             return this;
         }
 
@@ -276,8 +286,7 @@ namespace Liberator.RESTore
             {
                 result = false;
             }
-
-            Assertions.Add(testName, result);
+            AddAndLogAssessment(testName, result);
             return this;
         }
 
@@ -299,7 +308,7 @@ namespace Liberator.RESTore
                 result = false;
             }
 
-            Assert.That(result, Is.True);
+            Assert.That(result, Is.True, "Condition used for Assert Body has failed");
             return this;
         }
 
@@ -315,23 +324,6 @@ namespace Liberator.RESTore
 
         #endregion
 
-        #region Output
-
-        /// <summary>
-        /// Outputs the list of Assertions and their results to the Debug console
-        /// </summary>
-        /// <returns>The ThenContext representing the response message.</returns>
-        public ThenContext ToConsole()
-        {
-            foreach (KeyValuePair<string, bool> assertion in Assertions)
-            {
-                Console.WriteLine($"Assertion: {assertion.Key} | {assertion.Value.ToString().ToUpper()}");
-            }
-            return this;
-        } 
-
-        #endregion
-
         #region Private Methods
 
         /// <summary>
@@ -342,8 +334,14 @@ namespace Liberator.RESTore
         private void CheckIfHeaderValueIsConfirmed(string headerType, string value)
         {
             bool doesHeaderHaveValue = Headers.ContainsKey(headerType) && Headers[headerType].Contains(value);
-            Assertions.Add($"Header: {headerType} has Value: {value}", doesHeaderHaveValue);
-        } 
+            AddAndLogAssessment($"Header: {headerType} has Value: {value}", doesHeaderHaveValue);
+        }
+
+        private void AddAndLogAssessment(string key, bool value)
+        {
+            Assertions.Add(key, value);
+            Console.WriteLine($"Assertion: {key} | {value.ToString().ToUpper()}");
+        }
 
         #endregion
     }
