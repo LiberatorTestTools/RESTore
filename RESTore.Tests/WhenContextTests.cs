@@ -83,7 +83,7 @@ namespace Liberator.RESTore.Tests
                 .When()
                     .PathParameter("id", "1")
                     .PathParameter("cow", "moo")
-                    .PathParameters(new Dictionary<string, string>
+                    .PathParameters(new Dictionary<string, object>
                     {
                         {"mood", "happy"},
                         {"another", "one"},
