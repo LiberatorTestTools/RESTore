@@ -75,6 +75,7 @@ namespace Liberator.RESTore
         /// <param name="givenContext">The GivenContext object required.</param>
         public WhenContext(GivenContext givenContext)
         {
+            RESToreSettings.Log.WriteLine("--WHEN--");
             GivenContext = givenContext;
             PathParams = new Dictionary<string, string>();
         }
@@ -110,6 +111,7 @@ namespace Liberator.RESTore
         public WhenContext PathParameter(string parameter, string value)
         {
             PathParams.Add(parameter, value);
+            RESToreSettings.Log.WriteLine($"Added path parameter: {parameter} with value: {value}");
             return this;
         }
 
@@ -123,6 +125,7 @@ namespace Liberator.RESTore
             foreach (var entry in pathParameters)
             {
                 PathParams.Add(entry.Key, entry.Value);
+                RESToreSettings.Log.WriteLine($"Added path parameter: {entry.Key} with value: {entry.Value}");
             }
             return this;
         }
@@ -134,7 +137,8 @@ namespace Liberator.RESTore
         /// <returns>The ExecutionContext that represents the executing query.</returns>
         public ExecutionContext Get([Optional, DefaultParameterValue(null)]string url)
         {
-            return SetHttpAction(url ?? GivenContext.TargetUri, HTTPVerb.GET);
+            RESToreSettings.Log.WriteLine("Using GET");
+            return SetHttpAction(ChooseUrl(url, GivenContext.TargetUri), HTTPVerb.GET);
         }
 
         /// <summary>
@@ -144,7 +148,8 @@ namespace Liberator.RESTore
         /// <returns>The ExecutionContext that represents the executing query.</returns>
         public ExecutionContext Post([Optional, DefaultParameterValue(null)]string url)
         {
-            return SetHttpAction(url ?? GivenContext.TargetUri, HTTPVerb.POST);
+            RESToreSettings.Log.WriteLine("Using POST");
+            return SetHttpAction(ChooseUrl(url, GivenContext.TargetUri), HTTPVerb.POST);
         }
 
         /// <summary>
@@ -154,7 +159,8 @@ namespace Liberator.RESTore
         /// <returns>The ExecutionContext that represents the executing query.</returns>
         public ExecutionContext Put([Optional, DefaultParameterValue(null)]string url)
         {
-            return SetHttpAction(url ?? GivenContext.TargetUri, HTTPVerb.PUT);
+            RESToreSettings.Log.WriteLine("Using PUT");
+            return SetHttpAction(ChooseUrl(url, GivenContext.TargetUri), HTTPVerb.PUT);
         }
 
         /// <summary>
@@ -164,7 +170,8 @@ namespace Liberator.RESTore
         /// <returns>The ExecutionContext that represents the executing query.</returns>
         public ExecutionContext Patch([Optional, DefaultParameterValue(null)]string url)
         {
-            return SetHttpAction(url ?? GivenContext.TargetUri, HTTPVerb.PATCH);
+            RESToreSettings.Log.WriteLine("Using PATCH");
+            return SetHttpAction(ChooseUrl(url, GivenContext.TargetUri), HTTPVerb.PATCH);
         }
 
         /// <summary>
@@ -174,12 +181,20 @@ namespace Liberator.RESTore
         /// <returns>The ExecutionContext that represents the executing query.</returns>
         public ExecutionContext Delete([Optional, DefaultParameterValue(null)]string url)
         {
-            return SetHttpAction(url ?? GivenContext.TargetUri, HTTPVerb.DELETE);
+            RESToreSettings.Log.WriteLine("Using Delete");
+            return SetHttpAction(ChooseUrl(url, GivenContext.TargetUri), HTTPVerb.DELETE);
         }
 
         #endregion
 
         #region Private Methods
+
+        private string ChooseUrl(string url1, string url2)
+        {
+            string url = url1 ?? url2;
+            RESToreSettings.Log.WriteLine($"Setting up endpoint: {url}");
+            return url;
+        }
 
         /// <summary>
         /// Sets the target URL.
@@ -201,7 +216,7 @@ namespace Liberator.RESTore
             }
 
             TargetUrl = new Uri(new Uri(GivenContext.HostName), urlBuilder.ToString()).AbsoluteUri;
-
+            RESToreSettings.Log.WriteLine($"Full Url: {TargetUrl}");
             return TargetUrl;
         }
 

@@ -82,6 +82,7 @@ namespace Liberator.RESTore
         /// </summary>
         public ThenContext()
         {
+            RESToreSettings.Log.WriteLine("--THEN--");
             Headers = new Dictionary<string, IEnumerable<string>>();
             LoadValues = new Dictionary<string, double>();
             Assertions = new Dictionary<string, bool>();

@@ -493,7 +493,6 @@ namespace Liberator.RESTore
         /// <returns>The WhenContext being used.</returns>
         public WhenContext When()
         {
-            RESToreSettings.Log.WriteLine("Created When Context from Given Context");
             return new WhenContext(this);
         } 
 
