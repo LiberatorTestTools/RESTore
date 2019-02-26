@@ -364,7 +364,9 @@ namespace Liberator.RESTore
         /// <returns>The ThenContext representing the response message.</returns>
         public ThenContext AssertPass()
         {
+            RESToreSettings.Log.WriteLine("BEGIN AssertPass test");
             Assert.That(Assertions.All(x => x.Value == true), Is.True);
+            RESToreSettings.Log.WriteLine("AssertPass test finished successfully");
             return this;
         }
 
