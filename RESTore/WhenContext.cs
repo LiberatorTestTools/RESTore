@@ -108,9 +108,9 @@ namespace Liberator.RESTore
         /// <param name="parameter">The parameter in the url.</param>
         /// <param name="value">The value to replace it with.</param>
         /// <returns>The When Context that we are building.</returns>
-        public WhenContext PathParameter(string parameter, string value)
+        public WhenContext PathParameter(string parameter, object value)
         {
-            PathParams.Add(parameter, value);
+            PathParams.Add(parameter, value.ToString());
             RESToreSettings.Log.WriteLine($"Added path parameter: {parameter} with value: {value}");
             return this;
         }
@@ -120,11 +120,11 @@ namespace Liberator.RESTore
         /// </summary>
         /// <param name="pathParameters">The parameters with their name and value pairs.</param>
         /// <returns>The When Context that we are building.</returns>
-        public WhenContext PathParameters(Dictionary<string, string> pathParameters)
+        public WhenContext PathParameters(Dictionary<string, object> pathParameters)
         {
             foreach (var entry in pathParameters)
             {
-                PathParams.Add(entry.Key, entry.Value);
+                PathParams.Add(entry.Key, entry.Value.ToString());
                 RESToreSettings.Log.WriteLine($"Added path parameter: {entry.Key} with value: {entry.Value}");
             }
             return this;
