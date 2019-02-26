@@ -61,7 +61,5 @@ namespace Liberator.RESTore.Tests
         {
             thenContext.AssertSuccessStatus();
         }
-
-
     }
 }
