@@ -134,7 +134,7 @@ namespace Liberator.RESTore
         /// <returns>The ExecutionContext that represents the executing query.</returns>
         public ExecutionContext Get([Optional, DefaultParameterValue(null)]string url)
         {
-            return SetHttpAction(url, HTTPVerb.GET);
+            return SetHttpAction(url ?? GivenContext.TargetUri, HTTPVerb.GET);
         }
 
         /// <summary>
@@ -144,7 +144,7 @@ namespace Liberator.RESTore
         /// <returns>The ExecutionContext that represents the executing query.</returns>
         public ExecutionContext Post([Optional, DefaultParameterValue(null)]string url)
         {
-            return SetHttpAction(url, HTTPVerb.POST);
+            return SetHttpAction(url ?? GivenContext.TargetUri, HTTPVerb.POST);
         }
 
         /// <summary>
@@ -154,7 +154,7 @@ namespace Liberator.RESTore
         /// <returns>The ExecutionContext that represents the executing query.</returns>
         public ExecutionContext Put([Optional, DefaultParameterValue(null)]string url)
         {
-            return SetHttpAction(url, HTTPVerb.PUT);
+            return SetHttpAction(url ?? GivenContext.TargetUri, HTTPVerb.PUT);
         }
 
         /// <summary>
@@ -164,7 +164,7 @@ namespace Liberator.RESTore
         /// <returns>The ExecutionContext that represents the executing query.</returns>
         public ExecutionContext Patch([Optional, DefaultParameterValue(null)]string url)
         {
-            return SetHttpAction(url, HTTPVerb.PATCH);
+            return SetHttpAction(url ?? GivenContext.TargetUri, HTTPVerb.PATCH);
         }
 
         /// <summary>
@@ -174,7 +174,7 @@ namespace Liberator.RESTore
         /// <returns>The ExecutionContext that represents the executing query.</returns>
         public ExecutionContext Delete([Optional, DefaultParameterValue(null)]string url)
         {
-            return SetHttpAction(url, HTTPVerb.DELETE);
+            return SetHttpAction(url ?? GivenContext.TargetUri, HTTPVerb.DELETE);
         }
 
         #endregion
