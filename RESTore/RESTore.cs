@@ -22,12 +22,14 @@ namespace Liberator.RESTore
     /// </summary>
     public class RESTore
     {
+        private static int testCount = 0;
         /// <summary>
         /// Allows a user to define the setup of post request
         /// </summary>
         /// <returns></returns>
         public GivenContext Given()
         {
+            RESToreSettings.Log.WriteLine($"**BEGINNING OF TEST {++testCount}**");
             return new GivenContext();
         }
     }
