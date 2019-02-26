@@ -215,7 +215,7 @@ namespace Liberator.RESTore
                 urlBuilder.Replace($"{{{pathParam.Key}}}", pathParam.Value);
             }
 
-            TargetUrl = new Uri(new Uri(GivenContext.HostName), urlBuilder.ToString()).AbsoluteUri;
+            TargetUrl = new Uri(new Uri(GivenContext.HostNameWithPort()), urlBuilder.ToString()).AbsoluteUri;
             RESToreSettings.Log.WriteLine($"Full Url: {TargetUrl}");
             return TargetUrl;
         }
