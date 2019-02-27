@@ -155,8 +155,6 @@ namespace Liberator.RESTore
 
             foreach (KeyValuePair<string, string> header in headers)
             {
-                
-
                 bool isHeaderPresent = Headers.ContainsKey(header.Key);
                 RESToreSettings.Log.WriteLine($"{header.Key} is present in the response: {isHeaderPresent}");
 
@@ -256,7 +254,7 @@ namespace Liberator.RESTore
         /// <returns>The ThenContext representing the response message.</returns>
         public ThenContext AssessBody(string testName, Func<string, bool> assert)
         {
-            RESToreSettings.Log.WriteLine($"START AssessBody test: {testName} with user function");
+            RESToreSettings.Log.WriteLine($"START AssessBody test: {testName}");
             bool result;
             try
             {
@@ -266,8 +264,7 @@ namespace Liberator.RESTore
             }
             catch(Exception e)
             {
-                RESToreSettings.Log.WriteLine($"User function threw an exception: {e.Message}");
-                result = false;
+                throw new RESToreException(e.Message, e);
             }
 
             AddAndLogAssessment(testName, result);
@@ -283,7 +280,7 @@ namespace Liberator.RESTore
         /// <returns>The ThenContext representing the response message.</returns>
         public ThenContext AssertBody(Func<string, bool> assert)
         {
-            RESToreSettings.Log.WriteLine("BEGIN AssertBody test with user function");
+            RESToreSettings.Log.WriteLine("BEGIN AssertBody test");
             bool result;
             try
             {
@@ -293,8 +290,7 @@ namespace Liberator.RESTore
             }
             catch(Exception e)
             {
-                RESToreSettings.Log.WriteLine($"User function threw an exception: {e.Message}");
-                result = false;
+                throw new RESToreException(e.Message, e);
             }
 
             Assert.That(result, Is.True, "Condition used for Assert Body has failed");
@@ -312,7 +308,7 @@ namespace Liberator.RESTore
         /// <returns>The ThenContext representing the response message.</returns>
         public ThenContext AssessBody<TContent>(string testName, Func<TContent, bool> assert)
         {
-            RESToreSettings.Log.WriteLine($"START AssessBody test: {testName} with user function");
+            RESToreSettings.Log.WriteLine($"START AssessBody test: {testName}");
             bool result;
             try
             {
@@ -322,8 +318,7 @@ namespace Liberator.RESTore
             }
             catch(Exception e)
             {
-                RESToreSettings.Log.WriteLine($"User function threw an exception: {e.Message}");
-                result = false;
+                throw new RESToreException(e.Message, e);
             }
             AddAndLogAssessment(testName, result);
             RESToreSettings.Log.WriteLine("FINISH AssessBody test");
@@ -339,7 +334,7 @@ namespace Liberator.RESTore
         /// <returns>The ThenContext representing the response message.</returns>
         public ThenContext AssertBody<TContent>(Func<TContent, bool> assert)
         {
-            RESToreSettings.Log.WriteLine("BEGIN AssertBody test with user function");
+            RESToreSettings.Log.WriteLine("BEGIN AssertBody test");
             bool result;
             try
             {
@@ -349,8 +344,7 @@ namespace Liberator.RESTore
             }
             catch(Exception e)
             {
-                RESToreSettings.Log.WriteLine($"User function threw an exception: {e.Message}");
-                result = false;
+                throw new RESToreException(e.Message, e);
             }
 
             Assert.That(result, Is.True, "Condition used for Assert Body has failed");

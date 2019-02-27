@@ -15,6 +15,8 @@
 // IN THE SOFTWARE.
 
 
+using System.Diagnostics;
+
 namespace Liberator.RESTore
 {
     /// <summary>
@@ -22,14 +24,14 @@ namespace Liberator.RESTore
     /// </summary>
     public class RESTore
     {
-        private static int testCount = 0;
         /// <summary>
         /// Allows a user to define the setup of post request
         /// </summary>
         /// <returns></returns>
         public GivenContext Given()
         {
-            RESToreSettings.Log.WriteLine($"**BEGINNING OF TEST {++testCount}**");
+            string callingFunction = new StackTrace().GetFrame(1).GetMethod().Name;
+            RESToreSettings.Log.WriteLine($"**BEGINNING OF TEST {callingFunction}**");
             return new GivenContext();
         }
     }

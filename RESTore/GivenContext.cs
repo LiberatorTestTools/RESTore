@@ -174,7 +174,7 @@ namespace Liberator.RESTore
         public GivenContext Host(string host)
         {
             HostName = host;
-            RESToreSettings.Log.WriteLine($"Request will be sent to {host}");
+            RESToreSettings.Log.WriteLine($"Request will be sent to: {host}");
             return this;
         }
 
@@ -207,7 +207,7 @@ namespace Liberator.RESTore
         public GivenContext Uri(string uri)
         {
             TargetUri = uri;
-            RESToreSettings.Log.WriteLine($"Hitting Endpoint {uri}");
+            RESToreSettings.Log.WriteLine($"Hitting Endpoint: {uri}");
             return this;
         }
 
