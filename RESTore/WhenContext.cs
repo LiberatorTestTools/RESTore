@@ -181,7 +181,7 @@ namespace Liberator.RESTore
         /// <returns>The ExecutionContext that represents the executing query.</returns>
         public ExecutionContext Delete([Optional, DefaultParameterValue(null)]string url)
         {
-            RESToreSettings.Log.WriteLine("Using Delete");
+            RESToreSettings.Log.WriteLine("Using DELETE");
             return SetHttpAction(ChooseUrl(url, GivenContext.TargetUri), HTTPVerb.DELETE);
         }
 
