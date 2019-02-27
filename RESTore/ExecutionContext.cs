@@ -20,6 +20,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -434,9 +435,16 @@ namespace Liberator.RESTore
         /// <returns>A task representing the executed call.</returns>
         private async Task<TimedResponse> ExecuteCall()
         {
+            HttpResponseMessage response = null;
             var watch = new Stopwatch();
             watch.Start();
-            var response = await _httpClient.SendAsync(BuildRequest());
+            if (_whenContext.Streaming)
+            {
+
+            } else
+            {
+                response = await _httpClient.SendAsync(BuildRequest()); 
+            }
             watch.Stop();
             return new TimedResponse
             {
@@ -464,6 +472,17 @@ namespace Liberator.RESTore
                 LoadResponses = _loadReponses.ToList()
             };
             return thenContext;
+        }
+
+        private void BuildStream()
+        {
+            HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(BuildUri());
+            httpWebRequest.Method = "POST";
+            foreach (KeyValuePair<string, string> header in _whenContext.GivenContext.RequestHeaders)
+            {
+                httpWebRequest.Headers.Add(header.Key, header.Key);
+            }
+            HttpWebResponse httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
         }
 
         #endregion
