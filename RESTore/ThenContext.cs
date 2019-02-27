@@ -123,7 +123,7 @@ namespace Liberator.RESTore
             
             Assert.That(doesHeaderHaveValue, Is.True, $"{headerType} does not contain value {value}");
 
-            RESToreSettings.Log.WriteLine("AssertHeader test finished successfully");
+            RESToreSettings.Log.WriteLine("AssertHeader test finished");
             
             return this;
         }
@@ -164,7 +164,7 @@ namespace Liberator.RESTore
                 Assert.That(doesHeaderHaveValue, Is.True, $"{header.Key} does not contain value {header.Value}");
             }
 
-            RESToreSettings.Log.WriteLine("AssertHeaders test finished successfully");
+            RESToreSettings.Log.WriteLine("AssertHeaders test finished");
             
             return this;
         }
@@ -191,7 +191,7 @@ namespace Liberator.RESTore
         {
             RESToreSettings.Log.WriteLine("BEGIN AssertStatus test");
             Assert.That(StatusCode.Equals(httpStatusCode), Is.True, $"Expected HTTP Status: {httpStatusCode} but actual status is: {StatusCode}");
-            RESToreSettings.Log.WriteLine("AssertStatus test finished successfully");
+            RESToreSettings.Log.WriteLine("AssertStatus test finished");
             
             return this;
         }
@@ -216,7 +216,7 @@ namespace Liberator.RESTore
         {
             RESToreSettings.Log.WriteLine("BEGIN AssertSuccessStatus test");
             Assert.That(IsSuccessStatus, Is.True, $"HTTP Status: {StatusCode} does not indicate success");
-            RESToreSettings.Log.WriteLine("AssertSuccessStatus test finished successfully");
+            RESToreSettings.Log.WriteLine("AssertSuccessStatus test finished");
             
             return this;
         }
@@ -241,7 +241,7 @@ namespace Liberator.RESTore
         {
             RESToreSettings.Log.WriteLine("BEGIN AssertFailureStatus test");
             Assert.That(IsSuccessStatus, Is.False, $"HTTP Status: {StatusCode} does not indicate failure");
-            RESToreSettings.Log.WriteLine("AssertFailureStatus test finished successfully");
+            RESToreSettings.Log.WriteLine("AssertFailureStatus test finished");
             
             return this;
         }
@@ -294,7 +294,7 @@ namespace Liberator.RESTore
             }
 
             Assert.That(result, Is.True, "Condition used for Assert Body has failed");
-            RESToreSettings.Log.WriteLine("AssessBody test finished successfully");
+            RESToreSettings.Log.WriteLine("AssessBody test finished");
             
             return this;
         }
@@ -348,7 +348,7 @@ namespace Liberator.RESTore
             }
 
             Assert.That(result, Is.True, "Condition used for Assert Body has failed");
-            RESToreSettings.Log.WriteLine("AssessBody test finished successfully");
+            RESToreSettings.Log.WriteLine("AssessBody test finished");
             
             return this;
         }
@@ -361,7 +361,7 @@ namespace Liberator.RESTore
         {
             RESToreSettings.Log.WriteLine("BEGIN AssertPass test");
             Assert.That(Assertions.All(x => x.Value == true), Is.True);
-            RESToreSettings.Log.WriteLine("AssertPass test finished successfully");
+            RESToreSettings.Log.WriteLine("AssertPass test finished");
             return this;
         }
 
