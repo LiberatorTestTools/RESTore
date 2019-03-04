@@ -15,6 +15,8 @@
 // IN THE SOFTWARE.
 
 
+using System.Diagnostics;
+
 namespace Liberator.RESTore
 {
     /// <summary>
@@ -28,6 +30,8 @@ namespace Liberator.RESTore
         /// <returns></returns>
         public GivenContext Given()
         {
+            string callingFunction = new StackTrace().GetFrame(1).GetMethod().Name;
+            RESToreSettings.Log.WriteLine($"**BEGINNING OF TEST {callingFunction}**");
             return new GivenContext();
         }
     }

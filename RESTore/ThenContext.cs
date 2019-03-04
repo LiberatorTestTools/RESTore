@@ -19,6 +19,7 @@ using Newtonsoft.Json;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 
@@ -81,6 +82,7 @@ namespace Liberator.RESTore
         /// </summary>
         public ThenContext()
         {
+            RESToreSettings.Log.WriteLine("--THEN--");
             Headers = new Dictionary<string, IEnumerable<string>>();
             LoadValues = new Dictionary<string, double>();
             Assertions = new Dictionary<string, bool>();
@@ -111,8 +113,18 @@ namespace Liberator.RESTore
         /// <returns>The ThenContext representing the response message.</returns>
         public ThenContext AssertHeader(string headerType, string value)
         {
-            bool doesHeaderHaveValue = Headers.ContainsKey(headerType) && Headers[headerType].Contains(value);
-            Assert.That(doesHeaderHaveValue, Is.True);
+            RESToreSettings.Log.WriteLine("BEGIN AssertHeader test");
+
+            bool isHeaderPresent = Headers.ContainsKey(headerType);
+            RESToreSettings.Log.WriteLine($"{headerType} is present in the response: {isHeaderPresent}");
+
+            bool doesHeaderHaveValue = isHeaderPresent && Headers[headerType].Contains(value);
+            RESToreSettings.Log.WriteLine($"{headerType} contains {value}: {doesHeaderHaveValue}");
+            
+            Assert.That(doesHeaderHaveValue, Is.True, $"{headerType} does not contain value {value}");
+
+            RESToreSettings.Log.WriteLine("AssertHeader test finished");
+            
             return this;
         }
 
@@ -139,11 +151,21 @@ namespace Liberator.RESTore
         /// <returns>The ThenContext representing the response message.</returns>
         public ThenContext AssertHeaders(Dictionary<string, string> headers)
         {
+            RESToreSettings.Log.WriteLine("BEGIN AssertHeaders test");
+
             foreach (KeyValuePair<string, string> header in headers)
             {
-                bool doesHeaderHaveValue = Headers.ContainsKey(header.Key) && Headers[header.Key].Contains(header.Value);
-                Assert.That(doesHeaderHaveValue, Is.True);
+                bool isHeaderPresent = Headers.ContainsKey(header.Key);
+                RESToreSettings.Log.WriteLine($"{header.Key} is present in the response: {isHeaderPresent}");
+
+                bool doesHeaderHaveValue = isHeaderPresent && Headers[header.Key].Contains(header.Value);
+                RESToreSettings.Log.WriteLine($"{header.Key} contains {header.Value}: {doesHeaderHaveValue}");
+
+                Assert.That(doesHeaderHaveValue, Is.True, $"{header.Key} does not contain value {header.Value}");
             }
+
+            RESToreSettings.Log.WriteLine("AssertHeaders test finished");
+            
             return this;
         }
 
@@ -155,7 +177,7 @@ namespace Liberator.RESTore
         /// <returns>The ThenContext representing the response message.</returns>
         public ThenContext AssessStatus(HttpStatusCode httpStatusCode)
         {
-            Assertions.Add($"Status is {httpStatusCode}", StatusCode.Equals(httpStatusCode));
+            AddAndLogAssessment($"Expected HTTP Status: {httpStatusCode} to be equal to actual status code: {StatusCode}", StatusCode.Equals(httpStatusCode));
             return this;
         }
 
@@ -167,7 +189,10 @@ namespace Liberator.RESTore
         /// <returns>The ThenContext representing the response message.</returns>
         public ThenContext AssertStatus(HttpStatusCode httpStatusCode)
         {
-            Assert.That(StatusCode.Equals(httpStatusCode), Is.True);
+            RESToreSettings.Log.WriteLine("BEGIN AssertStatus test");
+            Assert.That(StatusCode.Equals(httpStatusCode), Is.True, $"Expected HTTP Status: {httpStatusCode} but actual status is: {StatusCode}");
+            RESToreSettings.Log.WriteLine("AssertStatus test finished");
+            
             return this;
         }
 
@@ -178,7 +203,7 @@ namespace Liberator.RESTore
         /// <returns></returns>
         public ThenContext AssessSuccessStatus()
         {
-            Assertions.Add("Success status:", IsSuccessStatus);
+            AddAndLogAssessment("Responded with success status", IsSuccessStatus);
             return this;
         }
 
@@ -189,7 +214,10 @@ namespace Liberator.RESTore
         /// <returns></returns>
         public ThenContext AssertSuccessStatus()
         {
-            Assert.That(IsSuccessStatus, Is.True);
+            RESToreSettings.Log.WriteLine("BEGIN AssertSuccessStatus test");
+            Assert.That(IsSuccessStatus, Is.True, $"HTTP Status: {StatusCode} does not indicate success");
+            RESToreSettings.Log.WriteLine("AssertSuccessStatus test finished");
+            
             return this;
         }
 
@@ -200,7 +228,7 @@ namespace Liberator.RESTore
         /// <returns></returns>
         public ThenContext AssessFailureStatus()
         {
-            Assertions.Add("Failure status:", IsSuccessStatus);
+            AddAndLogAssessment("Responded with failure status", !IsSuccessStatus);
             return this;
         }
 
@@ -211,7 +239,10 @@ namespace Liberator.RESTore
         /// <returns></returns>
         public ThenContext AssertFailureStatus()
         {
-            Assert.That(IsSuccessStatus, Is.False);
+            RESToreSettings.Log.WriteLine("BEGIN AssertFailureStatus test");
+            Assert.That(IsSuccessStatus, Is.False, $"HTTP Status: {StatusCode} does not indicate failure");
+            RESToreSettings.Log.WriteLine("AssertFailureStatus test finished");
+            
             return this;
         }
 
@@ -223,17 +254,22 @@ namespace Liberator.RESTore
         /// <returns>The ThenContext representing the response message.</returns>
         public ThenContext AssessBody(string testName, Func<string, bool> assert)
         {
+            RESToreSettings.Log.WriteLine($"START AssessBody test: {testName}");
             bool result;
             try
             {
+                RESToreSettings.Log.WriteLine("Calling user assert function...");
                 result = assert(Content);
+                RESToreSettings.Log.WriteLine("User function returned without exception");
             }
-            catch
+            catch(Exception e)
             {
-                result = false;
+                throw new RESToreException(e.Message, e);
             }
 
-            Assertions.Add(testName, result);
+            AddAndLogAssessment(testName, result);
+            RESToreSettings.Log.WriteLine("FINISH AssessBody test");
+            
             return this;
         }
 
@@ -244,17 +280,22 @@ namespace Liberator.RESTore
         /// <returns>The ThenContext representing the response message.</returns>
         public ThenContext AssertBody(Func<string, bool> assert)
         {
+            RESToreSettings.Log.WriteLine("BEGIN AssertBody test");
             bool result;
             try
             {
+                RESToreSettings.Log.WriteLine("Calling user assert function...");
                 result = assert(Content);
+                RESToreSettings.Log.WriteLine("User function returned without exception");
             }
-            catch
+            catch(Exception e)
             {
-                result = false;
+                throw new RESToreException(e.Message, e);
             }
 
-            Assert.That(result, Is.True);
+            Assert.That(result, Is.True, "Condition used for Assert Body has failed");
+            RESToreSettings.Log.WriteLine("AssessBody test finished");
+            
             return this;
         }
 
@@ -267,17 +308,21 @@ namespace Liberator.RESTore
         /// <returns>The ThenContext representing the response message.</returns>
         public ThenContext AssessBody<TContent>(string testName, Func<TContent, bool> assert)
         {
+            RESToreSettings.Log.WriteLine($"START AssessBody test: {testName}");
             bool result;
             try
             {
+                RESToreSettings.Log.WriteLine("Calling user assert function...");
                 result = assert(JsonConvert.DeserializeObject<TContent>(Content));
+                RESToreSettings.Log.WriteLine("User function returned without exception");
             }
-            catch
+            catch(Exception e)
             {
-                result = false;
+                throw new RESToreException(e.Message, e);
             }
-
-            Assertions.Add(testName, result);
+            AddAndLogAssessment(testName, result);
+            RESToreSettings.Log.WriteLine("FINISH AssessBody test");
+            
             return this;
         }
 
@@ -289,17 +334,22 @@ namespace Liberator.RESTore
         /// <returns>The ThenContext representing the response message.</returns>
         public ThenContext AssertBody<TContent>(Func<TContent, bool> assert)
         {
+            RESToreSettings.Log.WriteLine("BEGIN AssertBody test");
             bool result;
             try
             {
+                RESToreSettings.Log.WriteLine("Calling user assert function...");
                 result = assert(JsonConvert.DeserializeObject<TContent>(Content));
+                RESToreSettings.Log.WriteLine("User function returned without exception");
             }
-            catch
+            catch(Exception e)
             {
-                result = false;
+                throw new RESToreException(e.Message, e);
             }
 
-            Assert.That(result, Is.True);
+            Assert.That(result, Is.True, "Condition used for Assert Body has failed");
+            RESToreSettings.Log.WriteLine("AssessBody test finished");
+            
             return this;
         }
 
@@ -309,26 +359,11 @@ namespace Liberator.RESTore
         /// <returns>The ThenContext representing the response message.</returns>
         public ThenContext AssertPass()
         {
+            RESToreSettings.Log.WriteLine("BEGIN AssertPass test");
             Assert.That(Assertions.All(x => x.Value == true), Is.True);
+            RESToreSettings.Log.WriteLine("AssertPass test finished");
             return this;
         }
-
-        #endregion
-
-        #region Output
-
-        /// <summary>
-        /// Outputs the list of Assertions and their results to the Debug console
-        /// </summary>
-        /// <returns>The ThenContext representing the response message.</returns>
-        public ThenContext ToConsole()
-        {
-            foreach (KeyValuePair<string, bool> assertion in Assertions)
-            {
-                Console.WriteLine($"Assertion: {assertion.Key} | {assertion.Value.ToString().ToUpper()}");
-            }
-            return this;
-        } 
 
         #endregion
 
@@ -342,8 +377,15 @@ namespace Liberator.RESTore
         private void CheckIfHeaderValueIsConfirmed(string headerType, string value)
         {
             bool doesHeaderHaveValue = Headers.ContainsKey(headerType) && Headers[headerType].Contains(value);
-            Assertions.Add($"Header: {headerType} has Value: {value}", doesHeaderHaveValue);
-        } 
+            AddAndLogAssessment($"Header: {headerType} has Value: {value}", doesHeaderHaveValue);
+        }
+
+        private void AddAndLogAssessment(string assessment, bool value)
+        {
+            Assertions.Add(assessment, value);
+            RESToreSettings.Log.WriteLine($"Assessment: {assessment} | {value.ToString().ToUpper()}");
+            
+        }
 
         #endregion
     }

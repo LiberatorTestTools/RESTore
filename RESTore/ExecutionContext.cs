@@ -328,11 +328,6 @@ namespace Liberator.RESTore
                 content.Add(new StringContent(pair.Value), pair.Key.Quote());
             }
 
-            foreach (var item in _givenContext.Files)
-            {
-
-            }
-
             _givenContext.Files.ForEach(x =>
             {
                 var fileContent = new ByteArrayContent(x.Content);

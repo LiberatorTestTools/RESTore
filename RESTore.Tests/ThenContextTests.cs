@@ -62,6 +62,11 @@ namespace Liberator.RESTore.Tests
             thenContext.AssertSuccessStatus();
         }
 
-
+        [Test]
+        [Category("Then Context : Methods")]
+        public void GetApiCall_AssessBody()
+        {
+            Assert.That(() => thenContext.AssessBody<int>("test exception", number => number == 0), Throws.Exception.TypeOf<AssertionException>());
+        }
     }
 }

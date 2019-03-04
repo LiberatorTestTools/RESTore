@@ -112,6 +112,7 @@ namespace Liberator.RESTore
         /// </summary>
         public GivenContext()
         {
+            RESToreSettings.Log.WriteLine("--GIVEN--");
             Client = new HttpClient();
             Files = new List<FileContent>();
             SiteCookies = new Dictionary<string, string>();
@@ -133,6 +134,7 @@ namespace Liberator.RESTore
         public GivenContext Name(string name)
         {
             SuiteName = name;
+            RESToreSettings.Log.WriteLine($"Test Suite Name: {SuiteName}");
             return this;
         }
 
@@ -144,6 +146,7 @@ namespace Liberator.RESTore
         public GivenContext Proxy(string address)
         {
             Client = new HttpClient(AddProxyToClient(address));
+            RESToreSettings.Log.WriteLine($"Added proxy: {address} using default credentials");
             return this;
         }
 
@@ -157,6 +160,7 @@ namespace Liberator.RESTore
         public GivenContext Proxy(string address, string userName, string password)
         {
             Client = new HttpClient(AddProxyToClient(address, userName, password));
+            RESToreSettings.Log.WriteLine($"Added proxy: {address} using username: {userName} and password: {password}");
             return this;
         }
 
@@ -170,6 +174,7 @@ namespace Liberator.RESTore
         public GivenContext Host(string host)
         {
             HostName = host;
+            RESToreSettings.Log.WriteLine($"Request will be sent to: {host}");
             return this;
         }
 
@@ -181,6 +186,7 @@ namespace Liberator.RESTore
         public GivenContext Port(int port)
         {
             HostPort = port;
+            RESToreSettings.Log.WriteLine($"Using Port: {port}");
             return this;
         }
 
@@ -201,6 +207,7 @@ namespace Liberator.RESTore
         public GivenContext Uri(string uri)
         {
             TargetUri = uri;
+            RESToreSettings.Log.WriteLine($"Hitting Endpoint: {uri}");
             return this;
         }
 
@@ -212,6 +219,7 @@ namespace Liberator.RESTore
         public GivenContext Timeout(int milliseconds)
         {
             RequestTimeout = new TimeSpan(0, 0, 0, 0, milliseconds);
+            RESToreSettings.Log.WriteLine($"Setting Request Timeout to {milliseconds}ms");
             return this;
         }
 
@@ -223,6 +231,7 @@ namespace Liberator.RESTore
         public GivenContext Body(string body)
         {
             RequestBody = body;
+            RESToreSettings.Log.WriteLine($"Using Body: {body}");
             return this;
         }
 
@@ -234,7 +243,9 @@ namespace Liberator.RESTore
         /// <returns>The GivenContext object with the request body set.</returns>
         public GivenContext Body<T>(T body) where T : class
         {
-            RequestBody = JsonConvert.SerializeObject(body);
+            string bodyString = JsonConvert.SerializeObject(body);
+            RequestBody = bodyString;
+            RESToreSettings.Log.WriteLine($"Using Body: {bodyString}");
             return this;
         }
 
@@ -256,7 +267,7 @@ namespace Liberator.RESTore
                     ContentType = contentType,
                     Content = content
                 });
-
+            RESToreSettings.Log.WriteLine($"Uploading file: {fileName}");
             return this;
         }
 
@@ -271,6 +282,7 @@ namespace Liberator.RESTore
             if (!SiteCookies.ContainsKey(name))
             {
                 SiteCookies.Add(name, value);
+                RESToreSettings.Log.WriteLine($"Adding cookie: {name} with value: {value}");
             }
             return this;
         }
@@ -287,6 +299,7 @@ namespace Liberator.RESTore
                 if (!SiteCookies.ContainsKey(cookie.Key))
                 {
                     SiteCookies.Add(cookie.Key, cookie.Value);
+                    RESToreSettings.Log.WriteLine($"Adding cookie: {cookie.Key} with value: {cookie.Value}");
                 }
             }
             return this;
@@ -302,7 +315,10 @@ namespace Liberator.RESTore
             foreach (var header in headers)
             {
                 if (!RequestHeaders.ContainsKey(header.Key))
+                {
                     RequestHeaders.Add(header.Key, header.Value);
+                    RESToreSettings.Log.WriteLine($"Adding header: {header.Key} with value: {header.Value}");
+                }
             }
             return this;
         }
@@ -316,7 +332,10 @@ namespace Liberator.RESTore
         public GivenContext Header(string headerType, string value)
         {
             if (!RequestHeaders.ContainsKey(headerType))
+            {
                 RequestHeaders.Add(headerType, value);
+                RESToreSettings.Log.WriteLine($"Adding header: {headerType} with value: {value}");
+            }
 
             return this;
         }
@@ -330,7 +349,10 @@ namespace Liberator.RESTore
         public GivenContext Parameter(string key, string value)
         {
             if (!QueryParameters.ContainsKey(key))
+            {
                 QueryParameters.Add(key, value);
+                RESToreSettings.Log.WriteLine($"Adding form parameter: {key} with value: {value}");
+            }
             return this;
         }
 
@@ -344,7 +366,10 @@ namespace Liberator.RESTore
             foreach (var parameter in parameters)
             {
                 if (!QueryParameters.ContainsKey(parameter.Key))
+                {
                     QueryParameters.Add(parameter.Key, parameter.Value);
+                    RESToreSettings.Log.WriteLine($"Adding form parameter: {parameter.Key} with value: {parameter.Value}");
+                }
             }
             return this;
         }
@@ -358,7 +383,10 @@ namespace Liberator.RESTore
         public GivenContext Query(string key, string value)
         {
             if (!QueryStrings.ContainsKey(key))
+            {
                 QueryStrings.Add(key, value);
+                RESToreSettings.Log.WriteLine($"Adding to query string: {key} with value: {value}");
+            }
             return this;
         }
 
@@ -372,7 +400,10 @@ namespace Liberator.RESTore
             foreach (var query in queries)
             {
                 if (!QueryStrings.ContainsKey(query.Key))
+                {
                     QueryStrings.Add(query.Key, query.Value);
+                    RESToreSettings.Log.WriteLine($"Adding to query string: {query.Key} with value: {query.Value}");
+                }
             }
             return this;
         }
