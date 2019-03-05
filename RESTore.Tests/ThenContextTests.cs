@@ -37,6 +37,13 @@ namespace Liberator.RESTore.Tests
 
         [Test]
         [Category("Then Context : Methods")]
+        public void GetApiCall_StatusIsOKInt()
+        {
+            thenContext.AssertStatus(200);
+        }
+
+        [Test]
+        [Category("Then Context : Methods")]
         public void GetApiCall_ContentLengthCorrect()
         {
             thenContext.AssertHeader(HeaderType.ContentLength, "10883");
@@ -120,6 +127,58 @@ namespace Liberator.RESTore.Tests
         public void GetApiCall_AssertHeaderException()
         {
             Assert.That(() => thenContext.AssertHeader(HeaderType.ContentType, list => ((object)null).ToString().Equals("")),
+                Throws.Exception.TypeOf<AssertionException>());
+        }
+
+        [Test]
+        [Category("Then Context : Methods")]
+        public void GetApiCall_AssessStatus()
+        {
+            string test = "test4";
+            thenContext.AssessStatus(test, code => code == 200);
+            thenContext.Assertions.TryGetValue(test, out bool value);
+            Assert.That(value, Is.True);
+        }
+
+        [Test]
+        [Category("Then Context : Methods")]
+        public void GetApiCall_AssessStatusFail()
+        {
+            string test = "test5";
+            thenContext.AssessStatus(test, code => code == 505);
+            thenContext.Assertions.TryGetValue(test, out bool value);
+            Assert.That(value, Is.False);
+        }
+
+        [Test]
+        [Category("Then Context : Methods")]
+        public void GetApiCall_AssessStatusException()
+        {
+            string test = "test6";
+            Assert.That(() => thenContext.AssessStatus(test, code => ((object)null).ToString().Equals("")),
+                Throws.Exception.TypeOf<AssertionException>());
+        }
+
+        [Test]
+        [Category("Then Context : Methods")]
+        public void GetApiCall_AssertStatus()
+        {
+            thenContext.AssertStatus(code => code == 200);
+        }
+
+        [Test]
+        [Category("Then Context : Methods")]
+        public void GetApiCall_AssertStatusFail()
+        {
+            Assert.That(() => thenContext.AssertStatus(code => code == 505),
+                Throws.Exception.TypeOf<AssertionException>());
+        }
+
+        [Test]
+        [Category("Then Context : Methods")]
+        public void GetApiCall_AssertStatusException()
+        {
+            Assert.That(() => thenContext.AssertStatus(code => ((object)null).ToString().Equals("")),
                 Throws.Exception.TypeOf<AssertionException>());
         }
     }
