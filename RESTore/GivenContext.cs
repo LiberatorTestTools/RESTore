@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.IO;
 
 namespace Liberator.RESTore
 {
@@ -102,6 +103,10 @@ namespace Liberator.RESTore
         /// </summary>
         public Dictionary<string, string> QueryParameters { get; set; }
 
+        /// <summary>
+        /// Content that is to be streamed
+        /// </summary>
+        public string StreamableContent { get; set; }
 
         #endregion
 
@@ -120,6 +125,7 @@ namespace Liberator.RESTore
             QueryStrings = new Dictionary<string, string>();
             QueryParameters = new Dictionary<string, string>();
             RequestTimeout = new TimeSpan(0, 0, 0, 30, 0);
+            StreamableContent = null;
         }
 
         #endregion
@@ -268,6 +274,12 @@ namespace Liberator.RESTore
                     Content = content
                 });
             RESToreSettings.Log.WriteLine($"Uploading file: {fileName}");
+            return this;
+        }
+
+        public GivenContext FileStream(string filePath)
+        {
+            StreamableContent = filePath;
             return this;
         }
 

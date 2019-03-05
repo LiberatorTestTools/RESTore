@@ -20,7 +20,6 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -146,20 +145,46 @@ namespace Liberator.RESTore
         /// <returns>The HTTP Request object representing the POST request.</returns>
         private HttpRequestMessage BuildPost()
         {
-            var request = new HttpRequestMessage()
-            {
-                RequestUri = BuildUri(),
-                Method = HttpMethod.Post
-            };
+            HttpRequestMessage request = new HttpRequestMessage();
 
-            AppendHeaders(request);
-            AppendCookies(request);
-            SetTimeout();
+            if (_givenContext.StreamableContent == null)
+            {
+                request = new HttpRequestMessage()
+                {
+                    RequestUri = BuildUri(),
+                    Method = HttpMethod.Post
+                };
+                AppendHeaders(request);
+                AppendCookies(request);
+                SetTimeout();
+            }
+            else
+            {
+                HttpWebRequest requestToServerEndpoint = (HttpWebRequest)WebRequest.Create(BuildUri());
+                foreach (KeyValuePair<string, string> header in _givenContext.RequestHeaders)
+                {
+                    requestToServerEndpoint.Headers.Add(header.Key, header.Value);
+                }
+            }
 
             request.Content = BuildContent();
 
             return request;
         }
+        /*
+        MemoryStream postDataStream = new MemoryStream();
+                    StreamWriter postDataWriter = new StreamWriter(postDataStream);
+
+                    FileStream fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+                    byte[] buffer = new byte[1024];
+                    int bytesRead = 0;
+                    while ((bytesRead = fileStream.Read(buffer, 0, buffer.Length)) != 0)
+                    {
+                        postDataStream.Write(buffer, 0, bytesRead);
+                    }
+                    fileStream.Close();
+        */
+
 
         /// <summary>
         /// Builds a PUT request.
@@ -231,7 +256,7 @@ namespace Liberator.RESTore
         private Uri BuildUri()
         {
             var builder = new UriBuilder(_whenContext.TargetUrl);
-            var query =   HttpUtility.ParseQueryString(builder.Query);
+            var query = HttpUtility.ParseQueryString(builder.Query);
 
             foreach (var queryString in _givenContext.QueryStrings)
             {
@@ -436,9 +461,10 @@ namespace Liberator.RESTore
             if (_whenContext.Streaming)
             {
 
-            } else
+            }
+            else
             {
-                response = await _httpClient.SendAsync(BuildRequest()); 
+                response = await _httpClient.SendAsync(BuildRequest());
             }
             watch.Stop();
             return new TimedResponse
