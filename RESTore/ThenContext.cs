@@ -104,6 +104,43 @@ namespace Liberator.RESTore
             return this;
         }
 
+        /// <summary>
+        /// Assess whether the header values meets the requirements of a lambda function
+        /// </summary>
+        /// <param name="testName">The name of the test</param>
+        /// <param name="headerType">The header that will be assessed</param>
+        /// <param name="assert">The assertion in the form of a lambda function</param>
+        /// <returns></returns>
+        public ThenContext AssessHeader(string testName, string headerType, Func<IEnumerable<string>, bool> assert)
+        {
+            RESToreSettings.Log.WriteLine("START AssessHeader test");
+            bool result;
+            try
+            {
+                bool isHeaderPresent = Headers.ContainsKey(headerType);
+                RESToreSettings.Log.WriteLine($"{headerType} is present in the response: {isHeaderPresent}");
+
+                // Header doesn't exist, therefore no reason to carry on the test
+                if (!isHeaderPresent)
+                {
+                    AddAndLogAssessment(testName, isHeaderPresent);
+                    return this;
+                }
+
+                RESToreSettings.Log.WriteLine("Calling user assert function...");
+                result = assert(Headers[headerType]);
+                RESToreSettings.Log.WriteLine("User function returned without exception");
+            }
+            catch(Exception e)
+            {
+                throw new RESToreException(e.Message, e);
+            }
+
+            AddAndLogAssessment(testName, result);
+            RESToreSettings.Log.WriteLine("FINISH AssessHeader test");
+            return this;
+        }
+
 
         /// <summary>
         /// Checks if a header has a specified value.
@@ -127,6 +164,8 @@ namespace Liberator.RESTore
             
             return this;
         }
+
+
 
 
         /// <summary>
@@ -300,7 +339,7 @@ namespace Liberator.RESTore
         }
 
         /// <summary>
-        /// Assess whether the body contains a particular type of object
+        /// Assess whether the body meets the requirements of a lambda function
         /// </summary>
         /// <typeparam name="TContent">The type of object to use to deserialise the body.</typeparam>
         /// <param name="testName">The name of the test</param>
@@ -327,7 +366,7 @@ namespace Liberator.RESTore
         }
 
         /// <summary>
-        /// Asserts whether the body contains a particular type of object
+        /// Assert whether the body meets the requirements of a lambda function
         /// </summary>
         /// <typeparam name="TContent">The type of object to use to deserialise the body.</typeparam>
         /// <param name="assert">A lambda function representing the test.</param>
