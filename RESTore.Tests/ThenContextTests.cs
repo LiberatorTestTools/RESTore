@@ -99,5 +99,28 @@ namespace Liberator.RESTore.Tests
             Assert.That(() => thenContext.AssessHeader(test, HeaderType.ContentType, list => ((object)null).ToString().Equals("")),
                 Throws.Exception.TypeOf<AssertionException>());
         }
+
+        [Test]
+        [Category("Then Context : Methods")]
+        public void GetApiCall_AssertHeader()
+        {
+            thenContext.AssertHeader(HeaderType.ContentType, headerValues => headerValues.Contains("text/html"));
+        }
+
+        [Test]
+        [Category("Then Context : Methods")]
+        public void GetApiCall_AssertHeaderWhereHeaderDoesntExist()
+        {
+            Assert.That(() => thenContext.AssertHeader("moo", headerValues => headerValues.Contains("text/html")),
+                Throws.Exception.TypeOf<AssertionException>());
+        }
+
+        [Test]
+        [Category("Then Context : Methods")]
+        public void GetApiCall_AssertHeaderException()
+        {
+            Assert.That(() => thenContext.AssertHeader(HeaderType.ContentType, list => ((object)null).ToString().Equals("")),
+                Throws.Exception.TypeOf<AssertionException>());
+        }
     }
 }

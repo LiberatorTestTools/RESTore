@@ -110,7 +110,7 @@ namespace Liberator.RESTore
         /// <param name="testName">The name of the test</param>
         /// <param name="headerType">The header that will be assessed</param>
         /// <param name="assert">The assertion in the form of a lambda function</param>
-        /// <returns></returns>
+        /// <returns>The ThenContext representing the response message</returns>
         public ThenContext AssessHeader(string testName, string headerType, Func<IEnumerable<string>, bool> assert)
         {
             RESToreSettings.Log.WriteLine("START AssessHeader test");
@@ -141,6 +141,42 @@ namespace Liberator.RESTore
             return this;
         }
 
+        /// <summary>
+        /// Assert whether the header values meets the requirements of a lambda function
+        /// </summary>
+        /// <param name="testName">The name of the test</param>
+        /// <param name="headerType">The header that will be assessed</param>
+        /// <param name="assert">The assertion in the form of a lambda function</param>
+        /// <returns>The ThenContext representing the response message`</returns>
+        public ThenContext AssertHeader(string headerType, Func<IEnumerable<string>, bool> assert)
+        {
+            RESToreSettings.Log.WriteLine("BEGIN AssertHeader test");
+            bool result;
+            try
+            {
+                bool isHeaderPresent = Headers.ContainsKey(headerType);
+                RESToreSettings.Log.WriteLine($"{headerType} is present in the response: {isHeaderPresent}");
+
+                // Header doesn't exist, therefore no reason to carry on the test
+                if (!isHeaderPresent)
+                {
+                    Assert.Fail($"Header {headerType} is not present");
+                    return this;
+                }
+
+                RESToreSettings.Log.WriteLine("Calling user assert function...");
+                result = assert(Headers[headerType]);
+                RESToreSettings.Log.WriteLine("User function returned without exception");
+            }
+            catch (Exception e)
+            {
+                throw new RESToreException(e.Message, e);
+            }
+
+            Assert.That(result, Is.True, "Condition used for Assert Header has failed") ;
+            RESToreSettings.Log.WriteLine("AssertHeaders test finished");
+            return this;
+        }
 
         /// <summary>
         /// Checks if a header has a specified value.
