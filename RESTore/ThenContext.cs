@@ -104,6 +104,79 @@ namespace Liberator.RESTore
             return this;
         }
 
+        /// <summary>
+        /// Assess whether the header values meets the requirements of a lambda function.
+        /// </summary>
+        /// <param name="testName">The name of the test.</param>
+        /// <param name="headerType">The header that will be assessed.</param>
+        /// <param name="assert">The assertion in the form of a lambda function.</param>
+        /// <returns>The ThenContext representing the response message.</returns>
+        public ThenContext AssessHeader(string testName, string headerType, Func<IEnumerable<string>, bool> assert)
+        {
+            RESToreSettings.Log.WriteLine("START AssessHeader test");
+            bool result;
+            try
+            {
+                bool isHeaderPresent = Headers.ContainsKey(headerType);
+                RESToreSettings.Log.WriteLine($"{headerType} is present in the response: {isHeaderPresent}");
+
+                // Header doesn't exist, therefore no reason to carry on the test
+                if (!isHeaderPresent)
+                {
+                    AddAndLogAssessment(testName, isHeaderPresent);
+                    return this;
+                }
+
+                RESToreSettings.Log.WriteLine("Calling user assert function...");
+                result = assert(Headers[headerType]);
+                RESToreSettings.Log.WriteLine("User function returned without exception");
+            }
+            catch(Exception e)
+            {
+                throw new RESToreException(e.Message, e);
+            }
+
+            AddAndLogAssessment(testName, result);
+            RESToreSettings.Log.WriteLine("FINISH AssessHeader test");
+            return this;
+        }
+
+        /// <summary>
+        /// Assert whether the header values meets the requirements of a lambda function.
+        /// </summary>
+        /// <param name="testName">The name of the test.</param>
+        /// <param name="headerType">The header that will be assessed.</param>
+        /// <param name="assert">The assertion in the form of a lambda function.</param>
+        /// <returns>The ThenContext representing the response message.</returns>
+        public ThenContext AssertHeader(string headerType, Func<IEnumerable<string>, bool> assert)
+        {
+            RESToreSettings.Log.WriteLine("BEGIN AssertHeader test");
+            bool result;
+            try
+            {
+                bool isHeaderPresent = Headers.ContainsKey(headerType);
+                RESToreSettings.Log.WriteLine($"{headerType} is present in the response: {isHeaderPresent}");
+
+                // Header doesn't exist, therefore no reason to carry on the test
+                if (!isHeaderPresent)
+                {
+                    Assert.Fail($"Header {headerType} is not present");
+                    return this;
+                }
+
+                RESToreSettings.Log.WriteLine("Calling user assert function...");
+                result = assert(Headers[headerType]);
+                RESToreSettings.Log.WriteLine("User function returned without exception");
+            }
+            catch (Exception e)
+            {
+                throw new RESToreException(e.Message, e);
+            }
+
+            Assert.That(result, Is.True, "Condition used for Assert Header has failed") ;
+            RESToreSettings.Log.WriteLine("AssertHeaders test finished");
+            return this;
+        }
 
         /// <summary>
         /// Checks if a header has a specified value.
@@ -127,8 +200,7 @@ namespace Liberator.RESTore
             
             return this;
         }
-
-
+        
         /// <summary>
         /// Assesses a series of headers and asserts specific values.
         /// </summary>
@@ -142,8 +214,7 @@ namespace Liberator.RESTore
             }
             return this;
         }
-
-
+        
         /// <summary>
         /// Checks a series of headers and asserts specific values.
         /// </summary>
@@ -168,8 +239,7 @@ namespace Liberator.RESTore
             
             return this;
         }
-
-
+        
         /// <summary>
         /// Assesses if the Status Code in the response is as anticipated.
         /// </summary>
@@ -181,7 +251,43 @@ namespace Liberator.RESTore
             return this;
         }
 
+        /// <summary>
+        /// Assesses if the Status Code in the response is as anticipated.
+        /// </summary>
+        /// <param name="statusCode">The code anticipated by the test.</param>
+        /// <returns>The ThenContext representing the response message.</returns>
+        public ThenContext AssessStatus(int statusCode)
+        {
+            AddAndLogAssessment($"Expected HTTP Status: {statusCode} to be equal to actual status code: {(int)StatusCode}", (int)StatusCode == statusCode);
+            return this;
+        }
 
+        /// <summary>
+        /// Assess whether the status meets the requirements of a lambda function.
+        /// </summary>
+        /// <param name="testName">The name of the test.</param>
+        /// <param name="assert">The assertion in the form of a lambda function.</param>
+        /// <returns>The ThenContext representing the response message.</returns>
+        public ThenContext AssessStatus(string testName, Func<int, bool> assert)
+        {
+            RESToreSettings.Log.WriteLine($"START AssessStatus test: {testName}");
+            bool result;
+            try
+            {
+                RESToreSettings.Log.WriteLine("Calling user assert function...");
+                result = assert((int)StatusCode);
+                RESToreSettings.Log.WriteLine("User function returned without exception");
+            }
+            catch (Exception e)
+            {
+                throw new RESToreException(e.Message, e);
+            }
+
+            AddAndLogAssessment(testName, result);
+            RESToreSettings.Log.WriteLine("FINISH AssessBody test");
+            return this;
+        }
+        
         /// <summary>
         /// Asserts if the Status Code in the response is as anticipated.
         /// </summary>
@@ -196,11 +302,48 @@ namespace Liberator.RESTore
             return this;
         }
 
+        /// <summary>
+        /// Asserts if the Status Code in the response is as anticipated.
+        /// </summary>
+        /// <param name="statusCode">The code anticipated by the test.</param>
+        /// <returns>The ThenContext representing the response message.</returns>
+        public ThenContext AssertStatus(int statusCode)
+        {
+            RESToreSettings.Log.WriteLine("BEGIN AssertStatus test");
+            Assert.That((int)StatusCode == statusCode, Is.True, $"Expected HTTP Status: {statusCode} to be equal to actual status code: {(int)StatusCode}");
+            RESToreSettings.Log.WriteLine("AssertStatus test finished");
+            return this;
+        }
 
         /// <summary>
-        /// Asserts whether the response contains a successful status
+        /// Assess whether the status meets the requirements of a lambda function.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="assert">The assertion in the form of a lambda function.</param>
+        /// <returns>The ThenContext representing the response message.</returns>
+        public ThenContext AssertStatus(Func<int, bool> assert)
+        {
+            RESToreSettings.Log.WriteLine("BEGIN AssertStatus test");
+            bool result;
+            try
+            {
+                RESToreSettings.Log.WriteLine("Calling user assert function...");
+                result = assert((int)StatusCode);
+                RESToreSettings.Log.WriteLine("User function returned without exception");
+            }
+            catch (Exception e)
+            {
+                throw new RESToreException(e.Message, e);
+            }
+
+            Assert.That(result, Is.True, "Condition used for AssertStatus has failed");
+            RESToreSettings.Log.WriteLine("AssertStatus test finished");
+            return this;
+        }
+
+        /// <summary>
+        /// Asserts whether the response contains a successful status.
+        /// </summary>
+        /// <returns>The ThenContext representing the response message.</returns>
         public ThenContext AssessSuccessStatus()
         {
             AddAndLogAssessment("Responded with success status", IsSuccessStatus);
@@ -209,9 +352,9 @@ namespace Liberator.RESTore
 
 
         /// <summary>
-        /// Asserts whether the response contains a successful status
+        /// Asserts whether the response contains a successful status.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The ThenContext representing the response message.</returns>
         public ThenContext AssertSuccessStatus()
         {
             RESToreSettings.Log.WriteLine("BEGIN AssertSuccessStatus test");
@@ -223,9 +366,9 @@ namespace Liberator.RESTore
 
 
         /// <summary>
-        /// Assess whether the response contains a non-success status
+        /// Assess whether the response contains a non-success status.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The ThenContext representing the response message.</returns>
         public ThenContext AssessFailureStatus()
         {
             AddAndLogAssessment("Responded with failure status", !IsSuccessStatus);
@@ -234,9 +377,9 @@ namespace Liberator.RESTore
 
 
         /// <summary>
-        /// Asserts whether the response contains a non-success status
+        /// Asserts whether the response contains a non-success status.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The ThenContext representing the response message.</returns>
         public ThenContext AssertFailureStatus()
         {
             RESToreSettings.Log.WriteLine("BEGIN AssertFailureStatus test");
@@ -247,10 +390,10 @@ namespace Liberator.RESTore
         }
 
         /// <summary>
-        /// Assess whether the body meets the requirements of a lambda function
+        /// Assess whether the body meets the requirements of a lambda function.
         /// </summary>
-        /// <param name="testName">The name of the test</param>
-        /// <param name="assert">The assertion in the form of a lambda function</param>
+        /// <param name="testName">The name of the test.</param>
+        /// <param name="assert">The assertion in the form of a lambda function.</param>
         /// <returns>The ThenContext representing the response message.</returns>
         public ThenContext AssessBody(string testName, Func<string, bool> assert)
         {
@@ -274,9 +417,9 @@ namespace Liberator.RESTore
         }
 
         /// <summary>
-        /// Asserts whether the body meets the requirements of a lambda function
+        /// Asserts whether the body meets the requirements of a lambda function.
         /// </summary>
-        /// <param name="assert">The assertion in the form of a lambda function</param>
+        /// <param name="assert">The assertion in the form of a lambda function.</param>
         /// <returns>The ThenContext representing the response message.</returns>
         public ThenContext AssertBody(Func<string, bool> assert)
         {
@@ -300,10 +443,10 @@ namespace Liberator.RESTore
         }
 
         /// <summary>
-        /// Assess whether the body contains a particular type of object
+        /// Assess whether the body meets the requirements of a lambda function.
         /// </summary>
         /// <typeparam name="TContent">The type of object to use to deserialise the body.</typeparam>
-        /// <param name="testName">The name of the test</param>
+        /// <param name="testName">The name of the test.</param>
         /// <param name="assert">A lambda function representing the test.</param>
         /// <returns>The ThenContext representing the response message.</returns>
         public ThenContext AssessBody<TContent>(string testName, Func<TContent, bool> assert)
@@ -327,7 +470,7 @@ namespace Liberator.RESTore
         }
 
         /// <summary>
-        /// Asserts whether the body contains a particular type of object
+        /// Assert whether the body meets the requirements of a lambda function.
         /// </summary>
         /// <typeparam name="TContent">The type of object to use to deserialise the body.</typeparam>
         /// <param name="assert">A lambda function representing the test.</param>
@@ -348,13 +491,12 @@ namespace Liberator.RESTore
             }
 
             Assert.That(result, Is.True, "Condition used for Assert Body has failed");
-            RESToreSettings.Log.WriteLine("AssessBody test finished");
-            
+            RESToreSettings.Log.WriteLine("AssertBody test finished");
             return this;
         }
 
         /// <summary>
-        /// Assesses whether the API test passes its validation
+        /// Assesses whether the API test passes its validation.
         /// </summary>
         /// <returns>The ThenContext representing the response message.</returns>
         public ThenContext AssertPass()
@@ -364,11 +506,9 @@ namespace Liberator.RESTore
             RESToreSettings.Log.WriteLine("AssertPass test finished");
             return this;
         }
-
         #endregion
 
         #region Private Methods
-
         /// <summary>
         /// Checks whether a header contains a particular value.
         /// </summary>
@@ -386,7 +526,6 @@ namespace Liberator.RESTore
             RESToreSettings.Log.WriteLine($"Assessment: {assessment} | {value.ToString().ToUpper()}");
             
         }
-
         #endregion
     }
 }
