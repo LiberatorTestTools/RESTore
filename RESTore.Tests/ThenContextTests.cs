@@ -1,7 +1,6 @@
-﻿using NUnit.Framework;
-using Liberator.RESTore.Enumerations;
+﻿using Liberator.RESTore.Enumerations;
+using NUnit.Framework;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 
 namespace Liberator.RESTore.Tests
@@ -63,6 +62,11 @@ namespace Liberator.RESTore.Tests
             thenContext.AssertSuccessStatus();
         }
 
-
+        [Test]
+        [Category("Then Context : Methods")]
+        public void GetApiCall_AssessBody()
+        {
+            Assert.That(() => thenContext.AssessBody<int>("test exception", number => number == 0), Throws.Exception.TypeOf<AssertionException>());
+        }
     }
 }

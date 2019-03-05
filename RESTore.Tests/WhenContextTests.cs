@@ -80,10 +80,11 @@ namespace Liberator.RESTore.Tests
             WhenContext when = new RESTore()
                 .Given()
                     .Host("http://www.totallyratted.com")
+                    .Port(8080)
                 .When()
                     .PathParameter("id", "1")
                     .PathParameter("cow", "moo")
-                    .PathParameters(new Dictionary<string, string>
+                    .PathParameters(new Dictionary<string, object>
                     {
                         {"mood", "happy"},
                         {"another", "one"},
@@ -92,7 +93,7 @@ namespace Liberator.RESTore.Tests
 
             ExecutionContext context = when.Get("/{id}/url/{cow}/{mood}/something/{another}/end");
 
-            Assert.That("http://www.totallyratted.com/1/url/moo/happy/something/one/end".Equals(when.TargetUrl), Is.True);
+            Assert.That("http://www.totallyratted.com:8080/1/url/moo/happy/something/one/end".Equals(when.TargetUrl), Is.True);
         }
     }
 }
