@@ -65,11 +65,6 @@ namespace Liberator.RESTore
         /// </summary>
         public Dictionary<string, string> PathParams { get; set; }
 
-        /// <summary>
-        /// Whether to use streaming requests
-        /// </summary>
-        public bool Streaming { get; set; }
-
         #endregion
 
         #region Constructor
@@ -132,12 +127,6 @@ namespace Liberator.RESTore
                 PathParams.Add(entry.Key, entry.Value.ToString());
                 RESToreSettings.Log.WriteLine($"Added path parameter: {entry.Key} with value: {entry.Value}");
             }
-            return this;
-        }
-
-        public WhenContext WithStream()
-        {
-            Streaming = true;
             return this;
         }
 

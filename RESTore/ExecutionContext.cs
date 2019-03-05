@@ -20,6 +20,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -53,6 +54,11 @@ namespace Liberator.RESTore
         private HttpClient _httpClient;
 
         /// <summary>
+        /// 
+        /// </summary>
+        private HttpWebRequest _webRequest;
+
+        /// <summary>
         /// The compiled responses from the load test.
         /// </summary>
         private ConcurrentQueue<LoadResponse> _loadReponses = new ConcurrentQueue<LoadResponse>();
@@ -72,6 +78,7 @@ namespace Liberator.RESTore
             _whenContext = whenContext;
 
             _httpClient = whenContext.GivenContext.Client;
+            
         }
 
         #endregion
@@ -145,32 +152,34 @@ namespace Liberator.RESTore
         /// <returns>The HTTP Request object representing the POST request.</returns>
         private HttpRequestMessage BuildPost()
         {
-            HttpRequestMessage request = new HttpRequestMessage();
-
-            if (_givenContext.StreamableContent == null)
+            HttpRequestMessage request = new HttpRequestMessage()
             {
-                request = new HttpRequestMessage()
-                {
-                    RequestUri = BuildUri(),
-                    Method = HttpMethod.Post
-                };
-                AppendHeaders(request);
-                AppendCookies(request);
-                SetTimeout();
-            }
-            else
-            {
-                HttpWebRequest requestToServerEndpoint = (HttpWebRequest)WebRequest.Create(BuildUri());
-                foreach (KeyValuePair<string, string> header in _givenContext.RequestHeaders)
-                {
-                    requestToServerEndpoint.Headers.Add(header.Key, header.Value);
-                }
-            }
+                RequestUri = BuildUri(),
+                Method = HttpMethod.Post
+            };
+            AppendHeaders(request);
+            AppendCookies(request);
+            SetTimeout();
 
             request.Content = BuildContent();
 
             return request;
+
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        private HttpWebRequest BuildStreamingPost()
+        {
+            HttpWebRequest requestToServerEndpoint = (HttpWebRequest)WebRequest.Create(BuildUri());
+            AppendStreamingHeaders(requestToServerEndpoint);
+            AppendStreamingCookies(requestToServerEndpoint);
+
+            return requestToServerEndpoint;
+        }
+
         /*
         MemoryStream postDataStream = new MemoryStream();
                     StreamWriter postDataWriter = new StreamWriter(postDataStream);
@@ -278,12 +287,29 @@ namespace Liberator.RESTore
                 request.Headers.Add(header.Key, header.Value);
             }
         }
+        private void AppendStreamingHeaders(HttpWebRequest request)
+        {
+            foreach (var header in _givenContext.RequestHeaders)
+            {
+                request.Headers.Add(header.Key, header.Value);
+            }
+        }
 
         /// <summary>
         /// Appends cookies to the request.
         /// </summary>
         /// <param name="request">The request to be sent to the endpoint.</param>
         private void AppendCookies(HttpRequestMessage request)
+        {
+            if (_givenContext.SiteCookies.Count != 0)
+                request.Headers.Add("Cookie", string.Join(";", _givenContext.SiteCookies.Select(x => x.Key + "=" + x.Value)));
+        }
+
+        /// <summary>
+        /// Appends cookies to the streamed request.
+        /// </summary>
+        /// <param name="request">The request to be sent to the endpoint.</param>
+        private void AppendStreamingCookies(HttpWebRequest request)
         {
             if (_givenContext.SiteCookies.Count != 0)
                 request.Headers.Add("Cookie", string.Join(";", _givenContext.SiteCookies.Select(x => x.Key + "=" + x.Value)));
@@ -438,9 +464,9 @@ namespace Liberator.RESTore
             HttpResponseMessage response = null;
             var watch = new Stopwatch();
             watch.Start();
-            if (_whenContext.Streaming)
+            if (_whenContext.GivenContext.StreamableContent != null)
             {
-
+                using(Stream stream = )
             }
             else
             {
