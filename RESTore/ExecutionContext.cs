@@ -247,9 +247,29 @@ namespace Liberator.RESTore
         /// <param name="request">The request to be sent to the endpoint.</param>
         private void AppendHeaders(HttpRequestMessage request)
         {
-            foreach (var header in _givenContext.RequestHeaders)
+            if (_givenContext.RequestHeaders.IsPresentInDictionary(HeaderType.Accept))
             {
-                request.Headers.Add(header.Key, header.Value);
+                _httpClient.DefaultRequestHeaders.Add(HeaderType.Accept, _givenContext.HeaderAccept());
+            }
+            if (_givenContext.RequestHeaders.IsPresentInDictionary("Accept Encoding"))
+            {
+                _httpClient.DefaultRequestHeaders.Add("Accept Encoding", _givenContext.HeaderAccept());
+            }
+            if (_givenContext.RequestHeaders.IsPresentInDictionary("Accept Charset"))
+            {
+                _httpClient.DefaultRequestHeaders.Add("Accept Charset", _givenContext.HeaderAcceptCharset());
+            }
+            if (_givenContext.RequestHeaders.IsPresentInDictionary("Content Type"))
+            {
+                _httpClient.DefaultRequestHeaders.Add("Content Type", _givenContext.HeaderAcceptCharset());
+            }
+            if (_givenContext.OtherHeaders().Count > 0)
+            {
+                foreach (KeyValuePair<string, string> header in _givenContext.OtherHeaders())
+                {
+                    _httpClient.DefaultRequestHeaders.Add(header.Key, header.Value);
+
+                }
             }
         }
 

@@ -35,5 +35,29 @@ namespace Liberator.RESTore
         {
             return "\"" + source + "\"";
         }
+
+        /// <summary>
+        /// Checks if a value is present in a dictionary
+        /// </summary>
+        /// <param name="dictionary">The dictionary being checked.</param>
+        /// <param name="value">The value of the key to locate.</param>
+        /// <returns>True if the element is found in the dictionary.</returns>
+        internal static bool IsPresentInDictionary(this IEnumerable dictionary, object value)
+        {
+            object objectFound = ((IDictionary)dictionary)[value];
+            return objectFound != null ? true : false;
+        }
+
+        /// <summary>
+        /// Checks if a value is present in a KeyValueConfigurationCollection.
+        /// </summary>
+        /// <param name="configurationCollection">The collection of settings.</param>
+        /// <param name="value">the setting required.</param>
+        /// <returns>Whether the setting is in the collection passed.</returns>
+        internal static bool IsPresentInCollection(this KeyValueConfigurationCollection configurationCollection, string value)
+        {
+            object objectFound = configurationCollection[value].Value;
+            return objectFound != null ? true : false;
+        }
     }
 }
