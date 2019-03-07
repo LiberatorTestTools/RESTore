@@ -249,19 +249,15 @@ namespace Liberator.RESTore
         {
             if (_givenContext.RequestHeaders.IsPresentInDictionary(HeaderType.Accept))
             {
-                _httpClient.DefaultRequestHeaders.Add(HeaderType.Accept, _givenContext.HeaderAccept());
+                _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(_givenContext.HeaderAccept()));
             }
-            if (_givenContext.RequestHeaders.IsPresentInDictionary("Accept Encoding"))
+            if (_givenContext.RequestHeaders.IsPresentInDictionary(HeaderType.AcceptEncoding))
             {
-                _httpClient.DefaultRequestHeaders.Add("Accept Encoding", _givenContext.HeaderAccept());
+                _httpClient.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue(_givenContext.HeaderAcceptEncoding()));
             }
-            if (_givenContext.RequestHeaders.IsPresentInDictionary("Accept Charset"))
+            if (_givenContext.RequestHeaders.IsPresentInDictionary(HeaderType.AcceptCharset))
             {
-                _httpClient.DefaultRequestHeaders.Add("Accept Charset", _givenContext.HeaderAcceptCharset());
-            }
-            if (_givenContext.RequestHeaders.IsPresentInDictionary("Content Type"))
-            {
-                _httpClient.DefaultRequestHeaders.Add("Content Type", _givenContext.HeaderAcceptCharset());
+                _httpClient.DefaultRequestHeaders.AcceptCharset.Add(new StringWithQualityHeaderValue(_givenContext.HeaderAcceptCharset()));
             }
             if (_givenContext.OtherHeaders().Count > 0)
             {
