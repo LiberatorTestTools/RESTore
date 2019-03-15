@@ -247,9 +247,25 @@ namespace Liberator.RESTore
         /// <param name="request">The request to be sent to the endpoint.</param>
         private void AppendHeaders(HttpRequestMessage request)
         {
-            foreach (var header in _givenContext.RequestHeaders)
+            if (_givenContext.RequestHeaders.IsPresentInDictionary(HeaderType.Accept))
             {
-                request.Headers.Add(header.Key, header.Value);
+                _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(_givenContext.HeaderAccept()));
+            }
+            if (_givenContext.RequestHeaders.IsPresentInDictionary(HeaderType.AcceptEncoding))
+            {
+                _httpClient.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue(_givenContext.HeaderAcceptEncoding()));
+            }
+            if (_givenContext.RequestHeaders.IsPresentInDictionary(HeaderType.AcceptCharset))
+            {
+                _httpClient.DefaultRequestHeaders.AcceptCharset.Add(new StringWithQualityHeaderValue(_givenContext.HeaderAcceptCharset()));
+            }
+            if (_givenContext.OtherHeaders().Count > 0)
+            {
+                foreach (KeyValuePair<string, string> header in _givenContext.OtherHeaders())
+                {
+                    _httpClient.DefaultRequestHeaders.Add(header.Key, header.Value);
+
+                }
             }
         }
 
@@ -429,10 +445,13 @@ namespace Liberator.RESTore
         {
             var content = result.Response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
 
+            var contentHeaders = result.Response.Content.Headers;
+            var headers = result.Response.Headers;
+            
             ThenContext thenContext = new ThenContext()
             {
                 Content = content,
-                Headers = result.Response.Content.Headers.ToDictionary(x => x.Key.Trim(), x => x.Value),
+                Headers = contentHeaders.Concat(headers).ToDictionary(entry => entry.Key.Trim(), entry => entry.Value),
                 IsSuccessStatus = result.Response.IsSuccessStatusCode,
                 StatusCode = result.Response.StatusCode,
                 ElapsedExecutionTime = result.TimeElapsed,
