@@ -445,10 +445,13 @@ namespace Liberator.RESTore
         {
             var content = result.Response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
 
+            var contentHeaders = result.Response.Content.Headers;
+            var headers = result.Response.Headers;
+            
             ThenContext thenContext = new ThenContext()
             {
                 Content = content,
-                Headers = result.Response.Content.Headers.ToDictionary(x => x.Key.Trim(), x => x.Value),
+                Headers = contentHeaders.Concat(headers).ToDictionary(entry => entry.Key.Trim(), entry => entry.Value),
                 IsSuccessStatus = result.Response.IsSuccessStatusCode,
                 StatusCode = result.Response.StatusCode,
                 ElapsedExecutionTime = result.TimeElapsed,
