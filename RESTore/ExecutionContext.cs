@@ -20,7 +20,6 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -78,7 +77,7 @@ namespace Liberator.RESTore
             _whenContext = whenContext;
 
             _httpClient = whenContext.GivenContext.Client;
-            
+
         }
 
         #endregion
@@ -436,14 +435,7 @@ namespace Liberator.RESTore
             HttpResponseMessage response = null;
             var watch = new Stopwatch();
             watch.Start();
-            if (_whenContext.GivenContext.StreamableContent != null)
-            {
-                
-            }
-            else
-            {
-                response = await _httpClient.SendAsync(BuildRequest());
-            }
+            response = await _httpClient.SendAsync(BuildRequest());
             watch.Stop();
             return new TimedResponse
             {
@@ -463,7 +455,7 @@ namespace Liberator.RESTore
 
             var contentHeaders = result.Response.Content.Headers;
             var headers = result.Response.Headers;
-            
+
             ThenContext thenContext = new ThenContext()
             {
                 Content = content,
