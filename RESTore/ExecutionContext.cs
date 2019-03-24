@@ -482,7 +482,7 @@ namespace Liberator.RESTore
             watch.Start();
             if (_whenContext.GivenContext.StreamableContent != null)
             {
-                using(Stream stream = )
+                
             }
             else
             {
@@ -522,13 +522,13 @@ namespace Liberator.RESTore
 
         private void BuildStream()
         {
-            HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(BuildUri());
-            httpWebRequest.Method = "POST";
+            _webRequest = (HttpWebRequest)WebRequest.Create(BuildUri());
+            _webRequest.Method = "POST";
             foreach (KeyValuePair<string, string> header in _whenContext.GivenContext.RequestHeaders)
             {
-                httpWebRequest.Headers.Add(header.Key, header.Key);
+                _webRequest.Headers.Add(header.Key, header.Key);
             }
-            HttpWebResponse httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+            HttpWebResponse httpWebResponse = (HttpWebResponse)_webRequest.GetResponse();
         }
 
         #endregion
