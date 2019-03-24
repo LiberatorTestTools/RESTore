@@ -167,33 +167,6 @@ namespace Liberator.RESTore
 
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        private HttpWebRequest BuildStreamingPost()
-        {
-            HttpWebRequest requestToServerEndpoint = (HttpWebRequest)WebRequest.Create(BuildUri());
-            AppendStreamingHeaders(requestToServerEndpoint);
-            AppendStreamingCookies(requestToServerEndpoint);
-
-            return requestToServerEndpoint;
-        }
-
-        /*
-        MemoryStream postDataStream = new MemoryStream();
-                    StreamWriter postDataWriter = new StreamWriter(postDataStream);
-
-                    FileStream fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
-                    byte[] buffer = new byte[1024];
-                    int bytesRead = 0;
-                    while ((bytesRead = fileStream.Read(buffer, 0, buffer.Length)) != 0)
-                    {
-                        postDataStream.Write(buffer, 0, bytesRead);
-                    }
-                    fileStream.Close();
-        */
-
 
         /// <summary>
         /// Builds a PUT request.
@@ -303,29 +276,12 @@ namespace Liberator.RESTore
                 }
             }
         }
-        private void AppendStreamingHeaders(HttpWebRequest request)
-        {
-            foreach (var header in _givenContext.RequestHeaders)
-            {
-                request.Headers.Add(header.Key, header.Value);
-            }
-        }
 
         /// <summary>
         /// Appends cookies to the request.
         /// </summary>
         /// <param name="request">The request to be sent to the endpoint.</param>
         private void AppendCookies(HttpRequestMessage request)
-        {
-            if (_givenContext.SiteCookies.Count != 0)
-                request.Headers.Add("Cookie", string.Join(";", _givenContext.SiteCookies.Select(x => x.Key + "=" + x.Value)));
-        }
-
-        /// <summary>
-        /// Appends cookies to the streamed request.
-        /// </summary>
-        /// <param name="request">The request to be sent to the endpoint.</param>
-        private void AppendStreamingCookies(HttpWebRequest request)
         {
             if (_givenContext.SiteCookies.Count != 0)
                 request.Headers.Add("Cookie", string.Join(";", _givenContext.SiteCookies.Select(x => x.Key + "=" + x.Value)));
@@ -518,17 +474,6 @@ namespace Liberator.RESTore
                 LoadResponses = _loadReponses.ToList()
             };
             return thenContext;
-        }
-
-        private void BuildStream()
-        {
-            _webRequest = (HttpWebRequest)WebRequest.Create(BuildUri());
-            _webRequest.Method = "POST";
-            foreach (KeyValuePair<string, string> header in _whenContext.GivenContext.RequestHeaders)
-            {
-                _webRequest.Headers.Add(header.Key, header.Key);
-            }
-            HttpWebResponse httpWebResponse = (HttpWebResponse)_webRequest.GetResponse();
         }
 
         #endregion
