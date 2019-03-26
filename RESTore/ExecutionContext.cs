@@ -53,11 +53,6 @@ namespace Liberator.RESTore
         private HttpClient _httpClient;
 
         /// <summary>
-        /// 
-        /// </summary>
-        private HttpWebRequest _webRequest;
-
-        /// <summary>
         /// The compiled responses from the load test.
         /// </summary>
         private ConcurrentQueue<LoadResponse> _loadReponses = new ConcurrentQueue<LoadResponse>();
@@ -432,10 +427,9 @@ namespace Liberator.RESTore
         /// <returns>A task representing the executed call.</returns>
         private async Task<TimedResponse> ExecuteCall()
         {
-            HttpResponseMessage response = null;
             var watch = new Stopwatch();
             watch.Start();
-            response = await _httpClient.SendAsync(BuildRequest());
+            HttpResponseMessage response = await _httpClient.SendAsync(BuildRequest());
             watch.Stop();
             return new TimedResponse
             {
