@@ -199,15 +199,25 @@ namespace Liberator.RESTore
         /// <returns>The WhenContext for the call.</returns>
         public WhenContext GetAuthToken(IToken token)
         {
-            if (token.GetType() == typeof(AzureToken))
+            try
             {
-                AzureToken azureToken = (AzureToken)token;
-                AccessToken = azureToken.GetAccessToken(
-                    azureToken.UserName,
-                    azureToken.Password,
-                    azureToken.Scopes.ToArray(),
-                    azureToken.ClientId,
-                    azureToken.Authority);
+                if (token.GetType() == typeof(AzureToken))
+                {
+                    RESToreSettings.Log.WriteLine("Fetching Azure access token from authority endpoint.");
+                    AzureToken azureToken = (AzureToken)token;
+                    AccessToken = azureToken.GetAccessToken(
+                        azureToken.UserName,
+                        azureToken.Password,
+                        azureToken.Scopes.ToArray(),
+                        azureToken.ClientId,
+                        azureToken.Authority);
+                    RESToreSettings.Log.WriteLine("Azure access token retrieved.");
+                }
+            }
+            catch (Exception)
+            {
+                RESToreSettings.Log.WriteLine("Could not retrieve Azure access token.");
+                AccessToken = "";
             }
             return this;
         }
