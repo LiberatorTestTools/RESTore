@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.IO;
 
 namespace Liberator.RESTore
 {
@@ -101,7 +102,6 @@ namespace Liberator.RESTore
         /// The Query Parameters for the request.
         /// </summary>
         public Dictionary<string, string> QueryParameters { get; set; }
-
 
         #endregion
 
