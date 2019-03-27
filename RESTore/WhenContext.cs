@@ -15,6 +15,7 @@
 // IN THE SOFTWARE.
 
 
+using Liberator.RESTore.Access;
 using Liberator.RESTore.Enumerations;
 using System;
 using System.Collections.Generic;
@@ -64,6 +65,11 @@ namespace Liberator.RESTore
         /// The path parameters and their values.
         /// </summary>
         public Dictionary<string, string> PathParams { get; set; }
+
+        /// <summary>
+        /// The access token for the endpoint.
+        /// </summary>
+        public string AccessToken { get; set; }
 
         #endregion
 
@@ -183,6 +189,37 @@ namespace Liberator.RESTore
         {
             RESToreSettings.Log.WriteLine("Using DELETE");
             return SetHttpAction(ChooseUrl(url, GivenContext.TargetUri), HTTPVerb.DELETE);
+        }
+
+        /// <summary>
+        /// Gets an authorisation token based on the details of the passed token retrieval class.
+        /// NB: currently configured for Azure only. AWS and other applications to follow.
+        /// </summary>
+        /// <param name="token">The object used to retrieve the token.</param>
+        /// <returns>The WhenContext for the call.</returns>
+        public WhenContext GetAuthToken(IToken token)
+        {
+            try
+            {
+                if (token.GetType() == typeof(AzureToken))
+                {
+                    RESToreSettings.Log.WriteLine("Fetching Azure access token from authority endpoint.");
+                    AzureToken azureToken = (AzureToken)token;
+                    AccessToken = azureToken.GetAccessToken(
+                        azureToken.UserName,
+                        azureToken.Password,
+                        azureToken.Scopes.ToArray(),
+                        azureToken.ClientId,
+                        azureToken.Authority);
+                    RESToreSettings.Log.WriteLine("Azure access token retrieved.");
+                }
+            }
+            catch (Exception)
+            {
+                RESToreSettings.Log.WriteLine("Could not retrieve Azure access token.");
+                AccessToken = "";
+            }
+            return this;
         }
 
         #endregion

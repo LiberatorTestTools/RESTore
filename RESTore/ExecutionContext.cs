@@ -72,6 +72,7 @@ namespace Liberator.RESTore
             _whenContext = whenContext;
 
             _httpClient = whenContext.GivenContext.Client;
+
         }
 
         #endregion
@@ -145,12 +146,11 @@ namespace Liberator.RESTore
         /// <returns>The HTTP Request object representing the POST request.</returns>
         private HttpRequestMessage BuildPost()
         {
-            var request = new HttpRequestMessage()
+            HttpRequestMessage request = new HttpRequestMessage()
             {
                 RequestUri = BuildUri(),
                 Method = HttpMethod.Post
             };
-
             AppendHeaders(request);
             AppendCookies(request);
             SetTimeout();
@@ -158,7 +158,9 @@ namespace Liberator.RESTore
             request.Content = BuildContent();
 
             return request;
+
         }
+
 
         /// <summary>
         /// Builds a PUT request.
@@ -230,7 +232,7 @@ namespace Liberator.RESTore
         private Uri BuildUri()
         {
             var builder = new UriBuilder(_whenContext.TargetUrl);
-            var query =   HttpUtility.ParseQueryString(builder.Query);
+            var query = HttpUtility.ParseQueryString(builder.Query);
 
             foreach (var queryString in _givenContext.QueryStrings)
             {
@@ -427,7 +429,7 @@ namespace Liberator.RESTore
         {
             var watch = new Stopwatch();
             watch.Start();
-            var response = await _httpClient.SendAsync(BuildRequest());
+            HttpResponseMessage response = await _httpClient.SendAsync(BuildRequest());
             watch.Stop();
             return new TimedResponse
             {
@@ -447,7 +449,7 @@ namespace Liberator.RESTore
 
             var contentHeaders = result.Response.Content.Headers;
             var headers = result.Response.Headers;
-            
+
             ThenContext thenContext = new ThenContext()
             {
                 Content = content,
