@@ -496,20 +496,20 @@ namespace Liberator.RESTore
         }
 
         /// <summary>
-        /// Populates .NET objects with the returned JSON from the endpoint.
+        /// Gets the response body as an object of the specified type.
         /// </summary>
-        /// <typeparam name="TContent">The type of object to be populated.</typeparam>
-        /// <returns>.NET objects built from the returned JSON.</returns>
-        public TContent ReturnedObjectsFromJSON<TContent>()
+        /// <typeparam name="TContent">The type of the content being deserialized.</typeparam>
+        /// <param name="result">The resulting object to output.</param>
+        /// <returns>The ThenContext representing the response message.</returns>
+        public ThenContext GetJsonObject<TContent>(out TContent result)
         {
-            RESToreSettings.Log.WriteLine("BEGIN AssertBody test");
-            TContent result;
+            RESToreSettings.Log.WriteLine("Fetching JSON Object");
             try
             {
                 RESToreSettings.Log.WriteLine("Deserialising object(s) ...");
                 result = JsonConvert.DeserializeObject<TContent>(Content);
                 RESToreSettings.Log.WriteLine("... Object(s) deserialised");
-                return result;
+                return this;
             }
             catch (Exception e)
             {
