@@ -496,6 +496,29 @@ namespace Liberator.RESTore
         }
 
         /// <summary>
+        /// Populates .NET objects with the returned JSON from the endpoint.
+        /// </summary>
+        /// <typeparam name="TContent">The type of object to be populated.</typeparam>
+        /// <returns>.NET objects built from the returned JSON.</returns>
+        public TContent ReturnedObjectsFromJSON<TContent>()
+        {
+            RESToreSettings.Log.WriteLine("BEGIN AssertBody test");
+            TContent result;
+            try
+            {
+                RESToreSettings.Log.WriteLine("Deserialising object(s) ...");
+                result = JsonConvert.DeserializeObject<TContent>(Content);
+                RESToreSettings.Log.WriteLine("... Object(s) deserialised");
+                return result;
+            }
+            catch (Exception e)
+            {
+                RESToreSettings.Log.WriteLine("JSON deserialisation has failed.");
+                throw new RESToreException(e.Message, e);
+            }
+        }
+
+        /// <summary>
         /// Assesses whether the API test passes its validation.
         /// </summary>
         /// <returns>The ThenContext representing the response message.</returns>
