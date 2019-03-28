@@ -15,14 +15,14 @@
 // IN THE SOFTWARE.
 
 
-using Newtonsoft.Json;
 using Liberator.RESTore.Enumerations;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.IO;
+using System.Xml;
 
 namespace Liberator.RESTore
 {
@@ -232,6 +232,18 @@ namespace Liberator.RESTore
         {
             RequestBody = body;
             RESToreSettings.Log.WriteLine($"Using Body: {body}");
+            return this;
+        }
+
+        /// <summary>
+        /// Allows a user to set the body of the request using an XML Document
+        /// </summary>
+        /// <param name="xmlDocument">Document object to be used in the call.</param>
+        /// <returns>The GivenContext object with the request body set.</returns>
+        public GivenContext Body(XmlDocument xmlDocument)
+        {
+            RequestBody = xmlDocument.ToString();
+            RESToreSettings.Log.WriteLine($"Using Body: {xmlDocument}");
             return this;
         }
 
