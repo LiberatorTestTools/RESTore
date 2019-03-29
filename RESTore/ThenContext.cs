@@ -519,6 +519,17 @@ namespace Liberator.RESTore
         }
 
         /// <summary>
+        /// Get the content in the response body.
+        /// </summary>
+        /// <param name="content">The resulting content to output.</param>
+        /// <returns>The ThenContext representing the response message.</returns>
+        public ThenContext GetContent(out string content)
+        {
+            content = Content;
+            return this;
+        }
+
+        /// <summary>
         /// Assesses whether the API test passes its validation.
         /// </summary>
         /// <returns>The ThenContext representing the response message.</returns>
