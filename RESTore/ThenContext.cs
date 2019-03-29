@@ -526,6 +526,7 @@ namespace Liberator.RESTore
         public ThenContext GetContent(out string content)
         {
             content = Content;
+            RESToreSettings.Log.WriteLine("Fetched content");
             return this;
         }
 
