@@ -19,10 +19,12 @@ using Liberator.RESTore.Enumerations;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Xml;
+using System.Xml.Serialization;
 
 namespace Liberator.RESTore
 {
@@ -256,6 +258,26 @@ namespace Liberator.RESTore
         public GivenContext Body<T>(T body) where T : class
         {
             string bodyString = JsonConvert.SerializeObject(body);
+            RequestBody = bodyString;
+            RESToreSettings.Log.WriteLine($"Using Body: {bodyString}");
+            return this;
+        }
+
+        /// <summary>
+        /// Allows a user to add a body based on an Object and serialises it.
+        /// </summary>
+        /// <typeparam name="T">The type of object being passed.</typeparam>
+        /// <param name="body">The body object.</param>
+        /// <returns>The GivenContext object with the request body set.</returns>
+        public GivenContext BodyXML<T>(T body) where T : class
+        {
+            string bodyString = null;
+            XmlSerializer xmlSerializer = new XmlSerializer(body.GetType());
+            using (StringWriter stringWriter = new StringWriter())
+            {
+                xmlSerializer.Serialize(stringWriter, body);
+                bodyString = stringWriter.ToString();
+            }
             RequestBody = bodyString;
             RESToreSettings.Log.WriteLine($"Using Body: {bodyString}");
             return this;
