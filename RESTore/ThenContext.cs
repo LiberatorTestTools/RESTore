@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Xml.Serialization;
 
 namespace Liberator.RESTore
 {
@@ -516,6 +517,34 @@ namespace Liberator.RESTore
                 RESToreSettings.Log.WriteLine("JSON deserialisation has failed.");
                 throw new RESToreException(e.Message, e);
             }
+        }
+
+        /// <summary>
+        /// Gets the response body as an object of the specified type.
+        /// </summary>
+        /// <typeparam name="TContent">The type of the content being deserialized.</typeparam>
+        /// <param name="result">The resulting object to output.</param>
+        /// <returns>The ThenContext representing the response message.</returns>
+        public ThenContext GetXmlObject<TContent>(out TContent result)
+        {
+            RESToreSettings.Log.WriteLine("Fetching JSON Object");
+            try
+            {
+                RESToreSettings.Log.WriteLine("Deserialising object(s) ...");
+                XmlSerializer xmlSerializer = new XmlSerializer(typeof(TContent));
+                using (StringReader stringReader = new StringReader(Content))
+                {
+                    result = (TContent)xmlSerializer.Deserialize(stringReader); ;
+                }
+                RESToreSettings.Log.WriteLine("... Object(s) deserialised");
+                return this;
+            }
+            catch (Exception e)
+            {
+                RESToreSettings.Log.WriteLine("JSON deserialisation has failed.");
+                throw new RESToreException(e.Message, e);
+            }
+
         }
 
         /// <summary>
