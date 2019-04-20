@@ -196,9 +196,11 @@ namespace Liberator.RESTore
         /// NB: currently configured for Azure only. AWS and other applications to follow.
         /// </summary>
         /// <param name="token">The object used to retrieve the token.</param>
+        /// <param name="accessToken">The access token as a string.</param>
         /// <returns>The WhenContext for the call.</returns>
-        public WhenContext GetAuthToken(IToken token)
+        public WhenContext GetAuthToken(IToken token, out string accessToken)
         {
+            accessToken = "";
             try
             {
                 if (token.GetType() == typeof(AzureToken))
@@ -212,12 +214,14 @@ namespace Liberator.RESTore
                         azureToken.ClientId,
                         azureToken.Authority);
                     RESToreSettings.Log.WriteLine("Azure access token retrieved.");
+                    accessToken = AccessToken;
                 }
             }
             catch (Exception)
             {
                 RESToreSettings.Log.WriteLine("Could not retrieve Azure access token.");
                 AccessToken = "";
+                accessToken = AccessToken;
             }
             return this;
         }

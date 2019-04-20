@@ -4,14 +4,14 @@
     <TargetFrameworks>net461;netstandard2.0</TargetFrameworks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>Liberator.RESTore</PackageId>
-    <Version>0.3.0</Version>
+    <Version>0.3.1</Version>
     <Authors>LiberatorTestTools</Authors>
     <Product>Liberator.RESTore</Product>
     <Copyright>2017-2019, Liberator Test Tools</Copyright>
     <PackageTags>REST API Testing</PackageTags>
-    <AssemblyVersion>0.3.0.0</AssemblyVersion>
-    <FileVersion>0.3.0.0</FileVersion>
-    <PackageReleaseNotes>Add MIME types, output to .NET objects, streamed requests &amp; access tokens for Azure</PackageReleaseNotes>
+    <AssemblyVersion>0.3.1.0</AssemblyVersion>
+    <FileVersion>0.3.1.0</FileVersion>
+    <PackageReleaseNotes>Add XML handling to Given and Then Contexts</PackageReleaseNotes>
     <Description>A fluent BDD influenced library for testing API endpoints, influenced by the java project RestAssured.</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageLicenseUrl>https://licenses.nuget.org/MIT</PackageLicenseUrl>
