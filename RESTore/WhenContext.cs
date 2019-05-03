@@ -116,7 +116,14 @@ namespace Liberator.RESTore
         /// <returns>The When Context that we are building.</returns>
         public WhenContext PathParameter(string parameter, object value)
         {
-            PathParams.Add(parameter, value.ToString());
+            if (value == null)
+            {
+                PathParams.Add(parameter, "");
+            }
+            else
+            {
+                PathParams.Add(parameter, value.ToString());
+            }
             RESToreSettings.Log.WriteLine($"Added path parameter: {parameter} with value: {value}");
             return this;
         }
@@ -130,7 +137,14 @@ namespace Liberator.RESTore
         {
             foreach (var entry in pathParameters)
             {
-                PathParams.Add(entry.Key, entry.Value.ToString());
+                if (entry.Value == null)
+                {
+                    PathParams.Add(entry.Key, "");
+                }
+                else
+                {
+                    PathParams.Add(entry.Key, entry.Value.ToString());
+                }
                 RESToreSettings.Log.WriteLine($"Added path parameter: {entry.Key} with value: {entry.Value}");
             }
             return this;
@@ -253,7 +267,14 @@ namespace Liberator.RESTore
 
             foreach (var pathParam in PathParams)
             {
-                urlBuilder.Replace($"{{{pathParam.Key}}}", pathParam.Value);
+                if (pathParam.Value == "")
+                {
+                    urlBuilder.Replace($"/{{{pathParam.Key}}}", "");
+                }
+                else
+                {
+                    urlBuilder.Replace($"{{{pathParam.Key}}}", pathParam.Value);
+                }
             }
 
             TargetUrl = new Uri(new Uri(GivenContext.HostNameWithPort()), urlBuilder.ToString()).AbsoluteUri;
