@@ -368,7 +368,7 @@ namespace Liberator.RESTore
         /// <summary>
         /// Starts the load test element of the request.
         /// </summary>
-        public void StartCallsForLoad()
+        internal void StartCallsForLoad()
         {
             ServicePointManager.DefaultConnectionLimit = _whenContext.Threads;
 

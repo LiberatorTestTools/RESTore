@@ -461,7 +461,7 @@ namespace Liberator.RESTore
         /// Return all headers.
         /// </summary>
         /// <returns>A collection of headers as a dictionary.</returns>
-        public Dictionary<string, string> Headers()
+        internal Dictionary<string, string> Headers()
         {
             return RequestHeaders.Select(x => new KeyValuePair<string, string>(x.Key, x.Value)).ToDictionary(x => x.Key, x => x.Value);
         }
@@ -470,7 +470,7 @@ namespace Liberator.RESTore
         /// Return the value for a content-type header.
         /// </summary>
         /// <returns>The content-type header for the request.</returns>
-        public string HeaderContentType()
+        internal string HeaderContentType()
         {
             return RequestHeaders[HeaderType.ContentType];
         }
@@ -479,7 +479,7 @@ namespace Liberator.RESTore
         /// Return the value for an accept header.
         /// </summary>
         /// <returns>The accept header for the request</returns>
-        public string HeaderAccept()
+        internal string HeaderAccept()
         {
             return RequestHeaders[HeaderType.Accept];
         }
@@ -488,7 +488,7 @@ namespace Liberator.RESTore
         /// Return the value for an accept-encoding header.
         /// </summary>
         /// <returns>The accept-encoding header for the request.</returns>
-        public string HeaderAcceptEncoding()
+        internal string HeaderAcceptEncoding()
         {
             return RequestHeaders[HeaderType.AcceptEncoding];
         }
@@ -497,7 +497,7 @@ namespace Liberator.RESTore
         /// Return the value for an accept-charset header.
         /// </summary>
         /// <returns>The accept-charset header for the request.</returns>
-        public string HeaderAcceptCharset()
+        internal string HeaderAcceptCharset()
         {
             return RequestHeaders[HeaderType.AcceptCharset];
         }
@@ -506,7 +506,7 @@ namespace Liberator.RESTore
         /// Return all headers except for content-type, accept, accept-encoding and accept-charset
         /// </summary>
         /// <returns>A dictionary representing other headers.</returns>
-        public Dictionary<string, string> OtherHeaders()
+        internal Dictionary<string, string> OtherHeaders()
         {
             return RequestHeaders
                 .Where(
@@ -534,7 +534,7 @@ namespace Liberator.RESTore
 
         #region Private Methods
 
-        private HttpClientHandler AddProxyToClient(string proxyAddress)
+        internal HttpClientHandler AddProxyToClient(string proxyAddress)
         {
             WebProxy webProxy = new WebProxy(proxyAddress, false)
             {
@@ -548,7 +548,7 @@ namespace Liberator.RESTore
             };
         }
 
-        private HttpClientHandler AddProxyToClient(string proxyAddress, string userName, string password)
+        internal HttpClientHandler AddProxyToClient(string proxyAddress, string userName, string password)
         {
 
             return new HttpClientHandler()
