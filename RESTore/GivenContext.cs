@@ -455,7 +455,7 @@ namespace Liberator.RESTore
 
         #endregion
 
-        #region Headers
+        #region Internal Header methods
 
         /// <summary>
         /// Return all headers.
@@ -532,7 +532,7 @@ namespace Liberator.RESTore
 
         #endregion
 
-        #region Private Methods
+        #region Proxy Methods
 
         internal HttpClientHandler AddProxyToClient(string proxyAddress)
         {
