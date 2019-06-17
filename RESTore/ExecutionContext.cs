@@ -302,6 +302,10 @@ namespace Liberator.RESTore
 
         #region Content Buildup Strategy
 
+        /// <summary>
+        /// Builds the content for a request
+        /// </summary>
+        /// <returns>An HttpContent object</returns>
         internal HttpContent BuildContent()
         {
             if (_givenContext.FormParameters.Count > 0 || _givenContext.SubmittedFiles.Count > 0)
@@ -315,6 +319,10 @@ namespace Liberator.RESTore
             return null;
         }
 
+        /// <summary>
+        /// Builds the content for a form and/or files
+        /// </summary>
+        /// <returns>Multipart form data</returns>
         internal MultipartFormDataContent BuildMultipartFormData()
         {
             using (MultipartFormDataContent formContent = new MultipartFormDataContent())
@@ -333,6 +341,10 @@ namespace Liberator.RESTore
             }
         }
 
+        /// <summary>
+        /// Builds the content for a string body
+        /// </summary>
+        /// <returns>An HttpContent object representing a string body.</returns>
         internal HttpContent BuildRequestBody()
         {
             return new StringContent(_givenContext.RequestBody);
