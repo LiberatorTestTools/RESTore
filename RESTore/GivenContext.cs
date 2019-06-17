@@ -130,7 +130,6 @@ namespace Liberator.RESTore
             RequestHeaders = new Dictionary<string, string>();
             QueryStrings = new Dictionary<string, string>();
             QueryParameters = new Dictionary<string, string>();
-            
 
             if (parameters.Client != null) HttpClient(parameters.Client);
             if (parameters.Files != null) Files(parameters.Files);
