@@ -14,7 +14,7 @@ namespace Liberator.RESTore.Tests
         private Dictionary<string, string> header;
         private ThenContext thenContext;
         private ThenContext parameterised;
-        private GivenParameters givenParameters;
+        private GivenParameters defaultParameters;
 
         public ThenContextTests()
         {
@@ -23,7 +23,7 @@ namespace Liberator.RESTore.Tests
                 {HeaderType.Accept, "application/json" }
             };
 
-            givenParameters = new GivenParameters()
+            defaultParameters = new GivenParameters()
             {
                 RequestHeaders = header,
                 HostName = "http://www.totallyratted.com",
@@ -40,7 +40,7 @@ namespace Liberator.RESTore.Tests
                 .Then();
 
             parameterised = new RESTore()
-                .Given(givenParameters)
+                .Given(defaultParameters)
                 .When()
                     .Get("/index.html")
                 .Then();
