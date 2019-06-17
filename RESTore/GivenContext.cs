@@ -31,9 +31,9 @@ namespace Liberator.RESTore
     /// <summary>
     /// The setup for the request.
     /// </summary>
-    public class GivenContext
+    public class GivenContext : ISetupContext
     {
-        #region Public Properties
+        #region Internal Properties
 
         /// <summary>
         /// The name of the suite.
@@ -166,8 +166,6 @@ namespace Liberator.RESTore
             return this;
         }
 
-
-
         /// <summary>
         /// Allows a user to set the name of the host to use for the test suite.
         /// </summary>
@@ -264,10 +262,10 @@ namespace Liberator.RESTore
         }
 
         /// <summary>
-        /// Allows a user to add a body based on an Object and serialises it.
+        /// Allows a user to add an XML body based on an Object and serialises it.
         /// </summary>
         /// <typeparam name="T">The type of object being passed.</typeparam>
-        /// <param name="body">The body object.</param>
+        /// <param name="body">The body object to be converted to XML.</param>
         /// <returns>The GivenContext object with the request body set.</returns>
         public GivenContext BodyXML<T>(T body) where T : class
         {
@@ -522,7 +520,7 @@ namespace Liberator.RESTore
         #region When Context Initialiser
 
         /// <summary>
-        /// Used to initialise the WhenCOntext
+        /// Used to initialise the WhenContext
         /// </summary>
         /// <returns>The WhenContext being used.</returns>
         public WhenContext When()

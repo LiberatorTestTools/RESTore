@@ -29,7 +29,7 @@ namespace Liberator.RESTore
     /// <summary>
     /// The response for the request.
     /// </summary>
-    public class ThenContext
+    public class ThenContext : IResultContext
     {
         #region Properties
 

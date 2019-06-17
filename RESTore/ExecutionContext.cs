@@ -33,7 +33,7 @@ namespace Liberator.RESTore
     /// <summary>
     /// Represents the executing request
     /// </summary>
-    public class ExecutionContext
+    public class ExecutionContext : IExecutionContext
     {
         #region Private Properties
 
@@ -398,7 +398,7 @@ namespace Liberator.RESTore
         /// </summary>
         /// <param name="cancellationToken">The type of token used to cancel the request.</param>
         /// <returns>The underlying task object.</returns>
-        public async Task SingleThread(CancellationToken cancellationToken)
+        internal async Task SingleThread(CancellationToken cancellationToken)
         {
             do
             {
@@ -410,7 +410,7 @@ namespace Liberator.RESTore
         /// Maps the results of a load test call to a load response object.
         /// </summary>
         /// <returns>The underlying task object.</returns>
-        public async Task MapCall()
+        internal async Task MapCall()
         {
             var loadResponse = new LoadResponse()
             { StatusCode = -1, Ticks = -1 };

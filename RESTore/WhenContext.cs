@@ -27,7 +27,7 @@ namespace Liberator.RESTore
     /// <summary>
     /// Represents the HTTP Action being undertaken.
     /// </summary>
-    public class WhenContext
+    public class WhenContext : IActionContext
     {
         #region Public Properties
 
