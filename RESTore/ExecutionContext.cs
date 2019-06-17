@@ -22,6 +22,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -58,6 +59,8 @@ namespace Liberator.RESTore
         /// The compiled responses from the load test.
         /// </summary>
         internal ConcurrentQueue<LoadResponse> _loadReponses = new ConcurrentQueue<LoadResponse>();
+
+        public Encoding MessageEncoding { get; private set; }
 
         #endregion
 
@@ -298,70 +301,7 @@ namespace Liberator.RESTore
 
         #region Content Buildup Strategy
 
-        /// <summary>
-        /// Builds any file content required
-        /// </summary>
-        /// <returns>The content of the requestb to be sent.</returns>
-        private HttpContent BuildContent()
-        {
-            if (_givenContext.SubmittedFiles.Any())
-                return BuildMultipartContent();
-            if (_givenContext.QueryParameters.Any())
-                return BuildFormContent();
-            if (!string.IsNullOrEmpty(_givenContext.RequestBody))
-                return BuildStringContent();
-
-            return null;
-        }
-
-        /// <summary>
-        /// Builds content from multipart files.
-        /// </summary>
-        /// <returns>The content of the requestb to be sent.</returns>
-        private HttpContent BuildMultipartContent()
-        {
-            var content = new MultipartFormDataContent();
-
-            foreach (var pair in _givenContext.QueryParameters)
-            {
-                content.Add(new StringContent(pair.Value), pair.Key.Quote());
-            }
-
-            _givenContext.SubmittedFiles.ForEach(x =>
-            {
-                var fileContent = new ByteArrayContent(x.Content);
-                fileContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
-                {
-                    Name = x.ContentDispositionName.Quote(),
-                    FileName = x.FileName
-                };
-                fileContent.Headers.ContentType = new MediaTypeHeaderValue(x.ContentType);
-
-                content.Add(fileContent);
-            });
-
-            return content;
-        }
-
-        /// <summary>
-        /// Builds query parameters from the contents of a form.
-        /// </summary>
-        /// <returns>The content of the requestb to be sent.</returns>
-        private HttpContent BuildFormContent()
-        {
-            return new FormUrlEncodedContent(
-                _givenContext.QueryParameters.Select(x => new KeyValuePair<string, string>(x.Key, x.Value)).ToList());
-        }
-
-        /// <summary>
-        /// Adds request bodies and content types to a request.
-        /// </summary>
-        /// <returns>The content of the request to be sent.</returns>
-        private HttpContent BuildStringContent()
-        {
-            return new StringContent(_givenContext.RequestBody, Encoding.UTF8,
-                _givenContext.HeaderContentType());
-        }
+        
 
         #endregion
 
