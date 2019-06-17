@@ -34,42 +34,42 @@ namespace Liberator.RESTore
         /// <summary>
         /// Whether the test us a load test.
         /// </summary>
-        public bool IsLoadTest { get; set; }
+        internal bool IsLoadTest { get; set; }
 
         /// <summary>
         /// Which HTTP Verb should be used.
         /// </summary>
-        public HTTPVerb HttpVerbUsed { get; set; }
+        internal HTTPVerb HttpVerbUsed { get; set; }
 
         /// <summary>
         /// The GivenContext representing the setup of the request.
         /// </summary>
-        public GivenContext GivenContext { get; set; }
+        internal GivenContext GivenContext { get; set; }
 
         /// <summary>
         /// The target URL for the request.
         /// </summary>
-        public string TargetUrl { get; set; }
+        internal string TargetUrl { get; set; }
 
         /// <summary>
         /// The number of threads to run a load test.
         /// </summary>
-        public int Threads { get; set; }
+        internal int Threads { get; set; }
 
         /// <summary>
         /// The number of seconds to run a load test.
         /// </summary>
-        public int Seconds { get; set; }
+        internal int Seconds { get; set; }
 
         /// <summary>
         /// The path parameters and their values.
         /// </summary>
-        public Dictionary<string, string> PathParams { get; set; }
+        internal Dictionary<string, string> PathParams { get; set; }
 
         /// <summary>
         /// The access token for the endpoint.
         /// </summary>
-        public string AccessToken { get; set; }
+        internal string AccessToken { get; set; }
 
         #endregion
 

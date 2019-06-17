@@ -38,72 +38,72 @@ namespace Liberator.RESTore
         /// <summary>
         /// The name of the suite.
         /// </summary>
-        public string SuiteName { get; set; }
+        internal string SuiteName { get; set; }
 
         /// <summary>
         /// The name of the host.
         /// </summary>
-        public string HostName { get; set; }
+        internal string HostName { get; set; }
 
         /// <summary>
         /// The port to use on the host.
         /// </summary>
-        public int HostPort { get; set; }
+        internal int HostPort { get; set; }
 
         /// <summary>
         /// The target URL for the request.
         /// </summary>
-        public string TargetUri { get; set; }
+        internal string TargetUri { get; set; }
 
         /// <summary>
         /// The timeout for the request.
         /// </summary>
-        public TimeSpan RequestTimeout { get; set; }
+        internal TimeSpan RequestTimeout { get; set; }
 
         /// <summary>
         /// The body of the request.
         /// </summary>
-        public string RequestBody { get; set; }
+        internal string RequestBody { get; set; }
 
         /// <summary>
         /// The address of the proxy being used
         /// </summary>
-        public string ProxyAddress { get; set; }
+        internal string ProxyAddress { get; set; }
 
         /// <summary>
         /// The files applied to the request.
         /// </summary>
-        public List<FileContent> Files { get; set; }
+        internal List<FileContent> Files { get; set; }
 
         /// <summary>
         /// Cookies for the request.
         /// </summary>
-        public Dictionary<string, string> SiteCookies { get; set; }
+        internal Dictionary<string, string> SiteCookies { get; set; }
 
         /// <summary>
         /// Headers for the request.
         /// </summary>
-        public Dictionary<string, string> RequestHeaders { get; set; }
+        internal Dictionary<string, string> RequestHeaders { get; set; }
 
         /// <summary>
         /// Whether to use a secure HTTP connection
         /// </summary>
-        public bool SecureHttp { get; set; }
+        internal bool SecureHttp { get; set; }
 
         /// <summary>
         /// HTTP Client for the request.
         /// </summary>
-        public HttpClient Client { get; set; }
+        internal HttpClient Client { get; set; }
 
         /// <summary>
         /// The Query Strings for the request.
         /// </summary>
-        public Dictionary<string, string> QueryStrings { get; set; }
+        internal Dictionary<string, string> QueryStrings { get; set; }
 
         /// <summary>
         /// The Query Parameters for the request.
         /// </summary>
-        public Dictionary<string, string> QueryParameters { get; set; }
+        internal Dictionary<string, string> QueryParameters { get; set; }
 
         #endregion
 
@@ -196,7 +196,7 @@ namespace Liberator.RESTore
         /// Calculates the fully qualified name for the host with optional port.
         /// </summary>
         /// <returns>The fully qualified name for the host.</returns>
-        public string HostNameWithPort()
+        internal string HostNameWithPort()
         {
             return HostPort > 0 && HostPort != 88 ? $"{HostName}:{HostPort}" : HostName;
         }

@@ -40,22 +40,22 @@ namespace Liberator.RESTore
         /// <summary>
         /// Represents the setup of the request.
         /// </summary>
-        private readonly GivenContext _givenContext;
+        internal readonly GivenContext _givenContext;
 
         /// <summary>
         /// Represents the action to be executed.
         /// </summary>
-        private readonly WhenContext _whenContext;
+        internal readonly WhenContext _whenContext;
 
         /// <summary>
         /// The HTTP Client to use for the request.
         /// </summary>
-        private HttpClient _httpClient;
+        internal HttpClient _httpClient;
 
         /// <summary>
         /// The compiled responses from the load test.
         /// </summary>
-        private ConcurrentQueue<LoadResponse> _loadReponses = new ConcurrentQueue<LoadResponse>();
+        internal ConcurrentQueue<LoadResponse> _loadReponses = new ConcurrentQueue<LoadResponse>();
 
         #endregion
 
