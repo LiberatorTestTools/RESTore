@@ -17,6 +17,7 @@
 
 using Liberator.RESTore.Enumerations;
 using Liberator.RESTore.Extensions;
+using Liberator.RESTore.MIME;
 using Liberator.RESTore.Models;
 using System;
 using System.Collections.Concurrent;
@@ -301,7 +302,41 @@ namespace Liberator.RESTore
 
         #region Content Buildup Strategy
 
-        
+        internal HttpContent BuildContent()
+        {
+            if (_givenContext.FormParameters.Count > 0 || _givenContext.SubmittedFiles.Count > 0)
+            {
+                return BuildMultipartFormData();
+            }
+            else if (_givenContext.RequestBody.Length > 0)
+            {
+                return BuildRequestBody();
+            }
+            return null;
+        }
+
+        internal MultipartFormDataContent BuildMultipartFormData()
+        {
+            using (MultipartFormDataContent formContent = new MultipartFormDataContent())
+            {
+                FormUrlEncodedContent formData = new FormUrlEncodedContent(_givenContext.FormParameters);
+                formContent.Headers.ContentType.MediaType = Multipart.FormData;
+                formContent.Add(formData);
+
+                for (int i = 0; i < _givenContext.SubmittedFiles.Count; i++)
+                {
+                    string fileName = _givenContext.SubmittedFiles[i].FileName;
+                    Stream fileStream = File.OpenRead(fileName);
+                    formContent.Add(new StreamContent(fileStream), fileName, fileName);
+                }
+                return formContent;
+            }
+        }
+
+        internal HttpContent BuildRequestBody()
+        {
+            return new StringContent(_givenContext.RequestBody);
+        }
 
         #endregion
 
@@ -407,3 +442,6 @@ namespace Liberator.RESTore
         #endregion
     }
 }
+/* 
+
+ */

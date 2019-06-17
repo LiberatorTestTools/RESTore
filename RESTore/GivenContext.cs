@@ -99,7 +99,7 @@ namespace Liberator.RESTore
         /// <summary>
         /// The Query Parameters for the request.
         /// </summary>
-        internal Dictionary<string, string> QueryParameters { get; set; }
+        internal Dictionary<string, string> FormParameters { get; set; }
 
         #endregion
 
@@ -116,7 +116,7 @@ namespace Liberator.RESTore
             SiteCookies = new Dictionary<string, string>();
             RequestHeaders = new Dictionary<string, string>();
             QueryStrings = new Dictionary<string, string>();
-            QueryParameters = new Dictionary<string, string>();
+            FormParameters = new Dictionary<string, string>();
             RequestTimeout = new TimeSpan(0, 0, 0, 30, 0);
         }
 
@@ -129,7 +129,7 @@ namespace Liberator.RESTore
             SiteCookies = new Dictionary<string, string>();
             RequestHeaders = new Dictionary<string, string>();
             QueryStrings = new Dictionary<string, string>();
-            QueryParameters = new Dictionary<string, string>();
+            FormParameters = new Dictionary<string, string>();
 
             if (parameters.Client != null) HttpClient(parameters.Client);
             if (parameters.Files != null) Files(parameters.Files);
@@ -419,9 +419,9 @@ namespace Liberator.RESTore
         /// <returns>The GivenContext representing the setup of the request.</returns>
         public GivenContext Parameter(string key, string value)
         {
-            if (!QueryParameters.ContainsKey(key))
+            if (!FormParameters.ContainsKey(key))
             {
-                QueryParameters.Add(key, value);
+                FormParameters.Add(key, value);
                 RESToreSettings.Log.WriteLine($"Adding form parameter: {key} with value: {value}");
             }
             return this;
@@ -436,9 +436,9 @@ namespace Liberator.RESTore
         {
             foreach (var parameter in parameters)
             {
-                if (!QueryParameters.ContainsKey(parameter.Key))
+                if (!FormParameters.ContainsKey(parameter.Key))
                 {
-                    QueryParameters.Add(parameter.Key, parameter.Value);
+                    FormParameters.Add(parameter.Key, parameter.Value);
                     RESToreSettings.Log.WriteLine($"Adding form parameter: {parameter.Key} with value: {parameter.Value}");
                 }
             }
