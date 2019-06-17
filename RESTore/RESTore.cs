@@ -15,6 +15,7 @@
 // IN THE SOFTWARE.
 
 
+using Liberator.RESTore.Models;
 using System.Diagnostics;
 
 namespace Liberator.RESTore
@@ -25,14 +26,26 @@ namespace Liberator.RESTore
     public class RESTore
     {
         /// <summary>
-        /// Allows a user to define the setup of post request
+        /// Allows a user to define the setup of a request
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A new GivenContext representing the new query to be made.</returns>
         public GivenContext Given()
         {
             string callingFunction = new StackTrace().GetFrame(1).GetMethod().Name;
             RESToreSettings.Log.WriteLine($"**BEGINNING OF TEST {callingFunction}**");
             return new GivenContext();
+        }
+
+        /// <summary>
+        /// Allows a user to define the setup of a request
+        /// </summary>
+        /// <param name="parameters">An object containing the parameters for the test.</param>
+        /// <returns>A new GivenContext representing the new query to be made.</returns>
+        public GivenContext Given(GivenParameters parameters)
+        {
+            string callingFunction = new StackTrace().GetFrame(1).GetMethod().Name;
+            RESToreSettings.Log.WriteLine($"**BEGINNING OF TEST {callingFunction}**");
+            return new GivenContext(parameters);
         }
     }
 }

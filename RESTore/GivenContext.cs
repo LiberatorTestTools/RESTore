@@ -74,7 +74,7 @@ namespace Liberator.RESTore
         /// <summary>
         /// The files applied to the request.
         /// </summary>
-        internal List<FileContent> Files { get; set; }
+        internal List<FileContent> SubmittedFiles { get; set; }
 
         /// <summary>
         /// Cookies for the request.
@@ -85,11 +85,6 @@ namespace Liberator.RESTore
         /// Headers for the request.
         /// </summary>
         internal Dictionary<string, string> RequestHeaders { get; set; }
-
-        /// <summary>
-        /// Whether to use a secure HTTP connection
-        /// </summary>
-        internal bool SecureHttp { get; set; }
 
         /// <summary>
         /// HTTP Client for the request.
@@ -109,7 +104,7 @@ namespace Liberator.RESTore
         #endregion
 
         #region Constructor
-    
+
         /// <summary>
         /// The GivenContext
         /// </summary>
@@ -117,12 +112,31 @@ namespace Liberator.RESTore
         {
             RESToreSettings.Log.WriteLine("--GIVEN--");
             Client = new HttpClient();
-            Files = new List<FileContent>();
+            SubmittedFiles = new List<FileContent>();
             SiteCookies = new Dictionary<string, string>();
             RequestHeaders = new Dictionary<string, string>();
             QueryStrings = new Dictionary<string, string>();
             QueryParameters = new Dictionary<string, string>();
             RequestTimeout = new TimeSpan(0, 0, 0, 30, 0);
+        }
+
+        public GivenContext(GivenParameters parameters)
+        {
+            RESToreSettings.Log.WriteLine("--GIVEN--");
+
+            if (parameters.Client != null) HttpClient(parameters.Client);
+            if (parameters.Files != null) Files(parameters.Files);
+            if (parameters.HostName != null) Host(parameters.HostName);
+            if (parameters.HostPort > 0) Port(parameters.HostPort);
+            if (parameters.ProxyAddress != null) Proxy(ProxyAddress);
+            if (parameters.QueryParameters != null) Parameters(parameters.QueryParameters);
+            if (parameters.QueryStrings != null) Queries(parameters.QueryStrings);
+            if (parameters.RequestBody != null) RequestBody = parameters.RequestBody ?? null;
+            if (parameters.RequestHeaders != null) Headers(parameters.RequestHeaders);
+            if (parameters.RequestTimeout != null) Timeout(parameters.RequestTimeout.Milliseconds);
+            if (parameters.SiteCookies != null) Cookies(parameters.SiteCookies);
+            if (parameters.SuiteName != null) Name(parameters.SuiteName);
+            if (parameters.TargetUri != null) Uri(parameters.TargetUri);
         }
 
         #endregion
@@ -292,7 +306,7 @@ namespace Liberator.RESTore
         /// <returns>The GivenContext representing the setup of the request.</returns>
         public GivenContext File(string fileName, string contentDispositionName, string contentType, byte[] content)
         {
-            Files.Add(
+            SubmittedFiles.Add(
                 new FileContent()
                 {
                     FileName = fileName,
@@ -301,6 +315,23 @@ namespace Liberator.RESTore
                     Content = content
                 });
             RESToreSettings.Log.WriteLine($"Uploading file: {fileName}");
+            return this;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="files"></param>
+        /// <returns></returns>
+        public GivenContext Files(List<FileContent> files)
+        {
+            if (files != null)
+            {
+                foreach (FileContent file in files)
+                {
+                    File(file.FileName, file.ContentDispositionName, file.ContentType, file.Content);
+                }
+            }
             return this;
         }
 
@@ -527,7 +558,7 @@ namespace Liberator.RESTore
         public WhenContext When()
         {
             return new WhenContext(this);
-        } 
+        }
 
         #endregion
 
@@ -555,7 +586,7 @@ namespace Liberator.RESTore
                 Proxy = new WebProxy(proxyAddress, true, null, new NetworkCredential(userName, password)),
                 UseProxy = true
             };
-        } 
+        }
 
         #endregion
     }

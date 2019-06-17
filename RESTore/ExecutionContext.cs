@@ -304,7 +304,7 @@ namespace Liberator.RESTore
         /// <returns>The content of the requestb to be sent.</returns>
         private HttpContent BuildContent()
         {
-            if (_givenContext.Files.Any())
+            if (_givenContext.SubmittedFiles.Any())
                 return BuildMultipartContent();
             if (_givenContext.QueryParameters.Any())
                 return BuildFormContent();
@@ -327,7 +327,7 @@ namespace Liberator.RESTore
                 content.Add(new StringContent(pair.Value), pair.Key.Quote());
             }
 
-            _givenContext.Files.ForEach(x =>
+            _givenContext.SubmittedFiles.ForEach(x =>
             {
                 var fileContent = new ByteArrayContent(x.Content);
                 fileContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
