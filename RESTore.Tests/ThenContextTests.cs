@@ -1,21 +1,33 @@
 ﻿using Liberator.RESTore.Enumerations;
+using Liberator.RESTore.Models;
 using NUnit.Framework;
+using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Linq;
+using System.Net;
 
 namespace Liberator.RESTore.Tests
 {
     [TestFixture]
     public class ThenContextTests
     {
+        private Dictionary<string, string> header;
         private ThenContext thenContext;
+        private ThenContext parameterised;
+        private GivenParameters defaultParameters;
 
         public ThenContextTests()
         {
-            Dictionary<string, string> header = new Dictionary<string, string>()
+            header = new Dictionary<string, string>()
             {
                 {HeaderType.Accept, "application/json" }
+            };
+
+            defaultParameters = new GivenParameters()
+            {
+                RequestHeaders = header,
+                HostName = "http://www.totallyratted.com",
+                SuiteName = "Test suite name"
             };
 
             thenContext = new RESTore()
@@ -26,6 +38,12 @@ namespace Liberator.RESTore.Tests
                 .When()
                     .Get("/index.html")
                 .Then();
+
+            parameterised = new RESTore()
+                .Given(defaultParameters)
+                .When()
+                    .Get("/index.html")
+                .Then();
         }
 
         [Test]
@@ -33,6 +51,13 @@ namespace Liberator.RESTore.Tests
         public void GetApiCall_StatusIsOK()
         {
             thenContext.AssertStatus(HttpStatusCode.OK);
+        }
+
+        [Test]
+        [Category("Then Context : Methods")]
+        public void GetApiCall_Parameterised_StatusIsOK()
+        {
+            parameterised.AssertStatus(HttpStatusCode.OK);
         }
 
         [Test]

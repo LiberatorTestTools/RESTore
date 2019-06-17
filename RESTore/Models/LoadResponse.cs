@@ -15,7 +15,7 @@
 // IN THE SOFTWARE.
 
 
-namespace Liberator.RESTore
+namespace Liberator.RESTore.Models
 {
     /// <summary>
     /// Used to contain results from a load test query instance.

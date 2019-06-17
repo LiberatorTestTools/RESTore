@@ -16,6 +16,8 @@
 
 
 using Liberator.RESTore.Enumerations;
+using Liberator.RESTore.Extensions;
+using Liberator.RESTore.Models;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -33,7 +35,7 @@ namespace Liberator.RESTore
     /// <summary>
     /// Represents the executing request
     /// </summary>
-    public class ExecutionContext
+    public class ExecutionContext : IExecutionContext
     {
         #region Private Properties
 
@@ -302,7 +304,7 @@ namespace Liberator.RESTore
         /// <returns>The content of the requestb to be sent.</returns>
         private HttpContent BuildContent()
         {
-            if (_givenContext.Files.Any())
+            if (_givenContext.SubmittedFiles.Any())
                 return BuildMultipartContent();
             if (_givenContext.QueryParameters.Any())
                 return BuildFormContent();
@@ -325,7 +327,7 @@ namespace Liberator.RESTore
                 content.Add(new StringContent(pair.Value), pair.Key.Quote());
             }
 
-            _givenContext.Files.ForEach(x =>
+            _givenContext.SubmittedFiles.ForEach(x =>
             {
                 var fileContent = new ByteArrayContent(x.Content);
                 fileContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
@@ -398,7 +400,7 @@ namespace Liberator.RESTore
         /// </summary>
         /// <param name="cancellationToken">The type of token used to cancel the request.</param>
         /// <returns>The underlying task object.</returns>
-        public async Task SingleThread(CancellationToken cancellationToken)
+        internal async Task SingleThread(CancellationToken cancellationToken)
         {
             do
             {
@@ -410,7 +412,7 @@ namespace Liberator.RESTore
         /// Maps the results of a load test call to a load response object.
         /// </summary>
         /// <returns>The underlying task object.</returns>
-        public async Task MapCall()
+        internal async Task MapCall()
         {
             var loadResponse = new LoadResponse()
             { StatusCode = -1, Ticks = -1 };
