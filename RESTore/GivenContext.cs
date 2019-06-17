@@ -16,6 +16,7 @@
 
 
 using Liberator.RESTore.Enumerations;
+using Liberator.RESTore.Models;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;

@@ -15,6 +15,7 @@
 // IN THE SOFTWARE.
 
 
+using Liberator.RESTore.Models;
 using Newtonsoft.Json;
 using NUnit.Framework;
 using System;
@@ -51,11 +52,10 @@ namespace Liberator.RESTore
         /// <summary>
         /// The elapsed execution time.
         /// </summary>
-        /// 
         public TimeSpan ElapsedExecutionTime { get; set; }
 
         /// <summary>
-        /// 
+        /// Values returned from Load Testing
         /// </summary>
         public Dictionary<string, double> LoadValues { get; set; }
 
@@ -145,7 +145,6 @@ namespace Liberator.RESTore
         /// <summary>
         /// Assert whether the header values meets the requirements of a lambda function.
         /// </summary>
-        /// <param name="testName">The name of the test.</param>
         /// <param name="headerType">The header that will be assessed.</param>
         /// <param name="assert">The assertion in the form of a lambda function.</param>
         /// <returns>The ThenContext representing the response message.</returns>

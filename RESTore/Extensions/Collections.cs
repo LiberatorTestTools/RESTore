@@ -1,7 +1,4 @@
 ﻿// This version, Copyright 2019 Liberator Test Tools
-// 
-// Based on original work of the RestAssured.NET project on GitHub
-// https://github.com/lamchakchan/RestAssured.Net
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"),
 // to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -14,27 +11,13 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 // IN THE SOFTWARE.
 
-
 using System.Collections;
 using System.Configuration;
 
-namespace Liberator.RESTore
+namespace Liberator.RESTore.Extensions
 {
-    /// <summary>
-    /// Extension methods
-    /// </summary>
-    internal static class Extensions
+    internal static class Collections
     {
-
-        /// <summary>
-        /// Allows a string value to be quoted.
-        /// </summary>
-        /// <param name="source"></param>
-        /// <returns></returns>
-        internal static string Quote(this string source)
-        {
-            return "\"" + source + "\"";
-        }
 
         /// <summary>
         /// Checks if a value is present in a dictionary

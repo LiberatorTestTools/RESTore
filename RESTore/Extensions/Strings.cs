@@ -1,7 +1,4 @@
 ﻿// This version, Copyright 2019 Liberator Test Tools
-// 
-// Based on original work of the RestAssured.NET project on GitHub
-// https://github.com/lamchakchan/RestAssured.Net
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"),
 // to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -15,24 +12,23 @@
 // IN THE SOFTWARE.
 
 
-using System;
-using System.Net.Http;
 
-namespace Liberator.RESTore
+namespace Liberator.RESTore.Extensions
 {
     /// <summary>
-    /// Timer attached to an HTTP Response Message
+    /// Extension methods
     /// </summary>
-    public class TimedResponse
+    internal static class Strings
     {
-        /// <summary>
-        /// Represents the HTTP Response Message.
-        /// </summary>
-        public HttpResponseMessage Response { get; set; }
 
         /// <summary>
-        /// The time elapsed for the execution of the request.
+        /// Allows a string value to be quoted.
         /// </summary>
-        public TimeSpan TimeElapsed { get; set; }
+        /// <param name="source"></param>
+        /// <returns></returns>
+        internal static string Quote(this string source)
+        {
+            return "\"" + source + "\"";
+        }
     }
 }

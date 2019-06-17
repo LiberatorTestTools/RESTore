@@ -15,7 +15,7 @@
 // IN THE SOFTWARE.
 
 
-namespace Liberator.RESTore
+namespace Liberator.RESTore.Models
 {
     /// <summary>
     /// Details of files for HTTP Actions
