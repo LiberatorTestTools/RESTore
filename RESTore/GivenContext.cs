@@ -124,16 +124,24 @@ namespace Liberator.RESTore
         {
             RESToreSettings.Log.WriteLine("--GIVEN--");
 
+            Client = new HttpClient();
+            SubmittedFiles = new List<FileContent>();
+            SiteCookies = new Dictionary<string, string>();
+            RequestHeaders = new Dictionary<string, string>();
+            QueryStrings = new Dictionary<string, string>();
+            QueryParameters = new Dictionary<string, string>();
+            
+
             if (parameters.Client != null) HttpClient(parameters.Client);
             if (parameters.Files != null) Files(parameters.Files);
             if (parameters.HostName != null) Host(parameters.HostName);
-            if (parameters.HostPort > 0) Port(parameters.HostPort);
+            if (parameters.HostPort > 0) { Port(parameters.HostPort); }
             if (parameters.ProxyAddress != null) Proxy(ProxyAddress);
             if (parameters.QueryParameters != null) Parameters(parameters.QueryParameters);
             if (parameters.QueryStrings != null) Queries(parameters.QueryStrings);
             if (parameters.RequestBody != null) RequestBody = parameters.RequestBody ?? null;
             if (parameters.RequestHeaders != null) Headers(parameters.RequestHeaders);
-            if (parameters.RequestTimeout != null) Timeout(parameters.RequestTimeout.Milliseconds);
+            if (parameters.RequestTimeout != TimeSpan.Zero) RequestTimeout = parameters.RequestTimeout; else RequestTimeout = new TimeSpan(0, 0, 0, 30, 0);
             if (parameters.SiteCookies != null) Cookies(parameters.SiteCookies);
             if (parameters.SuiteName != null) Name(parameters.SuiteName);
             if (parameters.TargetUri != null) Uri(parameters.TargetUri);
