@@ -32,14 +32,14 @@ namespace Liberator.RESTore.Models
         public string ProxyAddress { get; set; }
 
         /// <summary>
-        /// The Query Parameters for the request.
+        /// The Form Parameters for the request.
         /// </summary>
-        public Dictionary<string, string> QueryParameters { get; set; }
+        public List<KeyValuePair<string, object>> FormParameters { get; set; }
 
         /// <summary>
         /// The Query Strings for the request.
         /// </summary>
-        public Dictionary<string, string> QueryStrings { get; set; }
+        public List<KeyValuePair<string, string>> QueryStrings { get; set; }
 
         /// <summary>
         /// The body of the request.

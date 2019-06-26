@@ -310,7 +310,7 @@ namespace Liberator.RESTore
         {
             if (_givenContext.FormParameters.Count > 0 || _givenContext.SubmittedFiles.Count > 0)
             {
-                return BuildMultipartFormData();
+                //return BuildMultipartFormData();
             }
             else if (_givenContext.RequestBody.Length > 0)
             {
@@ -319,27 +319,28 @@ namespace Liberator.RESTore
             return null;
         }
 
-        /// <summary>
-        /// Builds the content for a form and/or files
-        /// </summary>
-        /// <returns>Multipart form data</returns>
-        internal MultipartFormDataContent BuildMultipartFormData()
-        {
-            using (MultipartFormDataContent formContent = new MultipartFormDataContent())
-            {
-                FormUrlEncodedContent formData = new FormUrlEncodedContent(_givenContext.FormParameters);
-                formContent.Headers.ContentType.MediaType = Multipart.FormData;
-                formContent.Add(formData);
+        ///// <summary>
+        ///// Builds the content for a form and/or files
+        ///// </summary>
+        ///// <returns>Multipart form data</returns>
+        //internal MultipartFormDataContent BuildMultipartFormData()
+        //{
+        //    using (MultipartFormDataContent formContent = new MultipartFormDataContent())
+        //    {
+        //        var dave = _givenContext.FormParameters.AsEnumerable<string, object>()
+        //        FormUrlEncodedContent formData = new FormUrlEncodedContent(dave);
+        //        formContent.Headers.ContentType.MediaType = Multipart.FormData;
+        //        formContent.Add(formData);
 
-                for (int i = 0; i < _givenContext.SubmittedFiles.Count; i++)
-                {
-                    string fileName = _givenContext.SubmittedFiles[i].FileName;
-                    Stream fileStream = File.OpenRead(fileName);
-                    formContent.Add(new StreamContent(fileStream), fileName, fileName);
-                }
-                return formContent;
-            }
-        }
+        //        for (int i = 0; i < _givenContext.SubmittedFiles.Count; i++)
+        //        {
+        //            string fileName = _givenContext.SubmittedFiles[i].FileName;
+        //            Stream fileStream = File.OpenRead(fileName);
+        //            formContent.Add(new StreamContent(fileStream), fileName, fileName);
+        //        }
+        //        return formContent;
+        //    }
+        //}
 
         /// <summary>
         /// Builds the content for a string body
