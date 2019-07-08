@@ -26,6 +26,7 @@
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.5.0" />
   </ItemGroup>  
   <ItemGroup>
+    <ProjectReference Include="..\RESTore.Performance\RESTore.Performance.csproj" />
     <ProjectReference Include="..\RESTore\RESTore.csproj" />
   </ItemGroup>  
   <ItemGroup>
