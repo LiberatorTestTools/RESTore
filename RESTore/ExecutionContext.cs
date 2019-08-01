@@ -319,7 +319,7 @@ namespace Liberator.RESTore
         {
             using (MultipartFormDataContent formContent = new MultipartFormDataContent())
             {
-                FormUrlEncodedContent formData = new FormUrlEncodedContent(_givenContext.FormParameters);
+                FormUrlEncodedContent formData = new FormUrlEncodedContent(_givenContext.FormParameters.Cast<KeyValuePair<string, string>>());
                 formContent.Headers.ContentType.MediaType = Multipart.FormData;
                 formContent.Add(formData);
 
