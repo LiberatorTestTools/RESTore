@@ -122,6 +122,8 @@ namespace Liberator.RESTore
                     return BuildPatch();
                 case HTTPVerb.DELETE:
                     return BuildDelete();
+                case HTTPVerb.HEAD:
+                    return BuildHead();
                 default:
                     throw new Exception("No functionality is available for that Verb.");
             }
@@ -137,6 +139,25 @@ namespace Liberator.RESTore
             {
                 RequestUri = BuildUri(),
                 Method = HttpMethod.Get
+            };
+
+            AppendHeaders(request);
+            AppendCookies(request);
+            SetTimeout();
+
+            return request;
+        }
+
+        /// <summary>
+        /// Builds a HEAD request.
+        /// </summary>
+        /// <returns>The HTTP Request object representing the HEAD request.</returns>
+        private HttpRequestMessage BuildHead()
+        {
+            var request = new HttpRequestMessage()
+            {
+                RequestUri = BuildUri(),
+                Method = HttpMethod.Head
             };
 
             AppendHeaders(request);
@@ -319,7 +340,7 @@ namespace Liberator.RESTore
         {
             using (MultipartFormDataContent formContent = new MultipartFormDataContent())
             {
-                FormUrlEncodedContent formData = new FormUrlEncodedContent(_givenContext.FormParameters);
+                FormUrlEncodedContent formData = null;
                 formContent.Headers.ContentType.MediaType = Multipart.FormData;
                 formContent.Add(formData);
 

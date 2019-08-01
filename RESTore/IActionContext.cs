@@ -72,5 +72,12 @@ namespace Liberator.RESTore
         /// <param name="url">The URL to send the PUT request to.</param>
         /// <returns>The ExecutionContext that represents the executing query.</returns>
         ExecutionContext Put([DefaultParameterValue(null), Optional] string url);
+
+        /// <summary>
+        /// Allows the user to set and execute a HEAD request.
+        /// </summary>
+        /// <param name="url">The URL to send the HEAD request to.</param>
+        /// <returns>The ExecutionContext that represents the executing query.</returns>
+        ExecutionContext Head([Optional, DefaultParameterValue(null)]string url);
     }
 }
