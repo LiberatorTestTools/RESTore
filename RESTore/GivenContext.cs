@@ -99,7 +99,7 @@ namespace Liberator.RESTore
         /// <summary>
         /// The Query Parameters for the request.
         /// </summary>
-        internal List<KeyValuePair<string, object>> FormParameters { get; set; }
+        internal List<KeyValuePair<string, string>> FormParameters { get; set; }
 
         #endregion
 
@@ -116,7 +116,7 @@ namespace Liberator.RESTore
             SiteCookies = new Dictionary<string, string>();
             RequestHeaders = new Dictionary<string, string>();
             QueryStrings = new List<KeyValuePair<string, string>>();
-            FormParameters = new List<KeyValuePair<string, object>>();
+            FormParameters = new List<KeyValuePair<string, string>>();
             RequestTimeout = new TimeSpan(0, 0, 0, 30, 0);
         }
 
@@ -129,7 +129,7 @@ namespace Liberator.RESTore
             SiteCookies = new Dictionary<string, string>();
             RequestHeaders = new Dictionary<string, string>();
             QueryStrings = new List<KeyValuePair<string, string>>();
-            FormParameters = new List<KeyValuePair<string, object>>();
+            FormParameters = new List<KeyValuePair<string, string>>();
 
             if (parameters.Client != null) HttpClient(parameters.Client);
             if (parameters.Files != null) Files(parameters.Files);
@@ -419,7 +419,7 @@ namespace Liberator.RESTore
         /// <returns>The GivenContext representing the setup of the request.</returns>
         public GivenContext Parameter(string key, object value)
         {
-            FormParameters.Add(new KeyValuePair<string, object>(key, value));
+            FormParameters.Add(new KeyValuePair<string, string>(key, value.ToString()));
             RESToreSettings.Log.WriteLine($"Adding form parameter: {key} with value: {value.ToString()}");
             return this;
         }
@@ -433,7 +433,7 @@ namespace Liberator.RESTore
         {
             foreach (var parameter in parameters)
             {
-                FormParameters.Add(new KeyValuePair<string, object>(parameter.Key, parameter.Value));
+                FormParameters.Add(new KeyValuePair<string, string>(parameter.Key, parameter.Value.ToString()));
                 RESToreSettings.Log.WriteLine($"Adding form parameter: {parameter.Key} with value: {parameter.Value.ToString()}");
             }
             return this;

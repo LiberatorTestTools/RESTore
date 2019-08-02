@@ -335,12 +335,13 @@ namespace Liberator.RESTore
             }
             return null;
         }
+        
 
         internal MultipartFormDataContent BuildMultipartFormData()
         {
             using (MultipartFormDataContent formContent = new MultipartFormDataContent())
             {
-                FormUrlEncodedContent formData = null;
+                FormUrlEncodedContent formData = new FormUrlEncodedContent(_givenContext.FormParameters);
                 formContent.Headers.ContentType.MediaType = Multipart.FormData;
                 formContent.Add(formData);
 
