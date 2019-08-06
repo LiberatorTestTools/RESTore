@@ -3,11 +3,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Liberator.RESTore.Access
 {
+    /// <summary>
+    /// Base class for retrieving access tokens
+    /// </summary>
     public class AzureToken : IToken
     {
         /// <summary>

@@ -1,6 +1,7 @@
 ﻿namespace Liberator.RESTore.Enumerations
 {
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    //TODO: Add descriptions of verbs
     public enum HTTPVerb
     {
         GET,

@@ -16,6 +16,8 @@
 
 
 using Liberator.RESTore.Enumerations;
+using Liberator.RESTore.Extensions;
+using Liberator.RESTore.Models;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -33,29 +35,29 @@ namespace Liberator.RESTore
     /// <summary>
     /// Represents the executing request
     /// </summary>
-    public class ExecutionContext
+    public class ExecutionContext : IExecutionContext
     {
         #region Private Properties
 
         /// <summary>
         /// Represents the setup of the request.
         /// </summary>
-        private readonly GivenContext _givenContext;
+        internal readonly GivenContext _givenContext;
 
         /// <summary>
         /// Represents the action to be executed.
         /// </summary>
-        private readonly WhenContext _whenContext;
+        internal readonly WhenContext _whenContext;
 
         /// <summary>
         /// The HTTP Client to use for the request.
         /// </summary>
-        private HttpClient _httpClient;
+        internal HttpClient _httpClient;
 
         /// <summary>
         /// The compiled responses from the load test.
         /// </summary>
-        private ConcurrentQueue<LoadResponse> _loadReponses = new ConcurrentQueue<LoadResponse>();
+        internal ConcurrentQueue<LoadResponse> _loadReponses = new ConcurrentQueue<LoadResponse>();
 
         #endregion
 
@@ -116,6 +118,8 @@ namespace Liberator.RESTore
                     return BuildPatch();
                 case HTTPVerb.DELETE:
                     return BuildDelete();
+                case HTTPVerb.HEAD:
+                    return BuildHead();
                 default:
                     throw new Exception("No functionality is available for that Verb.");
             }
@@ -131,6 +135,25 @@ namespace Liberator.RESTore
             {
                 RequestUri = BuildUri(),
                 Method = HttpMethod.Get
+            };
+
+            AppendHeaders(request);
+            AppendCookies(request);
+            SetTimeout();
+
+            return request;
+        }
+
+        /// <summary>
+        /// Builds a HEAD request.
+        /// </summary>
+        /// <returns>The HTTP Request object representing the HEAD request.</returns>
+        private HttpRequestMessage BuildHead()
+        {
+            var request = new HttpRequestMessage()
+            {
+                RequestUri = BuildUri(),
+                Method = HttpMethod.Head
             };
 
             AppendHeaders(request);
@@ -302,7 +325,7 @@ namespace Liberator.RESTore
         /// <returns>The content of the requestb to be sent.</returns>
         private HttpContent BuildContent()
         {
-            if (_givenContext.Files.Any())
+            if (_givenContext.SubmittedFiles.Any())
                 return BuildMultipartContent();
             if (_givenContext.QueryParameters.Any())
                 return BuildFormContent();
@@ -325,7 +348,7 @@ namespace Liberator.RESTore
                 content.Add(new StringContent(pair.Value), pair.Key.Quote());
             }
 
-            _givenContext.Files.ForEach(x =>
+            _givenContext.SubmittedFiles.ForEach(x =>
             {
                 var fileContent = new ByteArrayContent(x.Content);
                 fileContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
@@ -368,7 +391,7 @@ namespace Liberator.RESTore
         /// <summary>
         /// Starts the load test element of the request.
         /// </summary>
-        public void StartCallsForLoad()
+        internal void StartCallsForLoad()
         {
             ServicePointManager.DefaultConnectionLimit = _whenContext.Threads;
 
@@ -398,7 +421,7 @@ namespace Liberator.RESTore
         /// </summary>
         /// <param name="cancellationToken">The type of token used to cancel the request.</param>
         /// <returns>The underlying task object.</returns>
-        public async Task SingleThread(CancellationToken cancellationToken)
+        internal async Task SingleThread(CancellationToken cancellationToken)
         {
             do
             {
@@ -410,7 +433,7 @@ namespace Liberator.RESTore
         /// Maps the results of a load test call to a load response object.
         /// </summary>
         /// <returns>The underlying task object.</returns>
-        public async Task MapCall()
+        internal async Task MapCall()
         {
             var loadResponse = new LoadResponse()
             { StatusCode = -1, Ticks = -1 };

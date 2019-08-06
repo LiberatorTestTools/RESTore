@@ -15,37 +15,24 @@
 // IN THE SOFTWARE.
 
 
-using Liberator.RESTore.Models;
-using System.Diagnostics;
+using System;
+using System.Net.Http;
 
-namespace Liberator.RESTore
+namespace Liberator.RESTore.Models
 {
     /// <summary>
-    /// The base class for all RESTore tests.
+    /// Timer attached to an HTTP Response Message
     /// </summary>
-    public class RESTore
+    public class TimedResponse
     {
         /// <summary>
-        /// Allows a user to define the setup of a request
+        /// Represents the HTTP Response Message.
         /// </summary>
-        /// <returns>A new GivenContext representing the new query to be made.</returns>
-        public GivenContext Given()
-        {
-            string callingFunction = new StackTrace().GetFrame(1).GetMethod().Name;
-            RESToreSettings.Log.WriteLine($"**BEGINNING OF TEST {callingFunction}**");
-            return new GivenContext();
-        }
+        public HttpResponseMessage Response { get; set; }
 
         /// <summary>
-        /// Allows a user to define the setup of a request
+        /// The time elapsed for the execution of the request.
         /// </summary>
-        /// <param name="parameters">An object containing the parameters for the test.</param>
-        /// <returns>A new GivenContext representing the new query to be made.</returns>
-        public GivenContext Given(GivenParameters parameters)
-        {
-            string callingFunction = new StackTrace().GetFrame(1).GetMethod().Name;
-            RESToreSettings.Log.WriteLine($"**BEGINNING OF TEST {callingFunction}**");
-            return new GivenContext(parameters);
-        }
+        public TimeSpan TimeElapsed { get; set; }
     }
 }

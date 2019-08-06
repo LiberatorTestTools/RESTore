@@ -16,6 +16,7 @@
 
 
 using Liberator.RESTore.Enumerations;
+using Liberator.RESTore.Models;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -31,84 +32,79 @@ namespace Liberator.RESTore
     /// <summary>
     /// The setup for the request.
     /// </summary>
-    public class GivenContext
+    public class GivenContext : ISetupContext
     {
-        #region Public Properties
+        #region Internal Properties
 
         /// <summary>
         /// The name of the suite.
         /// </summary>
-        public string SuiteName { get; set; }
+        internal string SuiteName { get; set; }
 
         /// <summary>
         /// The name of the host.
         /// </summary>
-        public string HostName { get; set; }
+        internal string HostName { get; set; }
 
         /// <summary>
         /// The port to use on the host.
         /// </summary>
-        public int HostPort { get; set; }
+        internal int HostPort { get; set; }
 
         /// <summary>
         /// The target URL for the request.
         /// </summary>
-        public string TargetUri { get; set; }
+        internal string TargetUri { get; set; }
 
         /// <summary>
         /// The timeout for the request.
         /// </summary>
-        public TimeSpan RequestTimeout { get; set; }
+        internal TimeSpan RequestTimeout { get; set; }
 
         /// <summary>
         /// The body of the request.
         /// </summary>
-        public string RequestBody { get; set; }
+        internal string RequestBody { get; set; }
 
         /// <summary>
         /// The address of the proxy being used
         /// </summary>
-        public string ProxyAddress { get; set; }
+        internal string ProxyAddress { get; set; }
 
         /// <summary>
         /// The files applied to the request.
         /// </summary>
-        public List<FileContent> Files { get; set; }
+        internal List<FileContent> SubmittedFiles { get; set; }
 
         /// <summary>
         /// Cookies for the request.
         /// </summary>
-        public Dictionary<string, string> SiteCookies { get; set; }
+        internal Dictionary<string, string> SiteCookies { get; set; }
 
         /// <summary>
         /// Headers for the request.
         /// </summary>
-        public Dictionary<string, string> RequestHeaders { get; set; }
-
-        /// <summary>
-        /// Whether to use a secure HTTP connection
-        /// </summary>
-        public bool SecureHttp { get; set; }
+        internal Dictionary<string, string> RequestHeaders { get; set; }
 
         /// <summary>
         /// HTTP Client for the request.
         /// </summary>
-        public HttpClient Client { get; set; }
+        internal HttpClient Client { get; set; }
 
         /// <summary>
         /// The Query Strings for the request.
         /// </summary>
-        public Dictionary<string, string> QueryStrings { get; set; }
+        internal Dictionary<string, string> QueryStrings { get; set; }
 
         /// <summary>
         /// The Query Parameters for the request.
         /// </summary>
-        public Dictionary<string, string> QueryParameters { get; set; }
+        internal Dictionary<string, string> QueryParameters { get; set; }
 
         #endregion
 
         #region Constructor
-    
+
         /// <summary>
         /// The GivenContext
         /// </summary>
@@ -116,12 +112,38 @@ namespace Liberator.RESTore
         {
             RESToreSettings.Log.WriteLine("--GIVEN--");
             Client = new HttpClient();
-            Files = new List<FileContent>();
+            SubmittedFiles = new List<FileContent>();
             SiteCookies = new Dictionary<string, string>();
             RequestHeaders = new Dictionary<string, string>();
             QueryStrings = new Dictionary<string, string>();
             QueryParameters = new Dictionary<string, string>();
             RequestTimeout = new TimeSpan(0, 0, 0, 30, 0);
+        }
+
+        public GivenContext(GivenParameters parameters)
+        {
+            RESToreSettings.Log.WriteLine("--GIVEN--");
+
+            Client = new HttpClient();
+            SubmittedFiles = new List<FileContent>();
+            SiteCookies = new Dictionary<string, string>();
+            RequestHeaders = new Dictionary<string, string>();
+            QueryStrings = new Dictionary<string, string>();
+            QueryParameters = new Dictionary<string, string>();
+
+            if (parameters.Client != null) HttpClient(parameters.Client);
+            if (parameters.Files != null) Files(parameters.Files);
+            if (parameters.HostName != null) Host(parameters.HostName);
+            if (parameters.HostPort > 0) { Port(parameters.HostPort); }
+            if (parameters.ProxyAddress != null) Proxy(ProxyAddress);
+            if (parameters.QueryParameters != null) Parameters(parameters.QueryParameters);
+            if (parameters.QueryStrings != null) Queries(parameters.QueryStrings);
+            if (parameters.RequestBody != null) RequestBody = parameters.RequestBody ?? null;
+            if (parameters.RequestHeaders != null) Headers(parameters.RequestHeaders);
+            if (parameters.RequestTimeout != TimeSpan.Zero) RequestTimeout = parameters.RequestTimeout; else RequestTimeout = new TimeSpan(0, 0, 0, 30, 0);
+            if (parameters.SiteCookies != null) Cookies(parameters.SiteCookies);
+            if (parameters.SuiteName != null) Name(parameters.SuiteName);
+            if (parameters.TargetUri != null) Uri(parameters.TargetUri);
         }
 
         #endregion
@@ -166,8 +188,6 @@ namespace Liberator.RESTore
             return this;
         }
 
-
-
         /// <summary>
         /// Allows a user to set the name of the host to use for the test suite.
         /// </summary>
@@ -196,7 +216,7 @@ namespace Liberator.RESTore
         /// Calculates the fully qualified name for the host with optional port.
         /// </summary>
         /// <returns>The fully qualified name for the host.</returns>
-        public string HostNameWithPort()
+        internal string HostNameWithPort()
         {
             return HostPort > 0 && HostPort != 88 ? $"{HostName}:{HostPort}" : HostName;
         }
@@ -264,10 +284,10 @@ namespace Liberator.RESTore
         }
 
         /// <summary>
-        /// Allows a user to add a body based on an Object and serialises it.
+        /// Allows a user to add an XML body based on an Object and serialises it.
         /// </summary>
         /// <typeparam name="T">The type of object being passed.</typeparam>
-        /// <param name="body">The body object.</param>
+        /// <param name="body">The body object to be converted to XML.</param>
         /// <returns>The GivenContext object with the request body set.</returns>
         public GivenContext BodyXML<T>(T body) where T : class
         {
@@ -293,7 +313,7 @@ namespace Liberator.RESTore
         /// <returns>The GivenContext representing the setup of the request.</returns>
         public GivenContext File(string fileName, string contentDispositionName, string contentType, byte[] content)
         {
-            Files.Add(
+            SubmittedFiles.Add(
                 new FileContent()
                 {
                     FileName = fileName,
@@ -302,6 +322,23 @@ namespace Liberator.RESTore
                     Content = content
                 });
             RESToreSettings.Log.WriteLine($"Uploading file: {fileName}");
+            return this;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="files"></param>
+        /// <returns></returns>
+        public GivenContext Files(List<FileContent> files)
+        {
+            if (files != null)
+            {
+                foreach (FileContent file in files)
+                {
+                    File(file.FileName, file.ContentDispositionName, file.ContentType, file.Content);
+                }
+            }
             return this;
         }
 
@@ -455,13 +492,13 @@ namespace Liberator.RESTore
 
         #endregion
 
-        #region Headers
+        #region Internal Header methods
 
         /// <summary>
         /// Return all headers.
         /// </summary>
         /// <returns>A collection of headers as a dictionary.</returns>
-        public Dictionary<string, string> Headers()
+        internal Dictionary<string, string> Headers()
         {
             return RequestHeaders.Select(x => new KeyValuePair<string, string>(x.Key, x.Value)).ToDictionary(x => x.Key, x => x.Value);
         }
@@ -470,7 +507,7 @@ namespace Liberator.RESTore
         /// Return the value for a content-type header.
         /// </summary>
         /// <returns>The content-type header for the request.</returns>
-        public string HeaderContentType()
+        internal string HeaderContentType()
         {
             return RequestHeaders[HeaderType.ContentType];
         }
@@ -479,7 +516,7 @@ namespace Liberator.RESTore
         /// Return the value for an accept header.
         /// </summary>
         /// <returns>The accept header for the request</returns>
-        public string HeaderAccept()
+        internal string HeaderAccept()
         {
             return RequestHeaders[HeaderType.Accept];
         }
@@ -488,7 +525,7 @@ namespace Liberator.RESTore
         /// Return the value for an accept-encoding header.
         /// </summary>
         /// <returns>The accept-encoding header for the request.</returns>
-        public string HeaderAcceptEncoding()
+        internal string HeaderAcceptEncoding()
         {
             return RequestHeaders[HeaderType.AcceptEncoding];
         }
@@ -497,7 +534,7 @@ namespace Liberator.RESTore
         /// Return the value for an accept-charset header.
         /// </summary>
         /// <returns>The accept-charset header for the request.</returns>
-        public string HeaderAcceptCharset()
+        internal string HeaderAcceptCharset()
         {
             return RequestHeaders[HeaderType.AcceptCharset];
         }
@@ -506,7 +543,7 @@ namespace Liberator.RESTore
         /// Return all headers except for content-type, accept, accept-encoding and accept-charset
         /// </summary>
         /// <returns>A dictionary representing other headers.</returns>
-        public Dictionary<string, string> OtherHeaders()
+        internal Dictionary<string, string> OtherHeaders()
         {
             return RequestHeaders
                 .Where(
@@ -522,19 +559,19 @@ namespace Liberator.RESTore
         #region When Context Initialiser
 
         /// <summary>
-        /// Used to initialise the WhenCOntext
+        /// Used to initialise the WhenContext
         /// </summary>
         /// <returns>The WhenContext being used.</returns>
         public WhenContext When()
         {
             return new WhenContext(this);
-        } 
+        }
 
         #endregion
 
-        #region Private Methods
+        #region Proxy Methods
 
-        private HttpClientHandler AddProxyToClient(string proxyAddress)
+        internal HttpClientHandler AddProxyToClient(string proxyAddress)
         {
             WebProxy webProxy = new WebProxy(proxyAddress, false)
             {
@@ -548,7 +585,7 @@ namespace Liberator.RESTore
             };
         }
 
-        private HttpClientHandler AddProxyToClient(string proxyAddress, string userName, string password)
+        internal HttpClientHandler AddProxyToClient(string proxyAddress, string userName, string password)
         {
 
             return new HttpClientHandler()
@@ -556,7 +593,7 @@ namespace Liberator.RESTore
                 Proxy = new WebProxy(proxyAddress, true, null, new NetworkCredential(userName, password)),
                 UseProxy = true
             };
-        } 
+        }
 
         #endregion
     }

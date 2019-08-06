@@ -27,49 +27,49 @@ namespace Liberator.RESTore
     /// <summary>
     /// Represents the HTTP Action being undertaken.
     /// </summary>
-    public class WhenContext
+    public class WhenContext : IActionContext
     {
         #region Public Properties
 
         /// <summary>
         /// Whether the test us a load test.
         /// </summary>
-        public bool IsLoadTest { get; set; }
+        internal bool IsLoadTest { get; set; }
 
         /// <summary>
         /// Which HTTP Verb should be used.
         /// </summary>
-        public HTTPVerb HttpVerbUsed { get; set; }
+        internal HTTPVerb HttpVerbUsed { get; set; }
 
         /// <summary>
         /// The GivenContext representing the setup of the request.
         /// </summary>
-        public GivenContext GivenContext { get; set; }
+        internal GivenContext GivenContext { get; set; }
 
         /// <summary>
         /// The target URL for the request.
         /// </summary>
-        public string TargetUrl { get; set; }
+        internal string TargetUrl { get; set; }
 
         /// <summary>
         /// The number of threads to run a load test.
         /// </summary>
-        public int Threads { get; set; }
+        internal int Threads { get; set; }
 
         /// <summary>
         /// The number of seconds to run a load test.
         /// </summary>
-        public int Seconds { get; set; }
+        internal int Seconds { get; set; }
 
         /// <summary>
         /// The path parameters and their values.
         /// </summary>
-        public Dictionary<string, string> PathParams { get; set; }
+        internal Dictionary<string, string> PathParams { get; set; }
 
         /// <summary>
         /// The access token for the endpoint.
         /// </summary>
-        public string AccessToken { get; set; }
+        internal string AccessToken { get; set; }
 
         #endregion
 
@@ -116,7 +116,14 @@ namespace Liberator.RESTore
         /// <returns>The When Context that we are building.</returns>
         public WhenContext PathParameter(string parameter, object value)
         {
-            PathParams.Add(parameter, value.ToString());
+            if (value == null)
+            {
+                PathParams.Add(parameter, "");
+            }
+            else
+            {
+                PathParams.Add(parameter, value.ToString());
+            }
             RESToreSettings.Log.WriteLine($"Added path parameter: {parameter} with value: {value}");
             return this;
         }
@@ -130,7 +137,14 @@ namespace Liberator.RESTore
         {
             foreach (var entry in pathParameters)
             {
-                PathParams.Add(entry.Key, entry.Value.ToString());
+                if (entry.Value == null)
+                {
+                    PathParams.Add(entry.Key, "");
+                }
+                else
+                {
+                    PathParams.Add(entry.Key, entry.Value.ToString());
+                }
                 RESToreSettings.Log.WriteLine($"Added path parameter: {entry.Key} with value: {entry.Value}");
             }
             return this;
@@ -145,6 +159,17 @@ namespace Liberator.RESTore
         {
             RESToreSettings.Log.WriteLine("Using GET");
             return SetHttpAction(ChooseUrl(url, GivenContext.TargetUri), HTTPVerb.GET);
+        }
+
+        /// <summary>
+        /// Allows the user to set and execute a HEAD request.
+        /// </summary>
+        /// <param name="url">The URL to send the HEAD request to.</param>
+        /// <returns>The ExecutionContext that represents the executing query.</returns>
+        public ExecutionContext Head([Optional, DefaultParameterValue(null)]string url)
+        {
+            RESToreSettings.Log.WriteLine("Using HEAD");
+            return SetHttpAction(ChooseUrl(url, GivenContext.TargetUri), HTTPVerb.HEAD);
         }
 
         /// <summary>
@@ -253,7 +278,14 @@ namespace Liberator.RESTore
 
             foreach (var pathParam in PathParams)
             {
-                urlBuilder.Replace($"{{{pathParam.Key}}}", pathParam.Value);
+                if (pathParam.Value == "")
+                {
+                    urlBuilder.Replace($"/{{{pathParam.Key}}}", "");
+                }
+                else
+                {
+                    urlBuilder.Replace($"{{{pathParam.Key}}}", pathParam.Value);
+                }
             }
 
             TargetUrl = new Uri(new Uri(GivenContext.HostNameWithPort()), urlBuilder.ToString()).AbsoluteUri;
