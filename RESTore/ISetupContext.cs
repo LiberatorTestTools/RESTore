@@ -103,14 +103,14 @@ namespace Liberator.RESTore
         /// <param name="key">The key of the query parameter.</param>
         /// <param name="value">The value of the query parameter to use.</param>
         /// <returns>The GivenContext representing the setup of the request.</returns>
-        GivenContext Parameter(string key, string value);
+        GivenContext Parameter(string key, object value);
 
         /// <summary>
         /// Allows a user to add a collection of query parameters to a request.
         /// </summary>
         /// <param name="parameters">The dictionary representing the query parameters for the request.</param>
         /// <returns>The GivenContext representing the setup of the request.</returns>
-        GivenContext Parameters(Dictionary<string, string> parameters);
+        GivenContext Parameters(List<KeyValuePair<string, object>> parameters);
 
         /// <summary>
         /// Allows a user to set the name of the port on the host to use for the test.
@@ -140,7 +140,7 @@ namespace Liberator.RESTore
         /// </summary>
         /// <param name="queries">A dictionary represnting the collection of query strings.</param>
         /// <returns>The GivenContext representing the setup of the request.</returns>
-        GivenContext Queries(Dictionary<string, string> queries);
+        GivenContext Queries(List<KeyValuePair<string, string>> queries);
 
         /// <summary>
         /// Allows a user to add a single query string to a request.

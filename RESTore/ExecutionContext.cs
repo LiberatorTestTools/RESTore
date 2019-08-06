@@ -17,11 +17,13 @@
 
 using Liberator.RESTore.Enumerations;
 using Liberator.RESTore.Extensions;
+using Liberator.RESTore.MIME;
 using Liberator.RESTore.Models;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -58,6 +60,8 @@ namespace Liberator.RESTore
         /// The compiled responses from the load test.
         /// </summary>
         internal ConcurrentQueue<LoadResponse> _loadReponses = new ConcurrentQueue<LoadResponse>();
+
+        public Encoding MessageEncoding { get; private set; }
 
         #endregion
 
@@ -319,69 +323,41 @@ namespace Liberator.RESTore
 
         #region Content Buildup Strategy
 
-        /// <summary>
-        /// Builds any file content required
-        /// </summary>
-        /// <returns>The content of the requestb to be sent.</returns>
-        private HttpContent BuildContent()
+        internal HttpContent BuildContent()
         {
-            if (_givenContext.SubmittedFiles.Any())
-                return BuildMultipartContent();
-            if (_givenContext.QueryParameters.Any())
-                return BuildFormContent();
-            if (!string.IsNullOrEmpty(_givenContext.RequestBody))
-                return BuildStringContent();
-
+            if (_givenContext.FormParameters.Count > 0 || _givenContext.SubmittedFiles.Count > 0)
+            {
+                return BuildMultipartFormData();
+            }
+            else if (_givenContext.RequestBody.Length > 0)
+            {
+                return BuildRequestBody();
+            }
             return null;
         }
+        
 
-        /// <summary>
-        /// Builds content from multipart files.
-        /// </summary>
-        /// <returns>The content of the requestb to be sent.</returns>
-        private HttpContent BuildMultipartContent()
+        internal MultipartFormDataContent BuildMultipartFormData()
         {
-            var content = new MultipartFormDataContent();
-
-            foreach (var pair in _givenContext.QueryParameters)
+            using (MultipartFormDataContent formContent = new MultipartFormDataContent())
             {
-                content.Add(new StringContent(pair.Value), pair.Key.Quote());
-            }
+                FormUrlEncodedContent formData = new FormUrlEncodedContent(_givenContext.FormParameters);
+                formContent.Headers.ContentType.MediaType = Multipart.FormData;
+                formContent.Add(formData);
 
-            _givenContext.SubmittedFiles.ForEach(x =>
-            {
-                var fileContent = new ByteArrayContent(x.Content);
-                fileContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
+                for (int i = 0; i < _givenContext.SubmittedFiles.Count; i++)
                 {
-                    Name = x.ContentDispositionName.Quote(),
-                    FileName = x.FileName
-                };
-                fileContent.Headers.ContentType = new MediaTypeHeaderValue(x.ContentType);
-
-                content.Add(fileContent);
-            });
-
-            return content;
+                    string fileName = _givenContext.SubmittedFiles[i].FileName;
+                    Stream fileStream = File.OpenRead(fileName);
+                    formContent.Add(new StreamContent(fileStream), fileName, fileName);
+                }
+                return formContent;
+            }
         }
 
-        /// <summary>
-        /// Builds query parameters from the contents of a form.
-        /// </summary>
-        /// <returns>The content of the requestb to be sent.</returns>
-        private HttpContent BuildFormContent()
+        internal HttpContent BuildRequestBody()
         {
-            return new FormUrlEncodedContent(
-                _givenContext.QueryParameters.Select(x => new KeyValuePair<string, string>(x.Key, x.Value)).ToList());
-        }
-
-        /// <summary>
-        /// Adds request bodies and content types to a request.
-        /// </summary>
-        /// <returns>The content of the request to be sent.</returns>
-        private HttpContent BuildStringContent()
-        {
-            return new StringContent(_givenContext.RequestBody, Encoding.UTF8,
-                _givenContext.HeaderContentType());
+            return new StringContent(_givenContext.RequestBody);
         }
 
         #endregion
@@ -488,3 +464,6 @@ namespace Liberator.RESTore
         #endregion
     }
 }
+/* 
+
+ */

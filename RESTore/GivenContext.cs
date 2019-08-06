@@ -94,12 +94,12 @@ namespace Liberator.RESTore
         /// <summary>
         /// The Query Strings for the request.
         /// </summary>
-        internal Dictionary<string, string> QueryStrings { get; set; }
+        internal List<KeyValuePair<string, string>> QueryStrings { get; set; }
 
         /// <summary>
         /// The Query Parameters for the request.
         /// </summary>
-        internal Dictionary<string, string> QueryParameters { get; set; }
+        internal List<KeyValuePair<string, string>> FormParameters { get; set; }
 
         #endregion
 
@@ -115,8 +115,8 @@ namespace Liberator.RESTore
             SubmittedFiles = new List<FileContent>();
             SiteCookies = new Dictionary<string, string>();
             RequestHeaders = new Dictionary<string, string>();
-            QueryStrings = new Dictionary<string, string>();
-            QueryParameters = new Dictionary<string, string>();
+            QueryStrings = new List<KeyValuePair<string, string>>();
+            FormParameters = new List<KeyValuePair<string, string>>();
             RequestTimeout = new TimeSpan(0, 0, 0, 30, 0);
         }
 
@@ -128,15 +128,15 @@ namespace Liberator.RESTore
             SubmittedFiles = new List<FileContent>();
             SiteCookies = new Dictionary<string, string>();
             RequestHeaders = new Dictionary<string, string>();
-            QueryStrings = new Dictionary<string, string>();
-            QueryParameters = new Dictionary<string, string>();
+            QueryStrings = new List<KeyValuePair<string, string>>();
+            FormParameters = new List<KeyValuePair<string, string>>();
 
             if (parameters.Client != null) HttpClient(parameters.Client);
             if (parameters.Files != null) Files(parameters.Files);
             if (parameters.HostName != null) Host(parameters.HostName);
             if (parameters.HostPort > 0) { Port(parameters.HostPort); }
             if (parameters.ProxyAddress != null) Proxy(ProxyAddress);
-            if (parameters.QueryParameters != null) Parameters(parameters.QueryParameters);
+            if (parameters.FormParameters != null) Parameters(parameters.FormParameters);
             if (parameters.QueryStrings != null) Queries(parameters.QueryStrings);
             if (parameters.RequestBody != null) RequestBody = parameters.RequestBody ?? null;
             if (parameters.RequestHeaders != null) Headers(parameters.RequestHeaders);
@@ -417,13 +417,10 @@ namespace Liberator.RESTore
         /// <param name="key">The key of the query parameter.</param>
         /// <param name="value">The value of the query parameter to use.</param>
         /// <returns>The GivenContext representing the setup of the request.</returns>
-        public GivenContext Parameter(string key, string value)
+        public GivenContext Parameter(string key, object value)
         {
-            if (!QueryParameters.ContainsKey(key))
-            {
-                QueryParameters.Add(key, value);
-                RESToreSettings.Log.WriteLine($"Adding form parameter: {key} with value: {value}");
-            }
+            FormParameters.Add(new KeyValuePair<string, string>(key, value.ToString()));
+            RESToreSettings.Log.WriteLine($"Adding form parameter: {key} with value: {value.ToString()}");
             return this;
         }
 
@@ -432,15 +429,12 @@ namespace Liberator.RESTore
         /// </summary>
         /// <param name="parameters">The dictionary representing the query parameters for the request.</param>
         /// <returns>The GivenContext representing the setup of the request.</returns>
-        public GivenContext Parameters(Dictionary<string, string> parameters)
+        public GivenContext Parameters(List<KeyValuePair<string, object>> parameters)
         {
             foreach (var parameter in parameters)
             {
-                if (!QueryParameters.ContainsKey(parameter.Key))
-                {
-                    QueryParameters.Add(parameter.Key, parameter.Value);
-                    RESToreSettings.Log.WriteLine($"Adding form parameter: {parameter.Key} with value: {parameter.Value}");
-                }
+                FormParameters.Add(new KeyValuePair<string, string>(parameter.Key, parameter.Value.ToString()));
+                RESToreSettings.Log.WriteLine($"Adding form parameter: {parameter.Key} with value: {parameter.Value.ToString()}");
             }
             return this;
         }
@@ -453,11 +447,8 @@ namespace Liberator.RESTore
         /// <returns>The GivenContext representing the setup of the request.</returns>
         public GivenContext Query(string key, string value)
         {
-            if (!QueryStrings.ContainsKey(key))
-            {
-                QueryStrings.Add(key, value);
-                RESToreSettings.Log.WriteLine($"Adding to query string: {key} with value: {value}");
-            }
+            QueryStrings.Add(new KeyValuePair<string, string>(key, value));
+            RESToreSettings.Log.WriteLine($"Adding to query string: {key} with value: {value}");
             return this;
         }
 
@@ -466,15 +457,12 @@ namespace Liberator.RESTore
         /// </summary>
         /// <param name="queries">A dictionary represnting the collection of query strings.</param>
         /// <returns>The GivenContext representing the setup of the request.</returns>
-        public GivenContext Queries(Dictionary<string, string> queries)
+        public GivenContext Queries(List<KeyValuePair<string, string>> queries)
         {
             foreach (var query in queries)
             {
-                if (!QueryStrings.ContainsKey(query.Key))
-                {
-                    QueryStrings.Add(query.Key, query.Value);
+                    QueryStrings.Add(new KeyValuePair<string, string>(query.Key, query.Value));
                     RESToreSettings.Log.WriteLine($"Adding to query string: {query.Key} with value: {query.Value}");
-                }
             }
             return this;
         }
