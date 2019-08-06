@@ -21,6 +21,13 @@ namespace Liberator.RESTore
         ExecutionContext Get([DefaultParameterValue(null), Optional] string url);
 
         /// <summary>
+        /// Allows the user to set and execute a HEAD request.
+        /// </summary>
+        /// <param name="url">The URL to send the HEAD request to.</param>
+        /// <returns>The ExecutionContext that represents the executing query.</returns>
+        ExecutionContext Head([Optional, DefaultParameterValue(null)]string url);
+
+        /// <summary>
         /// Gets an authorisation token based on the details of the passed token retrieval class.
         /// NB: currently configured for Azure only. AWS and other applications to follow.
         /// </summary>

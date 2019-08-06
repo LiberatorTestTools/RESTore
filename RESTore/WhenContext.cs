@@ -162,6 +162,17 @@ namespace Liberator.RESTore
         }
 
         /// <summary>
+        /// Allows the user to set and execute a HEAD request.
+        /// </summary>
+        /// <param name="url">The URL to send the HEAD request to.</param>
+        /// <returns>The ExecutionContext that represents the executing query.</returns>
+        public ExecutionContext Head([Optional, DefaultParameterValue(null)]string url)
+        {
+            RESToreSettings.Log.WriteLine("Using HEAD");
+            return SetHttpAction(ChooseUrl(url, GivenContext.TargetUri), HTTPVerb.HEAD);
+        }
+
+        /// <summary>
         /// Allows the user to set and execute a POST request.
         /// </summary>
         /// <param name="url">The URL to send the POST request to.</param>
