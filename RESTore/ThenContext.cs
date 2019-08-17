@@ -72,7 +72,7 @@ namespace Liberator.RESTore
         /// <summary>
         /// Whether the response contains a success status
         /// </summary>
-        public bool IsSuccessStatus { get; set; } 
+        public bool IsSuccessStatus { get; set; }
 
         #endregion
 
@@ -87,7 +87,7 @@ namespace Liberator.RESTore
             Headers = new Dictionary<string, IEnumerable<string>>();
             LoadValues = new Dictionary<string, double>();
             Assertions = new Dictionary<string, bool>();
-        } 
+        }
 
         #endregion
 
@@ -132,7 +132,7 @@ namespace Liberator.RESTore
                 result = assert(Headers[headerType]);
                 RESToreSettings.Log.WriteLine("User function returned without exception");
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 throw new RESToreException(e.Message, e);
             }
@@ -173,7 +173,7 @@ namespace Liberator.RESTore
                 throw new RESToreException(e.Message, e);
             }
 
-            Assert.That(result, Is.True, "Condition used for Assert Header has failed") ;
+            Assert.That(result, Is.True, "Condition used for Assert Header has failed");
             RESToreSettings.Log.WriteLine("AssertHeaders test finished");
             return this;
         }
@@ -186,21 +186,27 @@ namespace Liberator.RESTore
         /// <returns>The ThenContext representing the response message.</returns>
         public ThenContext AssertHeader(string headerType, string value)
         {
+            bool doesHeaderHaveValue = false;
             RESToreSettings.Log.WriteLine("BEGIN AssertHeader test");
 
             bool isHeaderPresent = Headers.ContainsKey(headerType);
             RESToreSettings.Log.WriteLine($"{headerType} is present in the response: {isHeaderPresent}");
 
-            bool doesHeaderHaveValue = isHeaderPresent && Headers[headerType].Contains(value);
-            RESToreSettings.Log.WriteLine($"{headerType} contains {value}: {doesHeaderHaveValue}");
-            
-            Assert.That(doesHeaderHaveValue, Is.True, $"{headerType} does not contain value {value}");
+            List<string> headerValues = Headers[headerType].ToList();
 
-            RESToreSettings.Log.WriteLine("AssertHeader test finished");
+            foreach (string headerValue in headerValues)
+            {
+                doesHeaderHaveValue = isHeaderPresent && headerValue.ToLower().Contains(value.ToLower());
+                if (doesHeaderHaveValue){ break; }
+            }
             
+            RESToreSettings.Log.WriteLine($"{headerType} contains {value}: {doesHeaderHaveValue}");
+            Assert.That(doesHeaderHaveValue, Is.True, $"{headerType} does not contain value {value}");
+            RESToreSettings.Log.WriteLine("AssertHeader test finished");
+
             return this;
         }
-        
+
         /// <summary>
         /// Assesses a series of headers and asserts specific values.
         /// </summary>
@@ -214,7 +220,7 @@ namespace Liberator.RESTore
             }
             return this;
         }
-        
+
         /// <summary>
         /// Checks a series of headers and asserts specific values.
         /// </summary>
@@ -236,10 +242,10 @@ namespace Liberator.RESTore
             }
 
             RESToreSettings.Log.WriteLine("AssertHeaders test finished");
-            
+
             return this;
         }
-        
+
         /// <summary>
         /// Assesses if the Status Code in the response is as anticipated.
         /// </summary>
@@ -287,7 +293,7 @@ namespace Liberator.RESTore
             RESToreSettings.Log.WriteLine("FINISH AssessBody test");
             return this;
         }
-        
+
         /// <summary>
         /// Asserts if the Status Code in the response is as anticipated.
         /// </summary>
@@ -298,7 +304,7 @@ namespace Liberator.RESTore
             RESToreSettings.Log.WriteLine("BEGIN AssertStatus test");
             Assert.That(StatusCode.Equals(httpStatusCode), Is.True, $"Expected HTTP Status: {httpStatusCode} but actual status is: {StatusCode}");
             RESToreSettings.Log.WriteLine("AssertStatus test finished");
-            
+
             return this;
         }
 
@@ -360,7 +366,7 @@ namespace Liberator.RESTore
             RESToreSettings.Log.WriteLine("BEGIN AssertSuccessStatus test");
             Assert.That(IsSuccessStatus, Is.True, $"HTTP Status: {StatusCode} does not indicate success");
             RESToreSettings.Log.WriteLine("AssertSuccessStatus test finished");
-            
+
             return this;
         }
 
@@ -385,7 +391,7 @@ namespace Liberator.RESTore
             RESToreSettings.Log.WriteLine("BEGIN AssertFailureStatus test");
             Assert.That(IsSuccessStatus, Is.False, $"HTTP Status: {StatusCode} does not indicate failure");
             RESToreSettings.Log.WriteLine("AssertFailureStatus test finished");
-            
+
             return this;
         }
 
@@ -405,14 +411,14 @@ namespace Liberator.RESTore
                 result = assert(Content);
                 RESToreSettings.Log.WriteLine("User function returned without exception");
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 throw new RESToreException(e.Message, e);
             }
 
             AddAndLogAssessment(testName, result);
             RESToreSettings.Log.WriteLine("FINISH AssessBody test");
-            
+
             return this;
         }
 
@@ -431,14 +437,14 @@ namespace Liberator.RESTore
                 result = assert(Content);
                 RESToreSettings.Log.WriteLine("User function returned without exception");
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 throw new RESToreException(e.Message, e);
             }
 
             Assert.That(result, Is.True, "Condition used for Assert Body has failed");
             RESToreSettings.Log.WriteLine("AssessBody test finished");
-            
+
             return this;
         }
 
@@ -459,13 +465,13 @@ namespace Liberator.RESTore
                 result = assert(JsonConvert.DeserializeObject<TContent>(Content));
                 RESToreSettings.Log.WriteLine("User function returned without exception");
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 throw new RESToreException(e.Message, e);
             }
             AddAndLogAssessment(testName, result);
             RESToreSettings.Log.WriteLine("FINISH AssessBody test");
-            
+
             return this;
         }
 
@@ -485,7 +491,7 @@ namespace Liberator.RESTore
                 result = assert(JsonConvert.DeserializeObject<TContent>(Content));
                 RESToreSettings.Log.WriteLine("User function returned without exception");
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 throw new RESToreException(e.Message, e);
             }
@@ -579,7 +585,8 @@ namespace Liberator.RESTore
         /// <param name="value">The value to assert.</param>
         private void CheckIfHeaderValueIsConfirmed(string headerType, string value)
         {
-            bool doesHeaderHaveValue = Headers.ContainsKey(headerType) && Headers[headerType].Contains(value);
+            string header = Headers[headerType].ToList()[0].ToLower();
+            bool doesHeaderHaveValue = Headers.ContainsKey(headerType) && header.Contains(value.ToLower());
             AddAndLogAssessment($"Header: {headerType} has Value: {value}", doesHeaderHaveValue);
         }
 
@@ -587,7 +594,7 @@ namespace Liberator.RESTore
         {
             Assertions.Add(assessment, value);
             RESToreSettings.Log.WriteLine($"Assessment: {assessment} | {value.ToString().ToUpper()}");
-            
+
         }
         #endregion
     }

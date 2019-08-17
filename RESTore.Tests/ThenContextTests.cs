@@ -1,4 +1,5 @@
 ﻿using Liberator.RESTore.Enumerations;
+using Liberator.RESTore.MIME;
 using Liberator.RESTore.Models;
 using NUnit.Framework;
 using System;
@@ -137,6 +138,20 @@ namespace Liberator.RESTore.Tests
         public void GetApiCall_AssertHeader()
         {
             thenContext.AssertHeader(HeaderType.ContentType, headerValues => headerValues.Contains("text/html"));
+        }
+
+        [Test]
+        [Category("Then Context : Methods")]
+        public void GetApiCall_AssertHeader_Comparison()
+        {
+            thenContext.AssertHeader(HeaderType.ContentType, Text.HTML);
+        }
+
+        [Test]
+        [Category("Then Context : Methods")]
+        public void GetApiCall_AssertHeader_Comparison_Partial()
+        {
+            thenContext.AssertHeader(HeaderType.ContentType, "HTML");
         }
 
         [Test]
