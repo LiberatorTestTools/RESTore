@@ -91,12 +91,12 @@ namespace Liberator.RESTore
         /// <summary>
         /// The Query Strings for the request.
         /// </summary>
-        internal Dictionary<string, string> QueryStrings { get; set; }
+        internal List<QueryParams> QueryStrings { get; set; }
 
         /// <summary>
         /// The Query Parameters for the request.
         /// </summary>
-        internal Dictionary<string, string> QueryParameters { get; set; }
+        internal Dictionary<string, string> FormParameters { get; set; }
 
         #endregion
 
@@ -112,8 +112,8 @@ namespace Liberator.RESTore
             SubmittedFiles = new List<FileContent>();
             SiteCookies = new Dictionary<string, string>();
             RequestHeaders = new Dictionary<string, string>();
-            QueryStrings = new Dictionary<string, string>();
-            QueryParameters = new Dictionary<string, string>();
+            QueryStrings = new List<QueryParams>();
+            FormParameters = new Dictionary<string, string>();
             RequestTimeout = new TimeSpan(0, 0, 0, 30, 0);
         }
 
@@ -125,15 +125,15 @@ namespace Liberator.RESTore
             SubmittedFiles = new List<FileContent>();
             SiteCookies = new Dictionary<string, string>();
             RequestHeaders = new Dictionary<string, string>();
-            QueryStrings = new Dictionary<string, string>();
-            QueryParameters = new Dictionary<string, string>();
+            QueryStrings = new List<QueryParams>();
+            FormParameters = new Dictionary<string, string>();
 
             if (parameters.Client != null) HttpClient(parameters.Client);
             if (parameters.Files != null) Files(parameters.Files);
             if (parameters.HostName != null) Host(parameters.HostName);
             if (parameters.HostPort > 0) { Port(parameters.HostPort); }
             if (parameters.ProxyAddress != null) Proxy(ProxyAddress);
-            if (parameters.QueryParameters != null) Parameters(parameters.QueryParameters);
+            if (parameters.FormParameters != null) Parameters(parameters.FormParameters);
             if (parameters.QueryStrings != null) Queries(parameters.QueryStrings);
             if (parameters.RequestBody != null) RequestBody = parameters.RequestBody ?? null;
             if (parameters.RequestHeaders != null) Headers(parameters.RequestHeaders);
@@ -416,9 +416,9 @@ namespace Liberator.RESTore
         /// <returns>The GivenContext representing the setup of the request.</returns>
         public GivenContext Parameter(string key, string value)
         {
-            if (!QueryParameters.ContainsKey(key))
+            if (!FormParameters.ContainsKey(key))
             {
-                QueryParameters.Add(key, value);
+                FormParameters.Add(key, value);
                 RESToreSettings.Log.WriteLine($"Adding form parameter: {key} with value: {value}");
             }
             return this;
@@ -433,9 +433,9 @@ namespace Liberator.RESTore
         {
             foreach (var parameter in parameters)
             {
-                if (!QueryParameters.ContainsKey(parameter.Key))
+                if (!FormParameters.ContainsKey(parameter.Key))
                 {
-                    QueryParameters.Add(parameter.Key, parameter.Value);
+                    FormParameters.Add(parameter.Key, parameter.Value);
                     RESToreSettings.Log.WriteLine($"Adding form parameter: {parameter.Key} with value: {parameter.Value}");
                 }
             }
@@ -450,11 +450,8 @@ namespace Liberator.RESTore
         /// <returns>The GivenContext representing the setup of the request.</returns>
         public GivenContext Query(string key, string value)
         {
-            if (!QueryStrings.ContainsKey(key))
-            {
-                QueryStrings.Add(key, value);
+                QueryStrings.Add(new QueryParams() { QueryKey = key, QueryValue = value });
                 RESToreSettings.Log.WriteLine($"Adding to query string: {key} with value: {value}");
-            }
             return this;
         }
 
@@ -463,15 +460,12 @@ namespace Liberator.RESTore
         /// </summary>
         /// <param name="queries">A dictionary represnting the collection of query strings.</param>
         /// <returns>The GivenContext representing the setup of the request.</returns>
-        public GivenContext Queries(Dictionary<string, string> queries)
+        public GivenContext Queries(List<QueryParams> queries)
         {
             foreach (var query in queries)
             {
-                if (!QueryStrings.ContainsKey(query.Key))
-                {
-                    QueryStrings.Add(query.Key, query.Value);
-                    RESToreSettings.Log.WriteLine($"Adding to query string: {query.Key} with value: {query.Value}");
-                }
+                QueryStrings.Add(query);
+                RESToreSettings.Log.WriteLine($"Adding to query string: {query.QueryKey} with value: {query.QueryValue}");
             }
             return this;
         }
@@ -590,6 +584,15 @@ namespace Liberator.RESTore
                 Proxy = new WebProxy(proxyAddress, true, null, new NetworkCredential(userName, password)),
                 UseProxy = true
             };
+        }
+
+        internal bool DoesQueryParamListContain(string key)
+        {
+            foreach (QueryParams query in QueryStrings)
+            {
+                if (query.QueryKey.Contains(key)) { return true; }
+            }
+            return false;
         }
 
         #endregion

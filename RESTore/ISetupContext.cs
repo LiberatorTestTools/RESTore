@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Liberator.RESTore.Models;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Xml;
 
@@ -138,9 +139,9 @@ namespace Liberator.RESTore
         /// <summary>
         /// Allows a user to add a series of query strings to a request.
         /// </summary>
-        /// <param name="queries">A dictionary represnting the collection of query strings.</param>
+        /// <param name="queries">A collection of query strings.</param>
         /// <returns>The GivenContext representing the setup of the request.</returns>
-        GivenContext Queries(Dictionary<string, string> queries);
+        GivenContext Queries(List<QueryParams> queries);
 
         /// <summary>
         /// Allows a user to add a single query string to a request.

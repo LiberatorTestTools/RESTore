@@ -34,12 +34,12 @@ namespace Liberator.RESTore.Models
         /// <summary>
         /// The Query Parameters for the request.
         /// </summary>
-        public Dictionary<string, string> QueryParameters { get; set; }
+        public Dictionary<string, string> FormParameters { get; set; }
 
         /// <summary>
         /// The Query Strings for the request.
         /// </summary>
-        public Dictionary<string, string> QueryStrings { get; set; }
+        public List<QueryParams> QueryStrings { get; set; }
 
         /// <summary>
         /// The body of the request.

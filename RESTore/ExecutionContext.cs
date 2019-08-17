@@ -1,7 +1,4 @@
 ﻿// This version, Copyright 2019 Liberator Test Tools
-// 
-// Based on original work of the RestAssured.NET project on GitHub
-// https://github.com/lamchakchan/RestAssured.Net
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"),
 // to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -259,7 +256,7 @@ namespace Liberator.RESTore
 
             foreach (var queryString in _givenContext.QueryStrings)
             {
-                query.Add(queryString.Key, queryString.Value);
+                query.Add(queryString.QueryKey, queryString.QueryValue);
             }
 
             builder.Query = query.ToString();
@@ -327,7 +324,7 @@ namespace Liberator.RESTore
         {
             if (_givenContext.SubmittedFiles.Any())
                 return BuildMultipartContent();
-            if (_givenContext.QueryParameters.Any())
+            if (_givenContext.FormParameters.Any())
                 return BuildFormContent();
             if (!string.IsNullOrEmpty(_givenContext.RequestBody))
                 return BuildStringContent();
@@ -343,7 +340,7 @@ namespace Liberator.RESTore
         {
             var content = new MultipartFormDataContent();
 
-            foreach (var pair in _givenContext.QueryParameters)
+            foreach (var pair in _givenContext.FormParameters)
             {
                 content.Add(new StringContent(pair.Value), pair.Key.Quote());
             }
@@ -371,7 +368,7 @@ namespace Liberator.RESTore
         private HttpContent BuildFormContent()
         {
             return new FormUrlEncodedContent(
-                _givenContext.QueryParameters.Select(x => new KeyValuePair<string, string>(x.Key, x.Value)).ToList());
+                _givenContext.FormParameters.Select(x => new KeyValuePair<string, string>(x.Key, x.Value)).ToList());
         }
 
         /// <summary>
