@@ -117,6 +117,8 @@ namespace Liberator.RESTore
                     return BuildDelete();
                 case HTTPVerb.HEAD:
                     return BuildHead();
+                case HTTPVerb.OPTIONS:
+                    return BuildOptions();
                 default:
                     throw new Exception("No functionality is available for that Verb.");
             }
@@ -151,6 +153,25 @@ namespace Liberator.RESTore
             {
                 RequestUri = BuildUri(),
                 Method = HttpMethod.Head
+            };
+
+            AppendHeaders(request);
+            AppendCookies(request);
+            SetTimeout();
+
+            return request;
+        }
+
+        /// <summary>
+        /// Builds an OPTIONS request.
+        /// </summary>
+        /// <returns>The HTTP Request object representing the OPTIONS request.</returns>
+        private HttpRequestMessage BuildOptions()
+        {
+            var request = new HttpRequestMessage()
+            {
+                RequestUri = BuildUri(),
+                Method = HttpMethod.Options
             };
 
             AppendHeaders(request);
